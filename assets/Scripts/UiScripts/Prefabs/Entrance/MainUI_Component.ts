@@ -1,0 +1,200 @@
+import { _decorator, Event, native, sys } from "cc";
+import { ComponentController } from "../../../Common/ComponentController";
+import { SoundsManager } from "../../../Runtime/SoundsManager";
+import { ComponentManager } from "../../../Runtime/ComponentManager";
+import { DialogSettingUI_Component } from "../Dialog/DialogSettingUI_Component";
+import NativeAPI from "../../../Utils/NativeAPI";
+import LocationService from "../../../Utils/LocationService";
+import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
+import WebClipboard from "../../../Utils/WebClipboard";
+import _ from "lodash";
+import { WAITING_TYPE } from "../Common/CircleLoadingUI_Component";
+
+const { ccclass, menu } = _decorator;
+
+@ccclass("MainUI_Component")
+@menu("Hidden/MainUI_Component")
+export class MainUI_Component extends ComponentController {
+  start() {
+    if (sys.isNative) {
+      SoundsManager.Instance.playMusic("bgm_00");
+    } else {
+      this.scheduleOnce(() => {
+        SoundsManager.Instance.playMusic("bgm_00");
+      }, 1);
+    }
+  }
+
+  update(deltaTime: number) {}
+
+  protected onLoad(): void {
+    super.onLoad();
+    this.printNodeMap();
+
+    this.setButtonClickEvent(
+      "TestButtonContainer/TestButton",
+      0,
+      "onTestBtnClick",
+      this.getClassName(),
+    );
+
+    this.setButtonClickEvent(
+      "TestButtonContainer/TestButton",
+      0,
+      "onTestBtnClick",
+      this.getClassName(),
+    );
+  }
+
+  /**
+   * 测试按钮点击事件
+   */
+  private async onTestBtnClick(event: Event) {
+    console.log(`onTestBtnClick`);
+    this.testCircleLoading();
+  }
+
+  /**
+   * 测试请求已知的最后定位信息
+   */
+  private async testGetLatestLocation() {
+    const location = await LocationService.getLatestLocation();
+    console.log(`testGetLatestLocation--->`, location);
+    if (location) {
+      CommonDailogHandler.showDialogMessage(
+        `纬度:${location.latitude},经度:${location.longitude}`,
+      );
+    }
+  }
+
+  private clickTime = 0;
+  /**
+   * 测试获取电量
+   */
+  private testGetBatteryInfo() {
+    const isAndroid = sys.isNative && sys.os === sys.OS.ANDROID;
+    const isIOS = sys.isNative && sys.os === sys.OS.IOS;
+    if (isAndroid) {
+      NativeAPI.getBatteryInfoAndroid();
+      if (this.clickTime % 2 === 0) {
+        NativeAPI.startBatteryMonitoringAndroid();
+      } else {
+        NativeAPI.stopBatteryMonitoringAndroid();
+      }
+    } else if (isIOS) {
+      NativeAPI.getBatteryInfoIOS();
+      if (this.clickTime % 2 === 0) {
+        NativeAPI.startBatteryMonitoringIOS();
+      } else {
+        NativeAPI.stopBatteryMonitoringIOS();
+      }
+    } else {
+      console.log("当前平台不支持获取电量");
+    }
+    this.clickTime++;
+  }
+
+  /**
+   * 测试小键盘
+   */
+  private testMiniKeyboard() {
+    CommonDailogHandler.showDialogMiniKeyboard(
+      "请输入玩家ID",
+      8,
+      (value: string) => {
+        console.log("玩家ID--->", value);
+      },
+    );
+  }
+
+  /**
+   * 测试显示加载动画
+   */
+  private testCircleLoading() {
+    CommonDailogHandler.showCircleLoading(WAITING_TYPE.LOADING, () => {});
+  }
+
+  /**
+   * 测试显示加载动画
+   */
+  private testBubbleMessage() {
+    CommonDailogHandler.showBubbleMessage(WAITING_TYPE.LOGIN, () => {});
+  }
+
+  /**
+   * 测试弹窗消息
+   */
+  private testDialogMessage() {
+    CommonDailogHandler.showDialogMessage("微信登陆逻辑", () => {});
+  }
+
+  /**
+   * 测试弹窗输入
+   */
+  private testDialogInput() {
+    CommonDailogHandler.showDialogInput(
+      {
+        tips: "请输入你的微信号！",
+        isRequired: true,
+        maxLength: 8,
+        placeholder: "请输入！",
+        height: 50,
+        defaultValue: "",
+        showLimitInfo: true,
+      },
+      (inputValue: string) => {
+        console.log(`确认回调--->`, inputValue);
+      },
+    );
+  }
+
+  /**
+   * 测试弹窗消息带按钮回调
+   */
+  private testDialogMsgCallback() {
+    CommonDailogHandler.showDialogMsgCallback(
+      {
+        tips: "复制以下内容到微信",
+        message: "https://www.baidu.com",
+        confirmText: "复制",
+      },
+      async (message: string) => {
+        if (sys.isNative) {
+          native.copyTextToClipboard(message);
+        } else {
+          await WebClipboard.copyTextToClipboard(message);
+        }
+        CommonDailogHandler.showBubbleMessage("复制成功！");
+      },
+    );
+  }
+
+  /**
+   * 测试询问确认弹窗
+   */
+  private testDialogConfirm() {
+    CommonDailogHandler.showDialogConfirm(
+      "确定吗？",
+      () => {
+        console.log("确定");
+      },
+      () => {
+        console.log("取消");
+      },
+    );
+  }
+
+  /**
+   * 测试设置界面
+   */
+  private testDialogSetting() {
+    const [settingUiNode, settingUiComponent] =
+      ComponentManager.Instance.renderUiNode<DialogSettingUI_Component>(
+        "DialogSettingUI",
+        "Prefabs",
+        "Dialog/DialogSettingUI",
+        DialogSettingUI_Component,
+      );
+    console.log("挂载设置界面成功！");
+  }
+}
