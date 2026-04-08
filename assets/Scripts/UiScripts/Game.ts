@@ -12,7 +12,7 @@ import { ResourceManager } from "../Runtime/ResourceManager";
 import { ComponentManager } from "../Runtime/ComponentManager";
 import { SoundsManager } from "../Runtime/SoundsManager";
 import { HotUpdateUI_Component } from "./Prefabs/Entrance/HotUpdateUI_Component";
-import { LoginRegisterUI_Component } from "./Prefabs/LoginRegister/LoginRegisterUI_Component";
+import { LoginRegisterMainUI_Component } from "./Prefabs/LoginRegister/LoginRegisterMainUI_Component";
 import { MainUI_Component } from "./Prefabs/Entrance/MainUI_Component";
 import CommonDailogHandler from "../Utils/CommonDailogHandler";
 import { WAITING_TYPE } from "./Prefabs/Common/CircleLoadingUI_Component";
@@ -69,7 +69,10 @@ export class Game extends SingletonComponent {
         // 登录注册预设体资源
         {
           assetType: Prefab,
-          urls: [],
+          urls: [
+            "LoginRegister/LoginRegisterMainUI",
+            "LoginRegister/AgreementUI",
+          ],
         },
         // 大厅相关预设体资源
         {
@@ -129,7 +132,7 @@ export class Game extends SingletonComponent {
       Sounds: [
         {
           assetType: AudioClip,
-          urls: ["BGM/bgm_00"],
+          urls: ["BGM/bgm_00", "BGM/bgm_01", "BGM/bgm_02"],
         },
         {
           assetType: AudioClip,
@@ -168,6 +171,14 @@ export class Game extends SingletonComponent {
               url: "BGM/bgm_00",
             },
             {
+              name: "bgm_01",
+              url: "BGM/bgm_01",
+            },
+            {
+              name: "bgm_02",
+              url: "BGM/bgm_02",
+            },
+            {
               name: "button_ui_click",
               url: "Effects/Common/ui_click",
             },
@@ -194,21 +205,21 @@ export class Game extends SingletonComponent {
     ComponentManager.Instance.destroyNodeByName("HotUpdateUI");
     console.log("热更新界面销毁成功！");
 
-    // // 正式：挂载登录注册界面
-    // ComponentManager.Instance.renderUiNode<LoginRegisterUI_Component>(
-    //   "LoginRegisterUI",
-    //   "Prefabs",
-    //   "LoginRegister/LoginRegisterUI",
-    //   LoginRegisterUI_Component,
-    // );
-
-    //NOTE - 测试：挂载主界面
-    ComponentManager.Instance.renderUiNode<MainUI_Component>(
-      "MainUI",
+    // 正式：挂载登录注册界面
+    ComponentManager.Instance.renderUiNode<LoginRegisterMainUI_Component>(
+      "LoginRegisterMainUI",
       "Prefabs",
-      "Entrance/MainUI",
-      MainUI_Component,
+      "LoginRegister/LoginRegisterMainUI",
+      LoginRegisterMainUI_Component,
     );
+
+    // NOTE - 测试：挂载主界面
+    // ComponentManager.Instance.renderUiNode<MainUI_Component>(
+    //   "MainUI",
+    //   "Prefabs",
+    //   "Entrance/MainUI",
+    //   MainUI_Component,
+    // );
 
     console.log("挂载登陆界面成功！");
   }

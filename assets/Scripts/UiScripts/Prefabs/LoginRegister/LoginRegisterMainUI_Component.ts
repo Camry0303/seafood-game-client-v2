@@ -9,9 +9,9 @@ import WeChatLoginService from "../../../Utils/WeChatLoginService";
 import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
 const { ccclass, menu } = _decorator;
 
-@ccclass("LoginRegisterUI_Component")
-@menu("Hidden/LoginRegisterUI_Component")
-export class LoginRegisterUI_Component extends ComponentController {
+@ccclass("LoginRegisterMainUI_Component")
+@menu("Hidden/LoginRegisterMainUI_Component")
+export class LoginRegisterMainUI_Component extends ComponentController {
   private _isAgreeToggleNode: Node = null;
   private _isAgreeToggle: Toggle = null;
 
@@ -45,7 +45,7 @@ export class LoginRegisterUI_Component extends ComponentController {
 
     // 设置微信登录按钮点击事件
     this.setButtonClickEvent(
-      "ButtonPanel/ButtonBar/LoginWeChatBtn",
+      "ButtonPanel/ButtonBar/WechatLoginBtn",
       0,
       "onLoginWeChatBtnClick",
       this.getClassName(),
@@ -53,7 +53,7 @@ export class LoginRegisterUI_Component extends ComponentController {
 
     // 设置手机登录按钮点击事件
     this.setButtonClickEvent(
-      "ButtonPanel/ButtonBar/LoginPhoneBtn",
+      "ButtonPanel/ButtonBar/PhoneLoginBtn",
       0,
       "onPhoneLoginBtnClick",
       this.getClassName(),
@@ -123,7 +123,7 @@ export class LoginRegisterUI_Component extends ComponentController {
   }
 
   /**
-   * 协议按钮点击事件
+   * 同意协议按钮点击事件
    */
   private onAgreementToggleClick(event: Event) {
     const agree = !this._isAgreeToggle.isChecked;
@@ -151,7 +151,7 @@ export class LoginRegisterUI_Component extends ComponentController {
    * 初始化协议按钮状态
    */
   private initIsAgree() {
-    let agree = false;
+    let agree = true;
     const agreeString = ComponentManager.Instance.getDataFromStorage("isAgree");
     if (agreeString) {
       agree = JSON.parse(agreeString);

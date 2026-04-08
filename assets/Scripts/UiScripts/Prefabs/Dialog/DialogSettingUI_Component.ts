@@ -3,7 +3,7 @@ import { ComponentController } from "../../../Common/ComponentController";
 import BubbleWindow from "../../../Common/BubbleWindow";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
 import { SoundsManager } from "../../../Runtime/SoundsManager";
-import { LoginRegisterUI_Component } from "../LoginRegister/LoginRegisterUI_Component";
+import { LoginRegisterMainUI_Component } from "../LoginRegister/LoginRegisterMainUI_Component";
 import SocketManager from "../../../Network/SocketIo/SocketManager";
 import { GlobalData } from "../../../Runtime/GlobalData";
 const { ccclass, menu } = _decorator;
@@ -158,11 +158,11 @@ export class DialogSettingUI_Component extends ComponentController {
   private onLogoutBtnClick(event: Event) {
     console.log(`onLogoutBtnClick--->`);
     // 挂载登录注册界面
-    ComponentManager.Instance.renderUiNode<LoginRegisterUI_Component>(
-      "LoginRegisterUI",
+    ComponentManager.Instance.renderUiNode<LoginRegisterMainUI_Component>(
+      "LoginRegisterMainUI",
       "Prefabs",
-      "LoginRegister/LoginRegisterUI",
-      LoginRegisterUI_Component,
+      "LoginRegister/LoginRegisterMainUI",
+      LoginRegisterMainUI_Component,
     );
 
     // 销毁大厅场景界面

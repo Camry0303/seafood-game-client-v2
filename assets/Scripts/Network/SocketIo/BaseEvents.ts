@@ -1,7 +1,7 @@
 import { Socket } from "socket.io-client";
 
 import { ComponentManager } from "../../Runtime/ComponentManager";
-import { LoginRegisterUI_Component } from "../../UiScripts/Prefabs/LoginRegister/LoginRegisterUI_Component";
+import { LoginRegisterMainUI_Component } from "../../UiScripts/Prefabs/LoginRegister/LoginRegisterMainUI_Component";
 import SocketManager from "./SocketManager";
 import CommonDailogHandler from "../../Utils/CommonDailogHandler";
 import { WAITING_TYPE } from "../../UiScripts/Prefabs/Common/CircleLoadingUI_Component";
@@ -111,11 +111,11 @@ export default class BaseEvents {
     }
     if (needLoginUi) {
       // 挂载渲染登录注册界面
-      ComponentManager.Instance.renderUiNode<LoginRegisterUI_Component>(
-        "LoginRegisterUI",
+      ComponentManager.Instance.renderUiNode<LoginRegisterMainUI_Component>(
+        "LoginRegisterMainUI",
         "Prefabs",
-        "LoginRegister/LoginRegisterUI",
-        LoginRegisterUI_Component
+        "LoginRegister/LoginRegisterMainUI",
+        LoginRegisterMainUI_Component,
       );
 
       // 登录失败了，关闭加载动画
@@ -150,11 +150,11 @@ export default class BaseEvents {
         SocketManager.Instance.refleshToken();
 
         // 挂载渲染登录注册界面
-        ComponentManager.Instance.renderUiNode<LoginRegisterUI_Component>(
-          "LoginRegisterUI",
+        ComponentManager.Instance.renderUiNode<LoginRegisterMainUI_Component>(
+          "LoginRegisterMainUI",
           "Prefabs",
-          "LoginRegister/LoginRegisterUI",
-          LoginRegisterUI_Component
+          "LoginRegister/LoginRegisterMainUI",
+          LoginRegisterMainUI_Component,
         );
         CommonDailogHandler.showDialogMessage("游戏网关服务断开与您的连接！");
         // // 不需要处理加载动画
@@ -211,7 +211,7 @@ export default class BaseEvents {
   private static async onReconnectError(returnData: Error) {
     console.log(`<SocketBaseEvent> onReconnectError--->`, returnData);
     CommonDailogHandler.showDialogMessage(
-      `游戏网关服务重连错误，\n\r${returnData.message}`
+      `游戏网关服务重连错误，\n\r${returnData.message}`,
     );
   }
 
@@ -221,7 +221,7 @@ export default class BaseEvents {
   private static async onReconnectFailed() {
     console.log(`<SocketBaseEvent> onReconnectFailed--->`, "重连失败！");
     CommonDailogHandler.showBubbleMessage(
-      "游戏网关服务重连失败，请检查网络设置！"
+      "游戏网关服务重连失败，请检查网络设置！",
     );
   }
 
@@ -232,7 +232,7 @@ export default class BaseEvents {
   private static async onError(returnData: Error) {
     console.log(`<SocketBaseEvent> onError--->`, returnData);
     CommonDailogHandler.showDialogMessage(
-      `游戏网关服务连接出错，\n\r${returnData.message}`
+      `游戏网关服务连接出错，\n\r${returnData.message}`,
     );
   }
 
