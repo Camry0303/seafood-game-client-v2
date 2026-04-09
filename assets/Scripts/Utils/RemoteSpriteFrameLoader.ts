@@ -80,7 +80,7 @@ export async function getSpriteFrameFromBase64(
     // 使用 assetManager 加载远程资源
     const imageAsset = await new Promise<ImageAsset>((resolve, reject) => {
       assetManager.loadRemote<ImageAsset>(
-        base64,
+        `data:image/png;base64,${base64}`,
         { ext: ".png" },
         (err, asset) => {
           if (err) {

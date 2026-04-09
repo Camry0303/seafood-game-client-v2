@@ -239,7 +239,7 @@ export class PhoneLoginUI_Component extends ComponentController {
       if (result.code === RESPONE_RESULT.SUCCESS) {
         this._captchaToken = result.data.captcha_token;
         const spriteFrame = await getSpriteFrameFromBase64(
-          `data:image/png;base64,${result.data.captcha_image}`,
+          result.data.captcha_image,
         );
         spriteFrame && (this._captchaSprite.spriteFrame = spriteFrame);
       } else {
