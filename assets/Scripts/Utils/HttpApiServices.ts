@@ -4,8 +4,36 @@ import CryptoUtils from "./CryptoUtils";
 import Constants from "../Common/Constants";
 import { fly } from "../3rd/packages";
 import { GlobalData } from "../Runtime/GlobalData";
+import { RESPONE_RESULT } from "../Enums";
 
 export default class HttpApiServices {
+  /**
+   * 获取验证码图片
+   * @returns
+   */
+  public static async getCaptcha(): Promise<
+    Gateway.Returned.Common.Result<{
+      captcha_token: string;
+      captcha_image: string;
+    }>
+  > {
+    // TODO - 改为配置获取
+    let host = "";
+    if (GlobalData.Instance.isLocalDev) {
+      host = "http://localhost";
+    } else {
+      host = "http://61.164.174.115";
+    }
+    const port = "16888";
+    const reponse = await fly.get(`${host}:${port}/captcha`);
+    const data = reponse.data as Gateway.Returned.Common.Result<{
+      captcha_token: string;
+      captcha_image: string;
+    }>;
+
+    return data;
+  }
+
   /**
    * 发送短信
    * @param phone
@@ -13,9 +41,9 @@ export default class HttpApiServices {
    */
   public static async sendSms(
     phone_number: string,
-    type: "register" | "reset" | "bind"
+    type: "register" | "reset" | "bind",
   ): Promise<Gateway.Returned.Common.Result<boolean>> {
-    // @TODO 改为配置获取
+    // TODO - 改为配置获取
     let host = "";
     if (GlobalData.Instance.isLocalDev) {
       host = "http://localhost";
@@ -30,7 +58,7 @@ export default class HttpApiServices {
           type,
           time: moment().unix(),
         },
-        Constants.API_KEY
+        Constants.API_KEY,
       );
     const reponse = await fly.post(`${host}:${port}/sendSMS`, params);
     const data = reponse.data as Gateway.Returned.Common.Result<boolean>;
@@ -43,9 +71,9 @@ export default class HttpApiServices {
    * @returns
    */
   public static async registerByPhone(
-    rawParams: Gateway.Requested.Authorization.PhoneRegisterParams
+    rawParams: Gateway.Requested.Authorization.PhoneRegisterParams,
   ): Promise<Gateway.Returned.Common.Result<{ token: string }>> {
-    // @TODO 改为配置获取
+    // TODO - 改为配置获取
     let host = "";
     if (GlobalData.Instance.isLocalDev) {
       host = "http://localhost";
@@ -56,7 +84,7 @@ export default class HttpApiServices {
     const params =
       CryptoUtils.genSignedParams<Gateway.Requested.Authorization.PhoneRegisterParams>(
         rawParams,
-        Constants.API_KEY
+        Constants.API_KEY,
       );
 
     const reponse = await fly.post(`${host}:${port}/registerByPhone`, params);
@@ -71,9 +99,9 @@ export default class HttpApiServices {
    * @returns
    */
   public static async loginByPhone(
-    rawParams: Gateway.Requested.Authorization.PhoneLoginParams
+    rawParams: Gateway.Requested.Authorization.PhoneLoginParams,
   ): Promise<Gateway.Returned.Common.Result<{ token: string }>> {
-    // @TODO 改为配置获取
+    // TODO - 改为配置获取
     let host = "";
     if (GlobalData.Instance.isLocalDev) {
       host = "http://localhost";
@@ -84,7 +112,7 @@ export default class HttpApiServices {
     const params =
       CryptoUtils.genSignedParams<Gateway.Requested.Authorization.PhoneLoginParams>(
         rawParams,
-        Constants.API_KEY
+        Constants.API_KEY,
       );
 
     const reponse = await fly.post(`${host}:${port}/loginByPhone`, params);
@@ -100,9 +128,9 @@ export default class HttpApiServices {
    * @returns
    */
   public static async wechatAuthorize(
-    rawParams: Gateway.Requested.Authorization.WeChatAuthParams
+    rawParams: Gateway.Requested.Authorization.WeChatAuthParams,
   ): Promise<Gateway.Returned.Common.Result<{ token: string }>> {
-    // @TODO 改为配置获取
+    // TODO - 改为配置获取
     let host = "";
     if (GlobalData.Instance.isLocalDev) {
       host = "http://localhost";
@@ -113,7 +141,7 @@ export default class HttpApiServices {
     const params =
       CryptoUtils.genSignedParams<Gateway.Requested.Authorization.WeChatAuthParams>(
         rawParams,
-        Constants.API_KEY
+        Constants.API_KEY,
       );
     const response = await fly.post(`${host}:${port}/wechatAuthorize`, params);
     const data = response.data as Gateway.Returned.Common.Result<{
@@ -127,9 +155,9 @@ export default class HttpApiServices {
    * @param rawParams
    */
   public static async bindPhone(
-    rawParams: Gateway.Requested.Authorization.BindPhoneParams
+    rawParams: Gateway.Requested.Authorization.BindPhoneParams,
   ): Promise<Gateway.Returned.Common.Result<boolean>> {
-    // @TODO 改为配置获取
+    // TODO - 改为配置获取
     let host = "";
     if (GlobalData.Instance.isLocalDev) {
       host = "http://localhost";
@@ -140,7 +168,7 @@ export default class HttpApiServices {
     const params =
       CryptoUtils.genSignedParams<Gateway.Requested.Authorization.BindPhoneParams>(
         rawParams,
-        Constants.API_KEY
+        Constants.API_KEY,
       );
 
     const reponse = await fly.post(`${host}:${port}/bindPhone`, params);

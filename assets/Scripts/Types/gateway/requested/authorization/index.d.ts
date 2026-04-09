@@ -63,6 +63,14 @@ export type PhoneLoginParams = {
    */
   time: number;
   /**
+   * 验证码
+   */
+  captcha: string;
+  /**
+   * 验证码token
+   */
+  captcha_token: string;
+  /**
    * 签名
    */
   sign: string;

@@ -41,16 +41,19 @@ export async function wechatSpriteFrameLoader(
 }
 
 /**
- * 获取头像精灵
+ * 获取本地头像精灵
  * @param url
  * @returns
  */
-export async function getAvatarSpriteFrame(url: string): Promise<SpriteFrame> {
+export async function getAvatarSpriteFrame(
+  url: string,
+  prefix: string = "custom_",
+): Promise<SpriteFrame> {
   // 分别处理微信头像和自定义头像
-  if (url.startsWith("custom_")) {
+  if (url.startsWith(prefix)) {
     return ResourceManager.Instance.getSpriteFrame(
       "Images",
-      `/Common/Avatars/${url.replace("custom_", "")}`,
+      `/Common/Avatars/${url.replace(prefix, "")}`,
     );
   } else if (url.startsWith("https") || url.startsWith("http")) {
     const spriteFrame = await wechatSpriteFrameLoader(url);
@@ -62,5 +65,44 @@ export async function getAvatarSpriteFrame(url: string): Promise<SpriteFrame> {
         `Common/Avatars/avatar_21`,
       );
     }
+  }
+}
+
+/**
+ * 从base64字符串获取SpriteFrame
+ * @param base64
+ * @returns
+ */
+export async function getSpriteFrameFromBase64(
+  base64: string,
+): Promise<SpriteFrame> {
+  try {
+    // 使用 assetManager 加载远程资源
+    const imageAsset = await new Promise<ImageAsset>((resolve, reject) => {
+      assetManager.loadRemote<ImageAsset>(
+        base64,
+        { ext: ".png" },
+        (err, asset) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          resolve(asset);
+        },
+      );
+    });
+
+    // 创建纹理
+    const texture = new Texture2D();
+    texture.image = imageAsset;
+
+    // 创建 SpriteFrame
+    const spriteFrame = new SpriteFrame();
+    spriteFrame.texture = texture;
+
+    return spriteFrame;
+  } catch (error) {
+    console.error("加载 base64 图片失败:", error);
+    return null;
   }
 }
