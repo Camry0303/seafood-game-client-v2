@@ -900,7 +900,7 @@
       "b": 255,
       "a": 255
     },
-    "_string": "抵制不良游戏，拒绝盗版游戏，注意自我保护，谨防受骗上当，适度游戏益脑，沉迷游戏伤身，合理安排时间，享受健康生活。",
+    "_string": "抵制不良游戏，拒绝盗版游戏，注意自我保护，谨防受骗上当，适度游戏益脑，沉迷游戏伤身，合理安排时间，享受健康生活",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
     "_actualFontSize": 20,
@@ -909,11 +909,8 @@
     "_lineHeight": 30,
     "_overflow": 2,
     "_enableWrapText": true,
-    "_font": {
-      "__uuid__": "02c082cb-9974-4627-a276-5047678eb19e",
-      "__expectedType__": "cc.TTFFont"
-    },
-    "_isSystemFontUsed": false,
+    "_font": null,
+    "_isSystemFontUsed": true,
     "_spacingX": 0,
     "_isItalic": false,
     "_isBold": false,
@@ -963,16 +960,16 @@
     },
     "_colorLB": {
       "__type__": "cc.Color",
-      "r": 156,
-      "g": 64,
-      "b": 2,
+      "r": 218,
+      "g": 138,
+      "b": 0,
       "a": 255
     },
     "_colorRB": {
       "__type__": "cc.Color",
-      "r": 156,
-      "g": 64,
-      "b": 2,
+      "r": 218,
+      "g": 138,
+      "b": 0,
       "a": 255
     },
     "_colorLT": {
@@ -990,12 +987,12 @@
       "a": 255
     },
     "_hueRatio": 1,
-    "_darkness": 1,
+    "_darkness": 0.8,
     "_id": ""
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "978crYCjpMebsQj0308RKI"
+    "fileId": "83qjstjnpH/IV7R2BoUOkT"
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -1108,9 +1105,9 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 207,
-      "g": 133,
-      "b": 83,
+      "r": 188,
+      "g": 158,
+      "b": 103,
       "a": 255
     },
     "_string": "1.0.0",
