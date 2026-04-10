@@ -55,6 +55,40 @@ export type PhoneRegisterParams = {
 };
 
 /**
+ * 重置密码请求负载
+ */
+export type ResetPasswordParams = {
+  /**
+   * 手机号
+   */
+  phone_number: string;
+  /**
+   * 验证码
+   */
+  captcha: string;
+  /**
+   * 验证码token
+   */
+  captcha_token: string;
+  /**
+   * 短信验证码
+   */
+  code: string;
+  /**
+   * 密码
+   */
+  password: string;
+  /**
+   * 时间
+   */
+  time: number;
+  /**
+   * 签名
+   */
+  sign: string;
+};
+
+/**
  * 手机登录请求负载
  */
 export type PhoneLoginParams = {

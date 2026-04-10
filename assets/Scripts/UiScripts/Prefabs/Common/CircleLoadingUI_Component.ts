@@ -12,6 +12,7 @@ export enum WAITING_TYPE {
   BIND_PHONE = "正在绑定手机号",
   REGIST_PHONE = "正在注册账号",
   PHONE_AUTH = "正在手机号登录授权",
+  RESET_PASSWORD = "正在重置密码",
   LOGIN = "正在登录服务器",
 }
 

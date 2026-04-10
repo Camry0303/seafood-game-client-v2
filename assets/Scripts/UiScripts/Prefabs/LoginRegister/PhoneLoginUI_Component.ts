@@ -8,7 +8,7 @@ import HttpApiServices from "../../../Utils/HttpApiServices";
 import { RESPONE_RESULT } from "../../../Enums";
 import CryptoUtils from "../../../Utils/CryptoUtils";
 import SocketManager from "../../../Network/SocketIo/SocketManager";
-import { ResetPassUI_Component } from "./ResetPassUI_Component";
+import { ResetPasswordUI_Component } from "./ResetPasswordUI_Component";
 import { PhoneRegisterUI_Component } from "./PhoneRegisterUI_Component";
 import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
 import { WAITING_TYPE } from "../Common/CircleLoadingUI_Component";
@@ -157,15 +157,15 @@ export class PhoneLoginUI_Component extends ComponentController {
    */
   private onToResetPasswordBtnClick(event: Event) {
     console.log("打开忘记密码界面UI");
-    // // 挂载忘记密码界面
-    // ComponentManager.Instance.renderUiNode<ResetPassUI_Component>(
-    //   "ResetPassUI",
-    //   "Prefabs",
-    //   "LoginRegister/ResetPassUI",
-    //   ResetPassUI_Component,
-    //   true,
-    //   this.node,
-    // );
+    // 挂载忘记密码界面
+    ComponentManager.Instance.renderUiNode<ResetPasswordUI_Component>(
+      "ResetPasswordUI",
+      "Prefabs",
+      "LoginRegister/ResetPasswordUI",
+      ResetPasswordUI_Component,
+      true,
+      this.node,
+    );
   }
 
   /**

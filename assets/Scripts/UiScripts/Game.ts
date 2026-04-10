@@ -74,6 +74,7 @@ export class Game extends SingletonComponent {
             "LoginRegister/AgreementUI",
             "LoginRegister/PhoneLoginUI",
             "LoginRegister/PhoneRegisterUI",
+            "LoginRegister/ResetPasswordUI",
           ],
         },
         // 大厅相关预设体资源

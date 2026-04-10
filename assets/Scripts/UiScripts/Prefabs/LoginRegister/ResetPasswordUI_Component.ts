@@ -1,23 +1,20 @@
-import { _decorator, Event, EditBox, Button, Label, Sprite } from "cc";
+import { _decorator, Button, EditBox, Event, Label, Sprite } from "cc";
 import BubbleWindow from "../../../Common/BubbleWindow";
-import { ComponentController } from "../../../Common/ComponentController";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
-import { RESPONE_RESULT } from "../../../Enums";
+import { ComponentController } from "../../../Common/ComponentController";
 import HttpApiServices from "../../../Utils/HttpApiServices";
 import moment from "moment";
-import { Gateway } from "../../../Types/typing";
-import SocketManager from "../../../Network/SocketIo/SocketManager";
-import CryptoUtils from "../../../Utils/CryptoUtils";
-import { PhoneLoginUI_Component } from "./PhoneLoginUI_Component";
 import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
 import { WAITING_TYPE } from "../Common/CircleLoadingUI_Component";
+import { RESPONE_RESULT } from "../../../Enums";
 import { getSpriteFrameFromBase64 } from "../../../Utils/RemoteSpriteFrameLoader";
-
+import { Gateway } from "../../../Types/typing";
+import CryptoUtils from "../../../Utils/CryptoUtils";
 const { ccclass, menu } = _decorator;
 
-@ccclass("PhoneRegisterUI_Component")
-@menu("Hidden/PhoneRegisterUI_Component")
-export class PhoneRegisterUI_Component extends ComponentController {
+@ccclass("ResetPasswordUI_Component")
+@menu("Hidden/ResetPasswordUI_Component")
+export class ResetPasswordUI_Component extends ComponentController {
   public _bubbleWindow: BubbleWindow = null;
 
   private _phoneNumberEditBox: EditBox = null;
@@ -36,9 +33,7 @@ export class PhoneRegisterUI_Component extends ComponentController {
 
   private _repeatPasswordEditBox: EditBox = null;
 
-  start() {
-    this.getCaptcha();
-  }
+  start() {}
 
   update(deltaTime: number) {}
 
@@ -124,11 +119,11 @@ export class PhoneRegisterUI_Component extends ComponentController {
       this.getClassName(),
     );
 
-    // 设置注册按钮点击事件
+    // 设置重置密码按钮点击事件
     this.setButtonClickEvent(
       "MainView/Content/ScrollView/view/content/Options/ButtonPanel/OkBtn",
       0,
-      "onRegisterBtnClick",
+      "onResetBtnClick",
       this.getClassName(),
     );
 
@@ -140,7 +135,7 @@ export class PhoneRegisterUI_Component extends ComponentController {
       this.getClassName(),
     );
 
-    // 设置蒙版关闭按钮点击事件
+    // 设置蒙版按钮点击事件
     this.setButtonClickEvent("MaskNode", 0, "close", this.getClassName());
 
     // 初始化获取短信验证码按钮
@@ -168,9 +163,9 @@ export class PhoneRegisterUI_Component extends ComponentController {
       }
 
       CommonDailogHandler.showCircleLoading(WAITING_TYPE.SEND_CODE);
-      const data = await HttpApiServices.sendSms(phoneNumber, "register");
+      const data = await HttpApiServices.sendSms(phoneNumber, "reset");
       if (data.code === RESPONE_RESULT.SUCCESS) {
-        CommonDailogHandler.showBubbleMessage("验证码发送成功！");
+        CommonDailogHandler.showBubbleMessage("短信验证码发送成功！");
         // 此处可添加倒计时逻辑
         ComponentManager.Instance.setDataToStorage(
           "lastSendCodeTime",
@@ -179,95 +174,71 @@ export class PhoneRegisterUI_Component extends ComponentController {
         this.setCountDown(60);
       } else {
         CommonDailogHandler.showBubbleMessage(`发送失败！${data.msg}`);
+        CommonDailogHandler.hideCircleLoading(WAITING_TYPE.SEND_CODE);
       }
     } catch (error) {
       CommonDailogHandler.showBubbleMessage("接口请求错误！");
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.SEND_CODE);
     } finally {
       CommonDailogHandler.hideCircleLoading(WAITING_TYPE.SEND_CODE);
     }
   }
 
   /**
-   * 注册按钮点击事件
+   * 确定重置按钮点击事件
    */
-  private async onRegisterBtnClick(event: Event) {
-    try {
-      console.log(`点击了注册按钮`);
-      const phoneNumber = this._phoneNumberEditBox.string;
-      const captcha = this._captchaEditBox.string;
-      const verificationCode = this._verificationCodeEditBox.string;
-      const password = this._passwordEditBox.string;
-      const repeatPassword = this._repeatPasswordEditBox.string;
+  private onResetBtnClick(event: Event) {
+    console.log(`点击了重置确定按钮`);
+    const phoneNumber = this._phoneNumberEditBox.string;
+    const captcha = this._captchaEditBox.string;
+    const verificationCode = this._verificationCodeEditBox.string;
+    const password = this._passwordEditBox.string;
+    const repeatPassword = this._repeatPasswordEditBox.string;
 
-      if (phoneNumber.trim() === "") {
-        CommonDailogHandler.showBubbleMessage("请输入手机号！");
-        return;
-      }
-
-      if (captcha.trim() === "") {
-        CommonDailogHandler.showBubbleMessage("请输入验证码！");
-        return;
-      }
-
-      if (verificationCode.trim() === "") {
-        CommonDailogHandler.showBubbleMessage("请输入短信验证码！");
-        return;
-      }
-
-      if (password.trim() === "") {
-        CommonDailogHandler.showBubbleMessage("请输入密码！");
-        return;
-      }
-
-      if (repeatPassword.trim() === "") {
-        CommonDailogHandler.showBubbleMessage("请再次输入密码！");
-        return;
-      }
-
-      if (password !== repeatPassword) {
-        CommonDailogHandler.showBubbleMessage("两次输入的密码不一致！");
-        return;
-      }
-
-      // 调用手机注册接口
-      CommonDailogHandler.showCircleLoading(WAITING_TYPE.REGIST_PHONE);
-      const params: Gateway.Requested.Authorization.PhoneRegisterParams = {
-        phone_number: phoneNumber,
-        captcha: captcha,
-        captcha_token: this._captchaToken,
-        code: verificationCode,
-        password: CryptoUtils.desEncryptPassword(password),
-        time: moment().unix(),
-        sign: "",
-      };
-      const result = await HttpApiServices.registerByPhone(params);
-      if (result.code === RESPONE_RESULT.SUCCESS) {
-        CommonDailogHandler.showBubbleMessage("注册成功！");
-        // 注册成功，拿到token，保存到本地，并且登录网关服务器建立长连接
-        ComponentManager.Instance.setDataToStorage("token", result.data.token);
-        // 关闭手机登录界面并销毁
-        const [phoneLoginUiNode, phoneLoginUiComponent] =
-          ComponentManager.Instance.getNodeComponent(
-            "PhoneLoginUI",
-            PhoneLoginUI_Component,
-          );
-        phoneLoginUiComponent?.close();
-
-        // 关闭手机注册界面并销毁
-        this.close();
-
-        // 连接网关服务器，进行登录
-        SocketManager.Instance.connect();
-      } else {
-        CommonDailogHandler.showBubbleMessage(`注册失败！${result.msg}`);
-        CommonDailogHandler.hideCircleLoading(WAITING_TYPE.REGIST_PHONE);
-      }
-    } catch (error) {
-      CommonDailogHandler.showBubbleMessage("接口请求错误！");
-      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.REGIST_PHONE);
+    if (phoneNumber.trim() === "") {
+      CommonDailogHandler.showBubbleMessage("请输入手机号！");
+      return;
     }
-  }
 
+    if (captcha.trim() === "") {
+      CommonDailogHandler.showBubbleMessage("请输入验证码！");
+      return;
+    }
+
+    if (verificationCode.trim() === "") {
+      CommonDailogHandler.showBubbleMessage("请输入短信验证码！");
+      return;
+    }
+
+    if (password.trim() === "") {
+      CommonDailogHandler.showBubbleMessage("请输入密码！");
+      return;
+    }
+
+    if (repeatPassword.trim() === "") {
+      CommonDailogHandler.showBubbleMessage("请再次输入密码！");
+      return;
+    }
+
+    if (password !== repeatPassword) {
+      CommonDailogHandler.showBubbleMessage("两次输入的密码不一致！");
+      return;
+    }
+
+    // 调用重置密码接口
+    CommonDailogHandler.showCircleLoading(WAITING_TYPE.RESET_PASSWORD);
+    const params: Gateway.Requested.Authorization.ResetPasswordParams = {
+      phone_number: phoneNumber,
+      captcha: captcha,
+      captcha_token: this._captchaToken,
+      code: verificationCode,
+      password: CryptoUtils.desEncryptPassword(password),
+      time: moment().unix(),
+      sign: "",
+    };
+    // TODO - 实现调用逻辑
+    console.log(`处理重置密码逻辑！`, params);
+  }
   /**
    * 关闭弹窗
    */
