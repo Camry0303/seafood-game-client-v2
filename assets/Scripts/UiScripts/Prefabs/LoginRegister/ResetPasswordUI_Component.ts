@@ -187,57 +187,69 @@ export class ResetPasswordUI_Component extends ComponentController {
   /**
    * 确定重置按钮点击事件
    */
-  private onResetBtnClick(event: Event) {
-    console.log(`点击了重置确定按钮`);
-    const phoneNumber = this._phoneNumberEditBox.string;
-    const captcha = this._captchaEditBox.string;
-    const verificationCode = this._verificationCodeEditBox.string;
-    const password = this._passwordEditBox.string;
-    const repeatPassword = this._repeatPasswordEditBox.string;
+  private async onResetBtnClick(event: Event) {
+    try {
+      console.log(`点击了重置确定按钮`);
+      const phoneNumber = this._phoneNumberEditBox.string;
+      const captcha = this._captchaEditBox.string;
+      const verificationCode = this._verificationCodeEditBox.string;
+      const password = this._passwordEditBox.string;
+      const repeatPassword = this._repeatPasswordEditBox.string;
 
-    if (phoneNumber.trim() === "") {
-      CommonDailogHandler.showBubbleMessage("请输入手机号！");
-      return;
+      if (phoneNumber.trim() === "") {
+        CommonDailogHandler.showBubbleMessage("请输入手机号！");
+        return;
+      }
+
+      if (captcha.trim() === "") {
+        CommonDailogHandler.showBubbleMessage("请输入验证码！");
+        return;
+      }
+
+      if (verificationCode.trim() === "") {
+        CommonDailogHandler.showBubbleMessage("请输入短信验证码！");
+        return;
+      }
+
+      if (password.trim() === "") {
+        CommonDailogHandler.showBubbleMessage("请输入密码！");
+        return;
+      }
+
+      if (repeatPassword.trim() === "") {
+        CommonDailogHandler.showBubbleMessage("请再次输入密码！");
+        return;
+      }
+
+      if (password !== repeatPassword) {
+        CommonDailogHandler.showBubbleMessage("两次输入的密码不一致！");
+        return;
+      }
+
+      // 调用重置密码接口
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.RESET_PASSWORD);
+      const params: Gateway.Requested.Authorization.ResetPasswordParams = {
+        phone_number: phoneNumber,
+        captcha: captcha,
+        captcha_token: this._captchaToken,
+        code: verificationCode,
+        password: CryptoUtils.desEncryptPassword(password),
+        time: moment().unix(),
+        sign: "",
+      };
+      const result = await HttpApiServices.resetPasswordByPhone(params);
+      if (result.code === RESPONE_RESULT.SUCCESS) {
+        CommonDailogHandler.showBubbleMessage("重置密码成功！");
+        // 关闭重置密码界面并销毁
+        this.close();
+      } else {
+        CommonDailogHandler.showBubbleMessage(`重置密码失败！${result.msg}`);
+        CommonDailogHandler.hideCircleLoading(WAITING_TYPE.RESET_PASSWORD);
+      }
+    } catch (error) {
+      CommonDailogHandler.showBubbleMessage("接口请求错误！");
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.RESET_PASSWORD);
     }
-
-    if (captcha.trim() === "") {
-      CommonDailogHandler.showBubbleMessage("请输入验证码！");
-      return;
-    }
-
-    if (verificationCode.trim() === "") {
-      CommonDailogHandler.showBubbleMessage("请输入短信验证码！");
-      return;
-    }
-
-    if (password.trim() === "") {
-      CommonDailogHandler.showBubbleMessage("请输入密码！");
-      return;
-    }
-
-    if (repeatPassword.trim() === "") {
-      CommonDailogHandler.showBubbleMessage("请再次输入密码！");
-      return;
-    }
-
-    if (password !== repeatPassword) {
-      CommonDailogHandler.showBubbleMessage("两次输入的密码不一致！");
-      return;
-    }
-
-    // 调用重置密码接口
-    CommonDailogHandler.showCircleLoading(WAITING_TYPE.RESET_PASSWORD);
-    const params: Gateway.Requested.Authorization.ResetPasswordParams = {
-      phone_number: phoneNumber,
-      captcha: captcha,
-      captcha_token: this._captchaToken,
-      code: verificationCode,
-      password: CryptoUtils.desEncryptPassword(password),
-      time: moment().unix(),
-      sign: "",
-    };
-    // TODO - 实现调用逻辑
-    console.log(`处理重置密码逻辑！`, params);
   }
   /**
    * 关闭弹窗

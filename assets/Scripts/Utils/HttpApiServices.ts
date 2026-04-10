@@ -93,6 +93,37 @@ export default class HttpApiServices {
     }>;
     return data;
   }
+
+  /**
+   * 重置密码
+   * @param rawParams
+   * @returns
+   */
+  public static async resetPasswordByPhone(
+    rawParams: Gateway.Requested.Authorization.ResetPasswordParams,
+  ): Promise<Gateway.Returned.Common.Result<boolean>> {
+    // TODO - 改为配置获取
+    let host = "";
+    if (GlobalData.Instance.isLocalDev) {
+      host = "http://localhost";
+    } else {
+      host = "http://61.164.174.115";
+    }
+    const port = "16888";
+    const params =
+      CryptoUtils.genSignedParams<Gateway.Requested.Authorization.ResetPasswordParams>(
+        rawParams,
+        Constants.API_KEY,
+      );
+
+    const reponse = await fly.post(
+      `${host}:${port}/resetPasswordByPhone`,
+      params,
+    );
+    const data = reponse.data as Gateway.Returned.Common.Result<boolean>;
+    return data;
+  }
+
   /**
    * 手机登录
    * @param rawParams
