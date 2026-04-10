@@ -237,6 +237,7 @@ export class PhoneLoginUI_Component extends ComponentController {
     console.log("获取验证码图片");
     try {
       const result = await HttpApiServices.getCaptcha();
+
       if (result.code === RESPONE_RESULT.SUCCESS) {
         this._captchaToken = result.data.captcha_token;
         const spriteFrame = await getSpriteFrameFromBase64(
@@ -249,7 +250,9 @@ export class PhoneLoginUI_Component extends ComponentController {
         );
       }
     } catch (error) {
-      CommonDailogHandler.showBubbleMessage("获取验证码图片失败！");
+      CommonDailogHandler.showBubbleMessage(
+        `获取验证码图片失败！${error?.response?.data?.msg || error.message || "未知错误!"}`,
+      );
     }
   }
 }

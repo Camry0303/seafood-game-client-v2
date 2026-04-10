@@ -297,7 +297,9 @@ export class PhoneRegisterUI_Component extends ComponentController {
         );
       }
     } catch (error) {
-      CommonDailogHandler.showBubbleMessage("获取验证码图片失败！");
+      CommonDailogHandler.showBubbleMessage(
+        `获取验证码图片失败！${error?.response?.data?.msg || error.message || "未知错误!"}`,
+      );
     }
   }
 
