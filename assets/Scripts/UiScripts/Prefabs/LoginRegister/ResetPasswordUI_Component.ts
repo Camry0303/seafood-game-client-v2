@@ -33,7 +33,9 @@ export class ResetPasswordUI_Component extends ComponentController {
 
   private _repeatPasswordEditBox: EditBox = null;
 
-  start() {}
+  start() {
+    this.getCaptcha();
+  }
 
   update(deltaTime: number) {}
 
