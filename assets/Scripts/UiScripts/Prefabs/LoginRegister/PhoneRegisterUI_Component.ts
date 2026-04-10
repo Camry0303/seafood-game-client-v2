@@ -1,4 +1,4 @@
-import { _decorator, Event, EditBox, Button, Label } from "cc";
+import { _decorator, Event, EditBox, Button, Label, Sprite } from "cc";
 import BubbleWindow from "../../../Common/BubbleWindow";
 import { ComponentController } from "../../../Common/ComponentController";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
@@ -11,24 +11,34 @@ import CryptoUtils from "../../../Utils/CryptoUtils";
 import { PhoneLoginUI_Component } from "./PhoneLoginUI_Component";
 import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
 import { WAITING_TYPE } from "../Common/CircleLoadingUI_Component";
+import { getSpriteFrameFromBase64 } from "../../../Utils/RemoteSpriteFrameLoader";
 
 const { ccclass, menu } = _decorator;
 
 @ccclass("PhoneRegisterUI_Component")
 @menu("Hidden/PhoneRegisterUI_Component")
 export class PhoneRegisterUI_Component extends ComponentController {
-  public bubbleWindow: BubbleWindow = null;
+  public _bubbleWindow: BubbleWindow = null;
 
   private _phoneNumberEditBox: EditBox = null;
+
+  private _captchaEditBox: EditBox = null;
+
+  private _captchaSprite: Sprite = null;
+
+  private _captchaToken: string = "";
+
+  private _verificationCodeEditBox: EditBox = null;
+
+  private _getCodeBtn: Button = null;
 
   private _passwordEditBox: EditBox = null;
 
   private _repeatPasswordEditBox: EditBox = null;
 
-  private _verificationCodeEditBox: EditBox = null;
-
-  private _sendCodeBtn: Button = null;
-  start() {}
+  start() {
+    this.getCaptcha();
+  }
 
   update(deltaTime: number) {}
 
@@ -37,20 +47,60 @@ export class PhoneRegisterUI_Component extends ComponentController {
     this.printNodeMap();
 
     // 挂载气泡弹窗组件
-    this.bubbleWindow = this.node.addComponent(BubbleWindow);
+    this._bubbleWindow = this.node.addComponent(BubbleWindow);
 
     // 手机号码输入框
     [, this._phoneNumberEditBox] = this.getNodeComponent(
-      "MainView/Content/Form/PhoneNumber/EditBox",
+      "MainView/Content/ScrollView/view/content/PhoneNumber/Value",
       EditBox,
     );
     this._phoneNumberEditBox.maxLength = 11;
     this._phoneNumberEditBox.inputMode = EditBox.InputMode.PHONE_NUMBER;
     this._phoneNumberEditBox.inputFlag = EditBox.InputFlag.DEFAULT;
 
+    // 验证码输入框
+    [, this._captchaEditBox] = this.getNodeComponent(
+      "MainView/Content/ScrollView/view/content/CaptchaCode/Value",
+      EditBox,
+    );
+    this._captchaEditBox.maxLength = 4;
+    this._captchaEditBox.inputMode = EditBox.InputMode.NUMERIC;
+    this._captchaEditBox.inputFlag = EditBox.InputFlag.DEFAULT;
+
+    // 验证码图片精灵
+    [, this._captchaSprite] = this.getNodeComponent(
+      "MainView/Content/ScrollView/view/content/CaptchaCode/Captcha",
+      Sprite,
+    );
+
+    // 设置验证码图片点击事件
+    this.setButtonClickEvent(
+      "MainView/Content/ScrollView/view/content/CaptchaCode/Captcha",
+      0,
+      "onCaptchaClick",
+      this.getClassName(),
+    );
+
+    // 短信验证码输入框
+    [, this._verificationCodeEditBox] = this.getNodeComponent(
+      "MainView/Content/ScrollView/view/content/VerificationCode/Value",
+      EditBox,
+    );
+    this._verificationCodeEditBox.maxLength = 4;
+    this._verificationCodeEditBox.inputMode = EditBox.InputMode.NUMERIC;
+    this._verificationCodeEditBox.inputFlag = EditBox.InputFlag.DEFAULT;
+
+    // 设置获取短信验证码按钮点击事件
+    [, this._getCodeBtn] = this.setButtonClickEvent(
+      "MainView/Content/ScrollView/view/content/VerificationCode/GetCodeBtn",
+      0,
+      "onGetCodeBtnClick",
+      this.getClassName(),
+    );
+
     // 登录密码输入框
     [, this._passwordEditBox] = this.getNodeComponent(
-      "MainView/Content/Form/Password/EditBox",
+      "MainView/Content/ScrollView/view/content/Password/Value",
       EditBox,
     );
     this._passwordEditBox.maxLength = 8;
@@ -59,43 +109,26 @@ export class PhoneRegisterUI_Component extends ComponentController {
 
     // 重复密码输入框
     [, this._repeatPasswordEditBox] = this.getNodeComponent(
-      "MainView/Content/Form/RepeatPassword/EditBox",
+      "MainView/Content/ScrollView/view/content/RepeatPassword/Value",
       EditBox,
     );
     this._repeatPasswordEditBox.maxLength = 8;
     this._repeatPasswordEditBox.inputMode = EditBox.InputMode.SINGLE_LINE;
     this._repeatPasswordEditBox.inputFlag = EditBox.InputFlag.PASSWORD;
 
-    // 验证码输入框
-    [, this._verificationCodeEditBox] = this.getNodeComponent(
-      "MainView/Content/Form/VerificationCode/EditBox",
-      EditBox,
-    );
-    this._verificationCodeEditBox.maxLength = 4;
-    this._verificationCodeEditBox.inputMode = EditBox.InputMode.NUMERIC;
-    this._verificationCodeEditBox.inputFlag = EditBox.InputFlag.DEFAULT;
-
-    // 设置发送短信按钮点击事件
-    [, this._sendCodeBtn] = this.setButtonClickEvent(
-      "MainView/Content/Form/VerificationCode/SendCodeBtn",
+    // 设置取消按钮点击事件
+    this.setButtonClickEvent(
+      "MainView/Content/ScrollView/view/content/Options/ButtonPanel/CancelBtn",
       0,
-      "onSendCodeBtnClick",
+      "close",
       this.getClassName(),
     );
 
     // 设置注册按钮点击事件
     this.setButtonClickEvent(
-      "MainView/Content/Form/ButtonPanel/RegisterBtn",
+      "MainView/Content/ScrollView/view/content/Options/ButtonPanel/OkBtn",
       0,
       "onRegisterBtnClick",
-      this.getClassName(),
-    );
-
-    // 设置返回按钮点击事件
-    this.setButtonClickEvent(
-      "MainView/Content/Form/ButtonPanel/BackBtn",
-      0,
-      "close",
       this.getClassName(),
     );
 
@@ -110,16 +143,24 @@ export class PhoneRegisterUI_Component extends ComponentController {
     // 设置蒙版关闭按钮点击事件
     this.setButtonClickEvent("MaskNode", 0, "close", this.getClassName());
 
-    // 初始化发送按钮
-    this.initSendBtn();
+    // 初始化获取验证码按钮
+    this.initGetCodeBtn();
   }
 
   /**
-   * 发送验证码按钮点击事件
+   * 验证码图片点击事件
    */
-  private async onSendCodeBtnClick(event: Event) {
+  private onCaptchaClick(event: Event) {
+    // 获取验证码图片
+    this.getCaptcha();
+  }
+
+  /**
+   * 获取短信验证码按钮点击事件
+   */
+  private async onGetCodeBtnClick(event: Event) {
     try {
-      console.log(`发送验证码`);
+      console.log(`获取短信验证码`);
       const phoneNumber = this._phoneNumberEditBox.string;
       if (phoneNumber.trim() === "") {
         CommonDailogHandler.showBubbleMessage("请输入手机号！");
@@ -153,11 +194,23 @@ export class PhoneRegisterUI_Component extends ComponentController {
     try {
       console.log(`点击了注册按钮`);
       const phoneNumber = this._phoneNumberEditBox.string;
+      const captcha = this._captchaEditBox.string;
+      const verificationCode = this._verificationCodeEditBox.string;
       const password = this._passwordEditBox.string;
       const repeatPassword = this._repeatPasswordEditBox.string;
-      const _verificationCodeEditBox = this._verificationCodeEditBox.string;
+
       if (phoneNumber.trim() === "") {
         CommonDailogHandler.showBubbleMessage("请输入手机号！");
+        return;
+      }
+
+      if (captcha.trim() === "") {
+        CommonDailogHandler.showBubbleMessage("请输入验证码！");
+        return;
+      }
+
+      if (verificationCode.trim() === "") {
+        CommonDailogHandler.showBubbleMessage("请输入短信验证码！");
         return;
       }
 
@@ -176,8 +229,8 @@ export class PhoneRegisterUI_Component extends ComponentController {
         return;
       }
 
-      if (_verificationCodeEditBox.trim() === "") {
-        CommonDailogHandler.showBubbleMessage("请输入验证码！");
+      if (verificationCode.trim() === "") {
+        CommonDailogHandler.showBubbleMessage("请输入短信验证码！");
         return;
       }
 
@@ -185,8 +238,10 @@ export class PhoneRegisterUI_Component extends ComponentController {
       CommonDailogHandler.showCircleLoading(WAITING_TYPE.REGIST_PHONE);
       const params: Gateway.Requested.Authorization.PhoneRegisterParams = {
         phone_number: phoneNumber,
+        captcha: captcha,
+        captcha_token: this._captchaToken,
+        code: verificationCode,
         password: CryptoUtils.desEncryptPassword(password),
-        code: _verificationCodeEditBox,
         time: moment().unix(),
         sign: "",
       };
@@ -222,9 +277,33 @@ export class PhoneRegisterUI_Component extends ComponentController {
    * 关闭弹窗
    */
   public close() {
-    this.bubbleWindow.close(() => {
+    this._bubbleWindow.close(() => {
       ComponentManager.Instance.destroyNode(this.node);
     });
+  }
+
+  /**
+   * 获取验证码图片
+   */
+  private async getCaptcha() {
+    // 获取验证码图片逻辑
+    console.log("获取验证码图片");
+    try {
+      const result = await HttpApiServices.getCaptcha();
+      if (result.code === RESPONE_RESULT.SUCCESS) {
+        this._captchaToken = result.data.captcha_token;
+        const spriteFrame = await getSpriteFrameFromBase64(
+          result.data.captcha_image,
+        );
+        spriteFrame && (this._captchaSprite.spriteFrame = spriteFrame);
+      } else {
+        CommonDailogHandler.showBubbleMessage(
+          `获取验证码图片失败！${result.msg}`,
+        );
+      }
+    } catch (error) {
+      CommonDailogHandler.showBubbleMessage("获取验证码图片失败！");
+    }
   }
 
   /**
@@ -234,20 +313,23 @@ export class PhoneRegisterUI_Component extends ComponentController {
   private setCountDown(repeat: number) {
     console.log(`按钮开始倒计时逻辑`);
 
-    this._sendCodeBtn.interactable = false;
-    this._sendCodeBtn.unscheduleAllCallbacks();
+    const btnSprite = this._getCodeBtn.node.getComponent(Sprite);
+    const labelNode = this._getCodeBtn.node.getChildByName("Label");
+    const label = labelNode ? labelNode.getComponent(Label) : null;
+
+    btnSprite && (btnSprite.enabled = false);
+    this._getCodeBtn.interactable = false;
+    this._getCodeBtn.unscheduleAllCallbacks();
     const timerStart = moment().unix();
-    this._sendCodeBtn.schedule(
+    this._getCodeBtn.schedule(
       () => {
         let timeLeft = Math.ceil(repeat - (moment().unix() - timerStart));
-        this._sendCodeBtn.node
-          .getChildByName("Label")
-          .getComponent(Label).string = String(timeLeft);
+        label && (label.string = String(timeLeft));
+
         if (timeLeft <= 0) {
-          this._sendCodeBtn.interactable = true;
-          this._sendCodeBtn.node
-            .getChildByName("Label")
-            .getComponent(Label).string = "发送";
+          btnSprite && (btnSprite.enabled = true);
+          this._getCodeBtn.interactable = true;
+          label && (label.string = "");
           ComponentManager.Instance.deleteDataFromStorage("lastSendCodeTime");
         }
       },
@@ -258,10 +340,10 @@ export class PhoneRegisterUI_Component extends ComponentController {
   }
 
   /**
-   * 初始化发送验证码按钮
+   * 初始化发送短信验证码按钮
    * @returns
    */
-  private initSendBtn() {
+  private initGetCodeBtn() {
     // 初始化是否按钮倒计时
     const lastSendCodeTime =
       ComponentManager.Instance.getDataFromStorage("lastSendCodeTime");

@@ -31,6 +31,14 @@ export type PhoneRegisterParams = {
   /**
    * 验证码
    */
+  captcha: string;
+  /**
+   * 验证码token
+   */
+  captcha_token: string;
+  /**
+   * 短信验证码
+   */
   code: string;
   /**
    * 密码
@@ -59,10 +67,6 @@ export type PhoneLoginParams = {
    */
   password: string;
   /**
-   * 时间
-   */
-  time: number;
-  /**
    * 验证码
    */
   captcha: string;
@@ -70,6 +74,10 @@ export type PhoneLoginParams = {
    * 验证码token
    */
   captcha_token: string;
+  /**
+   * 时间
+   */
+  time: number;
   /**
    * 签名
    */

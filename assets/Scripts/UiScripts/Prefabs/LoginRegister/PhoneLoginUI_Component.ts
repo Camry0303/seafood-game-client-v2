@@ -141,15 +141,15 @@ export class PhoneLoginUI_Component extends ComponentController {
    */
   private onToRegisterBtnClick(event: Event) {
     console.log("打开注册界面UI");
-    // // 挂载注册界面
-    // ComponentManager.Instance.renderUiNode<PhoneRegisterUI_Component>(
-    //   "PhoneRegisterUI",
-    //   "Prefabs",
-    //   "LoginRegister/PhoneRegisterUI",
-    //   PhoneRegisterUI_Component,
-    //   true,
-    //   this.node,
-    // );
+    // 挂载注册账号界面
+    ComponentManager.Instance.renderUiNode<PhoneRegisterUI_Component>(
+      "PhoneRegisterUI",
+      "Prefabs",
+      "LoginRegister/PhoneRegisterUI",
+      PhoneRegisterUI_Component,
+      true,
+      this.node,
+    );
   }
 
   /**
@@ -176,6 +176,7 @@ export class PhoneLoginUI_Component extends ComponentController {
       console.log("点击了登录按钮");
       const phoneNumber = this._phoneNumberEditBox.string;
       const password = this._passwordEditBox.string;
+      const captcha = this._captchaEditBox.string;
 
       if (phoneNumber.trim() === "") {
         CommonDailogHandler.showBubbleMessage("请输入手机号！");
@@ -187,7 +188,7 @@ export class PhoneLoginUI_Component extends ComponentController {
         return;
       }
 
-      if (this._captchaEditBox.string.trim() === "") {
+      if (captcha.trim() === "") {
         CommonDailogHandler.showBubbleMessage("请输入验证码！");
         return;
       }
@@ -197,7 +198,7 @@ export class PhoneLoginUI_Component extends ComponentController {
       const params: Gateway.Requested.Authorization.PhoneLoginParams = {
         phone_number: phoneNumber,
         password: CryptoUtils.desEncryptPassword(password),
-        captcha: this._captchaEditBox.string,
+        captcha: captcha,
         captcha_token: this._captchaToken,
         time: moment().unix(),
         sign: "",
