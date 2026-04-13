@@ -9,6 +9,7 @@ import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
 import WebClipboard from "../../../Utils/WebClipboard";
 import _ from "lodash";
 import { WAITING_TYPE } from "../Common/CircleLoadingUI_Component";
+import { PlazaMainUI_Component } from "../Plaza/PlazaMainUI_Component";
 
 const { ccclass, menu } = _decorator;
 
@@ -51,7 +52,7 @@ export class MainUI_Component extends ComponentController {
    */
   private async onTestBtnClick(event: Event) {
     console.log(`onTestBtnClick`);
-    this.testCircleLoading();
+    this.testPlazaMainUI();
   }
 
   /**
@@ -196,5 +197,17 @@ export class MainUI_Component extends ComponentController {
         DialogSettingUI_Component,
       );
     console.log("挂载设置界面成功！");
+  }
+
+  /**
+   * 测试大厅主界面
+   */
+  private testPlazaMainUI() {
+    ComponentManager.Instance.renderUiNode<PlazaMainUI_Component>(
+      "PlazaMainUI",
+      "Prefabs",
+      "Plaza/PlazaMainUI",
+      PlazaMainUI_Component,
+    );
   }
 }

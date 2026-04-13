@@ -80,7 +80,7 @@ export class Game extends SingletonComponent {
         // 大厅相关预设体资源
         {
           assetType: Prefab,
-          urls: [],
+          urls: ["Plaza/PlazaMainUI", "Plaza/PlayerInfoEditUI"],
         },
         // 俱乐部相关预设体资源
         {
@@ -123,7 +123,7 @@ export class Game extends SingletonComponent {
         // 内置头像资源
         {
           assetType: ImageAsset,
-          urls: [],
+          urls: ["Common/default_avatar_01"],
         },
         // 俱乐部相关
         {
@@ -208,21 +208,21 @@ export class Game extends SingletonComponent {
     ComponentManager.Instance.destroyNodeByName("HotUpdateUI");
     console.log("热更新界面销毁成功！");
 
-    // 正式：挂载登录注册界面
-    ComponentManager.Instance.renderUiNode<LoginRegisterMainUI_Component>(
-      "LoginRegisterMainUI",
-      "Prefabs",
-      "LoginRegister/LoginRegisterMainUI",
-      LoginRegisterMainUI_Component,
-    );
+    // // 正式：挂载登录注册界面
+    // ComponentManager.Instance.renderUiNode<LoginRegisterMainUI_Component>(
+    //   "LoginRegisterMainUI",
+    //   "Prefabs",
+    //   "LoginRegister/LoginRegisterMainUI",
+    //   LoginRegisterMainUI_Component,
+    // );
 
     // NOTE - 测试：挂载主界面
-    // ComponentManager.Instance.renderUiNode<MainUI_Component>(
-    //   "MainUI",
-    //   "Prefabs",
-    //   "Entrance/MainUI",
-    //   MainUI_Component,
-    // );
+    ComponentManager.Instance.renderUiNode<MainUI_Component>(
+      "MainUI",
+      "Prefabs",
+      "Entrance/MainUI",
+      MainUI_Component,
+    );
 
     console.log("挂载登陆界面成功！");
   }

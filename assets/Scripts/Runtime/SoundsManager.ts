@@ -88,7 +88,7 @@ export class SoundsManager extends SingletonComponent {
         const audioInfo = audioMaps[index];
         const audioClip: AudioClip = ResourceManager.Instance.getAsset(
           abName,
-          audioInfo.url
+          audioInfo.url,
         );
         if (audioClip) {
           this._soundsMap[audioInfo.name] = audioClip;
@@ -104,7 +104,7 @@ export class SoundsManager extends SingletonComponent {
   public playEffect(effectName: string) {
     if (!this._effectAudioSource) {
       console.error(
-        `[SoundsManager] playEffect faild: effectAudioSource not exist!`
+        `[SoundsManager] playEffect faild: effectAudioSource not exist!`,
       );
       return;
     }
@@ -112,7 +112,7 @@ export class SoundsManager extends SingletonComponent {
       const audioClip = this._soundsMap[effectName];
       if (!audioClip) {
         console.error(
-          `[SoundsManager] playEffect faild:AudioClip<${effectName}> not exist!`
+          `[SoundsManager] playEffect faild:AudioClip<${effectName}> not exist!`,
         );
         return;
       }
@@ -127,7 +127,7 @@ export class SoundsManager extends SingletonComponent {
   public playMusic(bgmName: string) {
     if (!this._bgmAudioSource) {
       console.error(
-        `[SoundsManager] playMusic faild:bgmAudioSource not exist!`
+        `[SoundsManager] playMusic faild:bgmAudioSource not exist!`,
       );
       return;
     }
@@ -135,10 +135,11 @@ export class SoundsManager extends SingletonComponent {
       const audioClip = this._soundsMap[bgmName];
       if (!audioClip) {
         console.error(
-          `[SoundsManager] playMusic faild:AudioClip<${bgmName}> not exist!`
+          `[SoundsManager] playMusic faild:AudioClip<${bgmName}> not exist!`,
         );
         return;
       }
+      this._bgmAudioSource.stop();
       this._bgmAudioSource.clip = audioClip;
       this._bgmAudioSource.loop = true;
       this._bgmAudioSource.volume = this._bgmVolume;

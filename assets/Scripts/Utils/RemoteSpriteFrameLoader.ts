@@ -62,7 +62,7 @@ export async function getAvatarSpriteFrame(
     } else {
       return ResourceManager.Instance.getSpriteFrame(
         "Images",
-        `Common/Avatars/avatar_21`,
+        `Common/default_avatar_01`,
       );
     }
   }
