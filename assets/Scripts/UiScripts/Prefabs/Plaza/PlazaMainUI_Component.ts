@@ -4,6 +4,9 @@ import { ComponentController } from "../../../Common/ComponentController";
 import { GlobalData } from "../../../Runtime/GlobalData";
 import { InformationMarquee_Component } from "../../Components/Common/InformationMarquee_Component";
 import { PlazaPlayerInfo_Component } from "./PlazaPlayerInfo_Component";
+import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
+import { ComponentManager } from "../../../Runtime/ComponentManager";
+import { BindPhoneUI_Component } from "./BindPhoneUI_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("PlazaMainUI_Component")
@@ -51,5 +54,59 @@ export class PlazaMainUI_Component extends ComponentController {
         "MainContainer/InformationMarquee",
         InformationMarquee_Component,
       );
+
+    // 设置绑定手机按钮点击事件
+    this.setButtonClickEvent(
+      "TopBar/TopMenu/BindPhoneBtn",
+      0,
+      "onBindPhoneBtnClick",
+      this.getClassName(),
+    );
+
+    // 设置商城按钮点击事件
+    this.setButtonClickEvent(
+      "TopBar/TopMenu/ShopBtn",
+      0,
+      "onShopBtnClick",
+      this.getClassName(),
+    );
+
+    // 设置活动按钮点击事件
+    this.setButtonClickEvent(
+      "TopBar/TopMenu/ActivityBtn",
+      0,
+      "onActivityBtnClick",
+      this.getClassName(),
+    );
+  }
+
+  /**
+   * 绑定手机按钮点击事件
+   * @param event
+   */
+  private onBindPhoneBtnClick(event: Event) {
+    console.log("onBindPhoneBtnClick");
+    ComponentManager.Instance.renderUiNode<BindPhoneUI_Component>(
+      "BindPhoneUI",
+      "Prefabs",
+      "Plaza/BindPhoneUI",
+      BindPhoneUI_Component,
+    );
+  }
+
+  /**
+   * 商城按钮点击事件
+   * @param event
+   */
+  private onShopBtnClick(event: Event) {
+    CommonDailogHandler.showBubbleMessage("敬请期待");
+  }
+
+  /**
+   * 活动按钮点击事件
+   * @param event
+   */
+  private onActivityBtnClick(event: Event) {
+    console.log("onActivityBtnClick");
   }
 }

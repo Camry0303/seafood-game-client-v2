@@ -2517,7 +2517,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Activity",
+    "_name": "ActivityBtn",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -2852,7 +2852,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Shop",
+    "_name": "ShopBtn",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {

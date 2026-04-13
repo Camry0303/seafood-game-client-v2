@@ -80,7 +80,11 @@ export class Game extends SingletonComponent {
         // 大厅相关预设体资源
         {
           assetType: Prefab,
-          urls: ["Plaza/PlazaMainUI", "Plaza/PlayerInfoEditUI"],
+          urls: [
+            "Plaza/PlazaMainUI",
+            "Plaza/PlayerInfoEditUI",
+            "Plaza/BindPhoneUI",
+          ],
         },
         // 俱乐部相关预设体资源
         {
