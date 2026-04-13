@@ -8,6 +8,7 @@ import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
 import { BindPhoneUI_Component } from "./BindPhoneUI_Component";
 import { ActivityUI_Component } from "./ActivityUI_Component";
+import { PlazaSettingUI_Component } from "./PlazaSettingUI_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("PlazaMainUI_Component")
@@ -79,6 +80,14 @@ export class PlazaMainUI_Component extends ComponentController {
       "onActivityBtnClick",
       this.getClassName(),
     );
+
+    // 设置设置按钮点击事件
+    this.setButtonClickEvent(
+      "BottomBar/SettingBtn",
+      0,
+      "onSettingBtnClick",
+      this.getClassName(),
+    );
   }
 
   /**
@@ -112,6 +121,19 @@ export class PlazaMainUI_Component extends ComponentController {
       "Prefabs",
       "Plaza/ActivityUI",
       ActivityUI_Component,
+    );
+  }
+
+  /**
+   * 设置按钮点击事件
+   * @param event
+   */
+  private onSettingBtnClick(event: Event) {
+    ComponentManager.Instance.renderUiNode<PlazaSettingUI_Component>(
+      "PlazaSettingUI",
+      "Prefabs",
+      "Plaza/PlazaSettingUI",
+      PlazaSettingUI_Component,
     );
   }
 }
