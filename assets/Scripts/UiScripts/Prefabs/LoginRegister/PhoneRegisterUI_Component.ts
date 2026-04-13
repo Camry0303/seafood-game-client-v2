@@ -47,7 +47,9 @@ export class PhoneRegisterUI_Component extends ComponentController {
     this.printNodeMap();
 
     // 挂载气泡弹窗组件
-    this._bubbleWindow = this.node.addComponent(BubbleWindow);
+    this._bubbleWindow = this.node
+      .getChildByName("MainView")
+      .addComponent(BubbleWindow);
 
     // 手机号码输入框
     [, this._phoneNumberEditBox] = this.getNodeComponent(

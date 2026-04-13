@@ -26,7 +26,7 @@ export default class BubbleWindow extends Component {
         const isActive: boolean = node.active;
         this.onActiveChanged(isActive);
       },
-      this
+      this,
     );
   }
 
@@ -53,25 +53,25 @@ export default class BubbleWindow extends Component {
           opacity: 255,
         }),
         tween(this.node)
-          .to(0.05, {
+          .to(0.1, {
             scale: new math.Vec3(
               this._origin.x * 1.05,
               this._origin.y * 1.05,
-              this._origin.z * 1.05
+              this._origin.z * 1.05,
             ),
           })
-          .to(0.05, {
+          .to(0.1, {
             scale: new math.Vec3(
               this._origin.x * 1,
               this._origin.y * 1,
-              this._origin.z * 1
+              this._origin.z * 1,
             ),
           })
           .call(() => {
             // 停止当前动画
             this._openTween.stop();
             if (callback) callback();
-          })
+          }),
       );
     }
     this._openTween.start();
@@ -85,11 +85,11 @@ export default class BubbleWindow extends Component {
       this._closeTween.stop();
     } else {
       this._closeTween = tween(this.node)
-        .to(0.05, {
+        .to(0.1, {
           scale: new math.Vec3(
             this._origin.x * 0.01,
             this._origin.y * 0.01,
-            this._origin.z * 0.01
+            this._origin.z * 0.01,
           ),
         })
         .call(() => {

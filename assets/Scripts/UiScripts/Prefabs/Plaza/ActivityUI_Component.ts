@@ -32,7 +32,9 @@ export class ActivityUI_Component extends ComponentController {
     this.printNodeMap();
 
     // 挂载气泡弹窗组件
-    this._bubbleWindow = this.node.addComponent(BubbleWindow);
+    this._bubbleWindow = this.node
+      .getChildByName("MainView")
+      .addComponent(BubbleWindow);
 
     // 获取内容节点
     this._contentNode = this.getNode(

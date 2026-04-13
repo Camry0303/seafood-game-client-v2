@@ -28,9 +28,6 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 230
-      },
-      {
         "__id__": 232
       },
       {
@@ -38,10 +35,13 @@
       },
       {
         "__id__": 236
+      },
+      {
+        "__id__": 238
       }
     ],
     "_prefab": {
-      "__id__": 238
+      "__id__": 240
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -335,10 +335,13 @@
       },
       {
         "__id__": 227
+      },
+      {
+        "__id__": 229
       }
     ],
     "_prefab": {
-      "__id__": 229
+      "__id__": 231
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -5332,7 +5335,7 @@
     "fileId": "40EwWxdo9ES4767NlLLEHl"
   },
   {
-    "__type__": "cc.BlockInputEvents",
+    "__type__": "cc.UIOpacity",
     "_name": "",
     "_objFlags": 0,
     "__editorExtras__": {},
@@ -5342,6 +5345,25 @@
     "_enabled": true,
     "__prefab": {
       "__id__": 226
+    },
+    "_opacity": 255,
+    "_id": ""
+  },
+  {
+    "__type__": "cc.CompPrefabInfo",
+    "fileId": "ab2aj+pzVMSbZJRE8TVWaB"
+  },
+  {
+    "__type__": "cc.BlockInputEvents",
+    "_name": "",
+    "_objFlags": 0,
+    "__editorExtras__": {},
+    "node": {
+      "__id__": 12
+    },
+    "_enabled": true,
+    "__prefab": {
+      "__id__": 228
     },
     "_id": ""
   },
@@ -5359,7 +5381,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 228
+      "__id__": 230
     },
     "_customMaterial": null,
     "_srcBlendFactor": 2,
@@ -5417,7 +5439,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 231
+      "__id__": 233
     },
     "_contentSize": {
       "__type__": "cc.Size",
@@ -5445,7 +5467,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 233
+      "__id__": 235
     },
     "_opacity": 255,
     "_id": ""
@@ -5464,7 +5486,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 235
+      "__id__": 237
     },
     "_alignFlags": 45,
     "_target": null,
@@ -5500,7 +5522,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 237
+      "__id__": 239
     },
     "_id": ""
   },

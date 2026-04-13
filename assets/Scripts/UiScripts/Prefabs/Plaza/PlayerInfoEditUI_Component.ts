@@ -9,7 +9,7 @@ const { ccclass, menu } = _decorator;
 @ccclass("PlayerInfoEditUI_Component")
 @menu("Hidden/PlayerInfoEditUI_Component")
 export class PlayerInfoEditUI_Component extends ComponentController {
-  public bubbleWindow: BubbleWindow = null;
+  public _bubbleWindow: BubbleWindow = null;
   private _avatarSprite: Sprite = null;
   private _nicknameEditBox: EditBox = null;
   private _idLabel: Label = null;
@@ -38,7 +38,9 @@ export class PlayerInfoEditUI_Component extends ComponentController {
     this.printNodeMap();
 
     // 挂载气泡弹窗组件
-    this.bubbleWindow = this.node.addComponent(BubbleWindow);
+    this._bubbleWindow = this.node
+      .getChildByName("MainView")
+      .addComponent(BubbleWindow);
 
     // 设置关闭按钮点击事件
     this.setButtonClickEvent(
@@ -109,7 +111,7 @@ export class PlayerInfoEditUI_Component extends ComponentController {
    * 关闭弹窗
    */
   public close() {
-    this.bubbleWindow.close(() => {
+    this._bubbleWindow.close(() => {
       ComponentManager.Instance.destroyNode(this.node);
     });
   }
