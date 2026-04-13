@@ -7,6 +7,7 @@ import { PlazaPlayerInfo_Component } from "./PlazaPlayerInfo_Component";
 import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
 import { BindPhoneUI_Component } from "./BindPhoneUI_Component";
+import { ActivityUI_Component } from "./ActivityUI_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("PlazaMainUI_Component")
@@ -85,7 +86,6 @@ export class PlazaMainUI_Component extends ComponentController {
    * @param event
    */
   private onBindPhoneBtnClick(event: Event) {
-    console.log("onBindPhoneBtnClick");
     ComponentManager.Instance.renderUiNode<BindPhoneUI_Component>(
       "BindPhoneUI",
       "Prefabs",
@@ -107,6 +107,11 @@ export class PlazaMainUI_Component extends ComponentController {
    * @param event
    */
   private onActivityBtnClick(event: Event) {
-    console.log("onActivityBtnClick");
+    ComponentManager.Instance.renderUiNode<ActivityUI_Component>(
+      "ActivityUI",
+      "Prefabs",
+      "Plaza/ActivityUI",
+      ActivityUI_Component,
+    );
   }
 }

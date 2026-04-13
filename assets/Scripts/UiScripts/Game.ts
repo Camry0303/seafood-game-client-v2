@@ -84,6 +84,7 @@ export class Game extends SingletonComponent {
             "Plaza/PlazaMainUI",
             "Plaza/PlayerInfoEditUI",
             "Plaza/BindPhoneUI",
+            "Plaza/ActivityUI",
           ],
         },
         // 俱乐部相关预设体资源
