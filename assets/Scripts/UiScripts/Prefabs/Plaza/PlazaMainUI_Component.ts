@@ -9,6 +9,7 @@ import { ComponentManager } from "../../../Runtime/ComponentManager";
 import { BindPhoneUI_Component } from "./BindPhoneUI_Component";
 import { ActivityUI_Component } from "./ActivityUI_Component";
 import { PlazaSettingUI_Component } from "./PlazaSettingUI_Component";
+import { ShareUI_Component } from "./ShareUI_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("PlazaMainUI_Component")
@@ -88,6 +89,14 @@ export class PlazaMainUI_Component extends ComponentController {
       "onSettingBtnClick",
       this.getClassName(),
     );
+
+    // 设置分享按钮点击事件
+    this.setButtonClickEvent(
+      "BottomBar/ShareBtn",
+      0,
+      "onShareBtnClick",
+      this.getClassName(),
+    );
   }
 
   /**
@@ -134,6 +143,19 @@ export class PlazaMainUI_Component extends ComponentController {
       "Prefabs",
       "Plaza/PlazaSettingUI",
       PlazaSettingUI_Component,
+    );
+  }
+
+  /**
+   * 分享按钮点击事件
+   * @param event
+   */
+  private onShareBtnClick(event: Event) {
+    ComponentManager.Instance.renderUiNode<ShareUI_Component>(
+      "ShareUI",
+      "Prefabs",
+      "Plaza/ShareUI",
+      ShareUI_Component,
     );
   }
 }
