@@ -11,6 +11,7 @@ import { ActivityUI_Component } from "./ActivityUI_Component";
 import { PlazaSettingUI_Component } from "./PlazaSettingUI_Component";
 import { ShareUI_Component } from "./ShareUI_Component";
 import { InviteUI_Component } from "./InviteUI_Component";
+import { CustomerServiceUI_Component } from "./CustomerServiceUI_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("PlazaMainUI_Component")
@@ -106,6 +107,14 @@ export class PlazaMainUI_Component extends ComponentController {
       "onInviteBtnClick",
       this.getClassName(),
     );
+
+    // 设置客服按钮点击事件
+    this.setButtonClickEvent(
+      "BottomBar/CustomerServiceBtn",
+      0,
+      "onCustomerServiceBtnClick",
+      this.getClassName(),
+    );
   }
 
   /**
@@ -178,6 +187,19 @@ export class PlazaMainUI_Component extends ComponentController {
       "Prefabs",
       "Plaza/InviteUI",
       InviteUI_Component,
+    );
+  }
+
+  /**
+   * 客服按钮点击事件
+   * @param event
+   */
+  private onCustomerServiceBtnClick(event: Event) {
+    ComponentManager.Instance.renderUiNode<CustomerServiceUI_Component>(
+      "CustomerServiceUI",
+      "Prefabs",
+      "Plaza/CustomerServiceUI",
+      CustomerServiceUI_Component,
     );
   }
 }
