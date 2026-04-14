@@ -10,6 +10,7 @@ import { BindPhoneUI_Component } from "./BindPhoneUI_Component";
 import { ActivityUI_Component } from "./ActivityUI_Component";
 import { PlazaSettingUI_Component } from "./PlazaSettingUI_Component";
 import { ShareUI_Component } from "./ShareUI_Component";
+import { InviteUI_Component } from "./InviteUI_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("PlazaMainUI_Component")
@@ -97,6 +98,14 @@ export class PlazaMainUI_Component extends ComponentController {
       "onShareBtnClick",
       this.getClassName(),
     );
+
+    // 设置邀请按钮点击事件
+    this.setButtonClickEvent(
+      "BottomBar/InviteBtn",
+      0,
+      "onInviteBtnClick",
+      this.getClassName(),
+    );
   }
 
   /**
@@ -156,6 +165,19 @@ export class PlazaMainUI_Component extends ComponentController {
       "Prefabs",
       "Plaza/ShareUI",
       ShareUI_Component,
+    );
+  }
+
+  /**
+   * 邀请按钮点击事件
+   * @param event
+   */
+  private onInviteBtnClick(event: Event) {
+    ComponentManager.Instance.renderUiNode<InviteUI_Component>(
+      "InviteUI",
+      "Prefabs",
+      "Plaza/InviteUI",
+      InviteUI_Component,
     );
   }
 }

@@ -9,11 +9,13 @@ export enum WAITING_TYPE {
   WECHAT_AUTH = "正在等待微信登录授权",
   GET_LOCATION = "正在获取位置信息",
   SEND_CODE = "正在发送验证码",
-  BIND_PHONE = "正在绑定手机号",
+  BINDING_PHONE = "正在绑定手机号",
   REGIST_PHONE = "正在注册账号",
   PHONE_AUTH = "正在手机号登录授权",
   RESET_PASSWORD = "正在重置密码",
   LOGIN = "正在登录服务器",
+
+  BINDING_AGENT = "正在绑定代理", //绑定代理
 }
 
 @ccclass("CircleLoadingUI_Component")

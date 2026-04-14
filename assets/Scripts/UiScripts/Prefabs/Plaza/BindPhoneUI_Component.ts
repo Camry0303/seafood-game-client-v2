@@ -162,7 +162,7 @@ export class BindPhoneUI_Component extends ComponentController {
       }
 
       // 调用绑定接口
-      CommonDailogHandler.showCircleLoading(WAITING_TYPE.BIND_PHONE);
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.BINDING_PHONE);
       const params: Gateway.Requested.Authorization.BindPhoneParams = {
         id: GlobalData.Instance.getCurrentPlayerInfo()?.id,
         phone_number: phoneNumber,
@@ -178,11 +178,11 @@ export class BindPhoneUI_Component extends ComponentController {
         this.close();
       } else {
         CommonDailogHandler.showBubbleMessage(`绑定手机失败！${result.msg}`);
-        CommonDailogHandler.hideCircleLoading(WAITING_TYPE.BIND_PHONE);
+        CommonDailogHandler.hideCircleLoading(WAITING_TYPE.BINDING_PHONE);
       }
     } catch (error) {
       CommonDailogHandler.showBubbleMessage("接口请求错误！" + error);
-      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.BIND_PHONE);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.BINDING_PHONE);
     }
   }
 

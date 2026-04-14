@@ -1,4 +1,4 @@
-import { IN_GAME_TYPE } from "db://assets/Scripts/Enums/enums";
+import { IN_GAME_TYPE } from "db://assets/Scripts/Enums";
 
 /**
  * 玩家信息
@@ -68,6 +68,21 @@ export type Player = {
    * 是否为测试账号
    */
   is_test: number;
+
+  /**
+   * 我的代理邀请码
+   */
+  my_agent_code: number;
+
+  /**
+   * 绑定的代理邀请码
+   */
+  bind_agent_code?: number;
+
+  /**
+   * 绑定的代理昵称
+   */
+  bind_agent_nickname?: string;
 
   /**
    * 是否在线
