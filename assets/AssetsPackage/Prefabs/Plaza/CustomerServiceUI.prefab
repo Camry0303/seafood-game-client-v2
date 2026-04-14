@@ -1021,7 +1021,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 182.5,
+      "y": 177.5,
       "z": 0
     },
     "_lrot": {
@@ -1122,7 +1122,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 710,
-      "height": 365
+      "height": 355
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1688,8 +1688,8 @@
     "_string": "微信号：www888www",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
-    "_actualFontSize": 36,
-    "_fontSize": 36,
+    "_actualFontSize": 34,
+    "_fontSize": 34,
     "_fontFamily": "Arial",
     "_lineHeight": 50,
     "_overflow": 2,
@@ -1969,7 +1969,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 710,
-      "height": 365
+      "height": 355
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -2043,8 +2043,8 @@
     "_target": null,
     "_left": 0,
     "_right": 0,
-    "_top": 20,
-    "_bottom": 20,
+    "_top": 0,
+    "_bottom": 0,
     "_horizontalCenter": 0,
     "_verticalCenter": 0,
     "_isAbsLeft": true,
@@ -2091,7 +2091,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 710,
-      "height": 405
+      "height": 355
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -2183,7 +2183,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 369.5,
-      "y": 244.5,
+      "y": 219.5,
       "z": 0
     },
     "_lrot": {
@@ -2402,7 +2402,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 750,
-      "height": 500
+      "height": 450
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",

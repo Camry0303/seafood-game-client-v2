@@ -12,6 +12,7 @@ import { PlazaSettingUI_Component } from "./PlazaSettingUI_Component";
 import { ShareUI_Component } from "./ShareUI_Component";
 import { InviteUI_Component } from "./InviteUI_Component";
 import { CustomerServiceUI_Component } from "./CustomerServiceUI_Component";
+import { PlazaGameRecordUI_Component } from "./PlazaGameRecordUI_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("PlazaMainUI_Component")
@@ -115,6 +116,14 @@ export class PlazaMainUI_Component extends ComponentController {
       "onCustomerServiceBtnClick",
       this.getClassName(),
     );
+
+    // 设置游戏记录按钮点击事件
+    this.setButtonClickEvent(
+      "BottomBar/GameRecordBtn",
+      0,
+      "onGameRecordBtnClick",
+      this.getClassName(),
+    );
   }
 
   /**
@@ -200,6 +209,19 @@ export class PlazaMainUI_Component extends ComponentController {
       "Prefabs",
       "Plaza/CustomerServiceUI",
       CustomerServiceUI_Component,
+    );
+  }
+
+  /**
+   * 游戏记录按钮点击事件
+   * @param event
+   */
+  private onGameRecordBtnClick(event: Event) {
+    ComponentManager.Instance.renderUiNode<PlazaGameRecordUI_Component>(
+      "PlazaGameRecordUI",
+      "Prefabs",
+      "Plaza/PlazaGameRecordUI",
+      PlazaGameRecordUI_Component,
     );
   }
 }
