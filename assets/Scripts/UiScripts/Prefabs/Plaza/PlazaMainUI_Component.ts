@@ -85,6 +85,30 @@ export class PlazaMainUI_Component extends ComponentController {
       this.getClassName(),
     );
 
+    // 设置加入游戏卡片按钮点击事件
+    this.setButtonClickEvent(
+      "MainContainer/CardButtonPanel/JoinBtn",
+      0,
+      "onJoinGameCardBtnClick",
+      this.getClassName(),
+    );
+
+    // 设置创建房间卡片按钮点击事件
+    this.setButtonClickEvent(
+      "MainContainer/CardButtonPanel/CreateBtn",
+      0,
+      "onCreateGameCardBtnClick",
+      this.getClassName(),
+    );
+
+    // 设置俱乐部按钮点击事件
+    this.setButtonClickEvent(
+      "MainContainer/CardButtonPanel/ClubBtn",
+      0,
+      "onClubBtnClick",
+      this.getClassName(),
+    );
+
     // 设置设置按钮点击事件
     this.setButtonClickEvent(
       "BottomBar/SettingBtn",
@@ -158,6 +182,35 @@ export class PlazaMainUI_Component extends ComponentController {
       "Plaza/ActivityUI",
       ActivityUI_Component,
     );
+  }
+
+  /**
+   * 加入游戏卡片按钮点击事件
+   * @param event
+   */
+  private onJoinGameCardBtnClick(event: Event) {
+    CommonDailogHandler.showDialogMiniKeyboard(6, (value: string) => {
+      console.log("房间ID--->", value);
+      // TODO - 加入游戏
+      console.log("加入游戏");
+      CommonDailogHandler.showBubbleMessage(`加入游戏:${value}`);
+    });
+  }
+
+  /**
+   * 创建房间卡片按钮点击事件
+   * @param event
+   */
+  private onCreateGameCardBtnClick(event: Event) {
+    CommonDailogHandler.showBubbleMessage("敬请期待");
+  }
+
+  /**
+   * 俱乐部按钮点击事件
+   * @param event
+   */
+  private onClubBtnClick(event: Event) {
+    CommonDailogHandler.showBubbleMessage("敬请期待");
   }
 
   /**
