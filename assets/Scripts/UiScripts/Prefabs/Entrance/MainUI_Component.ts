@@ -52,7 +52,8 @@ export class MainUI_Component extends ComponentController {
    */
   private async onTestBtnClick(event: Event) {
     console.log(`onTestBtnClick`);
-    this.testPlazaMainUI();
+    // this.testPlazaMainUI();
+    this.testMiniKeyboard();
   }
 
   /**
@@ -99,13 +100,9 @@ export class MainUI_Component extends ComponentController {
    * 测试小键盘
    */
   private testMiniKeyboard() {
-    CommonDailogHandler.showDialogMiniKeyboard(
-      "请输入玩家ID",
-      8,
-      (value: string) => {
-        console.log("玩家ID--->", value);
-      },
-    );
+    CommonDailogHandler.showDialogMiniKeyboard(6, (value: string) => {
+      console.log("玩家ID--->", value);
+    });
   }
 
   /**

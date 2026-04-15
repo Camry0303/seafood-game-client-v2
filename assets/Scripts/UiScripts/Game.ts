@@ -64,7 +64,7 @@ export class Game extends SingletonComponent {
         // 对话框预设体资源
         {
           assetType: Prefab,
-          urls: [],
+          urls: ["Dialog/DialogMiniKeyboardUI"],
         },
         // 登录注册预设体资源
         {

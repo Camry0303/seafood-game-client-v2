@@ -2,7 +2,10 @@ import { Node } from "cc";
 import { ComponentManager } from "../Runtime/ComponentManager";
 import { UI } from "../Types/ui";
 import { BubbleMessageUI_Component } from "../UiScripts/Prefabs/Common/BubbleMessageUI_Component";
-import { CircleLoadingUI_Component, WAITING_TYPE } from "../UiScripts/Prefabs/Common/CircleLoadingUI_Component";
+import {
+  CircleLoadingUI_Component,
+  WAITING_TYPE,
+} from "../UiScripts/Prefabs/Common/CircleLoadingUI_Component";
 import { DialogConfirmUI_Component } from "../UiScripts/Prefabs/Dialog/DialogConfirmUI_Component";
 import { DialogInputUI_Component } from "../UiScripts/Prefabs/Dialog/DialogInputUI_Component";
 import { DialogMessageUI_Component } from "../UiScripts/Prefabs/Dialog/DialogMessageUI_Component";
@@ -23,7 +26,7 @@ export default class CommonDailogHandler {
         "BubbleMessageUI",
         "Prefabs",
         "Common/BubbleMessageUI",
-        BubbleMessageUI_Component
+        BubbleMessageUI_Component,
       );
     // 播放气泡弹窗动效
     uiComponent.playBubbleMessageUI(message, callback);
@@ -39,7 +42,7 @@ export default class CommonDailogHandler {
         "CircleLoadingUI",
         "Prefabs",
         "Common/CircleLoadingUI",
-        CircleLoadingUI_Component
+        CircleLoadingUI_Component,
       );
     uiComponent.show(waiting, callback);
   }
@@ -54,7 +57,7 @@ export default class CommonDailogHandler {
         "CircleLoadingUI",
         "Prefabs",
         "Common/CircleLoadingUI",
-        CircleLoadingUI_Component
+        CircleLoadingUI_Component,
       );
     uiComponent.hide(waiting, callback);
   }
@@ -70,7 +73,7 @@ export default class CommonDailogHandler {
         "DialogMessageUI",
         "Prefabs",
         "Dialog/DialogMessageUI",
-        DialogMessageUI_Component
+        DialogMessageUI_Component,
       );
     uiComponent.setMessage(message, callback);
   }
@@ -82,14 +85,14 @@ export default class CommonDailogHandler {
    */
   public static showDialogMsgCallback(
     props: UI.MsgCallbackProperty,
-    callback: Function
+    callback: Function,
   ) {
     const [, uiComponent] =
       ComponentManager.Instance.renderUiNode<DialogMsgCallbackUI_Component>(
         "DialogMsgCallbackUI",
         "Prefabs",
         "Dialog/DialogMsgCallbackUI",
-        DialogMsgCallbackUI_Component
+        DialogMsgCallbackUI_Component,
       );
     uiComponent.setMessage(props, callback);
   }
@@ -105,7 +108,7 @@ export default class CommonDailogHandler {
         "DialogInputUI",
         "Prefabs",
         "Dialog/DialogInputUI",
-        DialogInputUI_Component
+        DialogInputUI_Component,
       );
     uiComponent.setInputProperty(props, callback);
   }
@@ -119,30 +122,28 @@ export default class CommonDailogHandler {
   public static showDialogConfirm(
     message: string,
     confirmCallback: Function,
-    cancelCallback: Function
+    cancelCallback: Function,
   ) {
     const [, uiComponent] =
       ComponentManager.Instance.renderUiNode<DialogConfirmUI_Component>(
         "DialogConfirmUI",
         "Prefabs",
         "Dialog/DialogConfirmUI",
-        DialogConfirmUI_Component
+        DialogConfirmUI_Component,
       );
     uiComponent.setDialogConfirm(message, confirmCallback, cancelCallback);
   }
 
   /**
    * 显示小键盘对话框
-   * @param message
    * @param numDigits
    * @param callback
+   * @param parentNode
    */
   public static showDialogMiniKeyboard(
-    message: string,
-    numDigits: 2 | 4 | 6 | 8,
+    numDigits: 2 | 4 | 6,
     callback: Function,
-    isConfirm: boolean = false,
-    parentNode?: Node
+    parentNode?: Node,
   ) {
     const [, uiComponent] =
       ComponentManager.Instance.renderUiNode<DialogMiniKeyboardUI_Component>(
@@ -151,8 +152,12 @@ export default class CommonDailogHandler {
         "Dialog/DialogMiniKeyboardUI",
         DialogMiniKeyboardUI_Component,
         true,
-        parentNode ? parentNode : null
+        parentNode ? parentNode : null,
       );
-    uiComponent.setDialogMiniKeyboard(message, numDigits, callback, isConfirm);
+    uiComponent.setDialogMiniKeyboard(
+      "InvitePlayerToggle",
+      numDigits,
+      callback,
+    );
   }
 }

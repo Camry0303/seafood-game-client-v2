@@ -1,4 +1,4 @@
-import { _decorator, Event, Node, Label } from "cc";
+import { _decorator, Event, Node, Label, ToggleContainer, Toggle } from "cc";
 import BubbleWindow from "../../../Common/BubbleWindow";
 import { ComponentController } from "../../../Common/ComponentController";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
@@ -10,19 +10,15 @@ const { ccclass, menu } = _decorator;
 export class DialogMiniKeyboardUI_Component extends ComponentController {
   public bubbleWindow: BubbleWindow = null;
 
-  private _messageLabelNode: Node = null;
+  private _titleToggleContainer: ToggleContainer = null;
 
-  private _messageLabel: Label = null;
-
-  private _valueLabelNode: Node = null;
-
-  private _valueLabel: Label = null;
+  private _valueNode: Node = null;
 
   private _confirmCallback: Function = null;
 
   private _numDigits: number = 0;
 
-  private _isConfirm: boolean = false;
+  private _valueString: string = "";
 
   start() {}
 
@@ -34,20 +30,13 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
 
     // 挂载气泡弹窗组件
     this.bubbleWindow = this.node.addComponent(BubbleWindow);
-    const [messageLabelNode, messageLabel] = this.getNodeComponent(
-      "MainView/Content/Layout/Tips",
-      Label,
+
+    [, this._titleToggleContainer] = this.getNodeComponent(
+      "MainView/Title",
+      ToggleContainer,
     );
 
-    const [valueLabelNode, valueLabel] = this.getNodeComponent(
-      "MainView/Content/Layout/Value/Label",
-      Label,
-    );
-    this._valueLabelNode = valueLabelNode;
-    this._valueLabel = valueLabel;
-
-    this._messageLabelNode = messageLabelNode;
-    this._messageLabel = messageLabel;
+    this._valueNode = this.getNode("MainView/Content/Layout/Value");
 
     this.initButtons();
   }
@@ -87,14 +76,6 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
       this.getClassName(),
     );
 
-    // 设置删除按钮点击事件
-    this.setButtonClickEvent(
-      "MainView/Content/Layout/Keyboard/DeleteBtn",
-      0,
-      "onDeleteBtnClick",
-      this.getClassName(),
-    );
-
     // 设置确认按钮点击事件
     this.setButtonClickEvent(
       "MainView/Content/Layout/Keyboard/ConfirmBtn",
@@ -119,25 +100,18 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
    * @param callback
    */
   public setDialogMiniKeyboard(
-    message: string,
-    numDigits: 2 | 4 | 6 | 8,
+    title: "JoinRoomToggle" | "InvitePlayerToggle",
+    numDigits: 2 | 4 | 6,
     callback: Function,
-    isConfirm: boolean = false,
   ) {
-    this._messageLabel.string = message;
     this._numDigits = numDigits;
     this._confirmCallback = callback;
-    this._isConfirm = isConfirm;
-
-    const ConfirmBtn = this.getNode(
-      "MainView/Content/Layout/Keyboard/ConfirmBtn",
+    const titleNode = this._titleToggleContainer.node.children.find(
+      (node) => node.name === title,
     );
-    ConfirmBtn && (ConfirmBtn.active = isConfirm);
-
-    const DeleteBtn = this.getNode(
-      "MainView/Content/Layout/Keyboard/DeleteBtn",
-    );
-    DeleteBtn && (DeleteBtn.active = !isConfirm);
+    const titleToggle = titleNode.getComponent(Toggle);
+    titleToggle.isChecked = true;
+    this._titleToggleContainer.notifyToggleCheck(titleToggle);
   }
 
   /**
@@ -146,13 +120,24 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
    * @param num
    */
   private onNumBtnClick(event: Event, num: number) {
-    const valueArr = this._valueLabel.string.split("");
-    valueArr.push(num.toString());
-    this._valueLabel.string = valueArr.join("");
-    if (!this._isConfirm && valueArr.length >= this._numDigits) {
-      this.onInputFinish();
+    // 限制输入长度
+    if (this._valueString.length >= this._numDigits) {
       return;
     }
+    const valueArr = this._valueString.split("");
+    valueArr.push(num.toString());
+    this._valueString = valueArr.join("");
+
+    const valueDigitNodes = this._valueNode.children;
+
+    valueDigitNodes.forEach((node, index) => {
+      if (index >= valueArr.length) {
+        node.getChildByName("Label").getComponent(Label).string = "";
+        return;
+      }
+      node.getChildByName("Label").getComponent(Label).string =
+        valueArr[index] || "";
+    });
   }
 
   /**
@@ -160,24 +145,18 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
    * @param event
    */
   private onClearBtnClick(event: Event) {
-    this._valueLabel.string = "";
-  }
-
-  /**
-   * 删除按钮点击事件
-   * @param event
-   */
-  private onDeleteBtnClick(event: Event) {
-    const valueArr = this._valueLabel.string.split("");
-    valueArr.pop();
-    this._valueLabel.string = valueArr.join("");
+    this._valueString = "";
+    const valueDigitNodes = this._valueNode.children;
+    valueDigitNodes.forEach((node) => {
+      node.getChildByName("Label").getComponent(Label).string = "";
+    });
   }
 
   /**
    * 完成输入
    */
   private onInputFinish() {
-    const value = this._valueLabel.string;
+    const value = this._valueString;
     if (!value.trim()) {
       CommonDailogHandler.showBubbleMessage("请输入有效数字！");
       return;
