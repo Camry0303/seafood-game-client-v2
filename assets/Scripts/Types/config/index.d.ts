@@ -21,4 +21,13 @@ export namespace Config {
       url: string;
     }[];
   };
+
+  /**
+   * 分数限制配置
+   */
+  export type ScoreLimitOption = {
+    id: number;
+    label: string;
+    value: string;
+  };
 }

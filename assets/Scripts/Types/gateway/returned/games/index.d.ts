@@ -1,5 +1,3 @@
-import * as ReturnedChaoShanMahjongModule from "./chaoshanMahjong";
-import * as ReturnedJKHoldemModule from "./jkHoldem";
+import * as ReturnedDicesModule from "./dices";
 
-export import ChaoShanMahjong = ReturnedChaoShanMahjongModule;
-export import JKHoldem = ReturnedJKHoldemModule;
+export import Dices = ReturnedDicesModule;

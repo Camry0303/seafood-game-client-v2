@@ -13,6 +13,7 @@ import { ShareUI_Component } from "./ShareUI_Component";
 import { InviteUI_Component } from "./InviteUI_Component";
 import { CustomerServiceUI_Component } from "./CustomerServiceUI_Component";
 import { PlazaGameRecordUI_Component } from "./PlazaGameRecordUI_Component";
+import { GameSettingUI_Component } from "../GameSetting/GameSettingUI_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("PlazaMainUI_Component")
@@ -202,7 +203,14 @@ export class PlazaMainUI_Component extends ComponentController {
    * @param event
    */
   private onCreateGameCardBtnClick(event: Event) {
-    CommonDailogHandler.showBubbleMessage("敬请期待");
+    const [node, component] =
+      ComponentManager.Instance.renderUiNode<GameSettingUI_Component>(
+        "GameSettnigUI",
+        "Prefabs",
+        "GameSetting/GameSettingUI",
+        GameSettingUI_Component,
+      );
+    component.setData("PUBLIC", GlobalData.Instance.defaultDicesConfig);
   }
 
   /**

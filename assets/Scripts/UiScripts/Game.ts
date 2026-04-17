@@ -105,7 +105,7 @@ export class Game extends SingletonComponent {
         // 游戏设置相关预设体资源
         {
           assetType: Prefab,
-          urls: [],
+          urls: ["GameSetting/GameSettingUI"],
         },
         // 潮汕麻将游戏房间相关预设体资源
         {

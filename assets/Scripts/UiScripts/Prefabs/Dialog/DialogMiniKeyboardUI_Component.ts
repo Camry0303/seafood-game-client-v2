@@ -8,7 +8,7 @@ const { ccclass, menu } = _decorator;
 @ccclass("DialogMiniKeyboardUI_Component")
 @menu("Hidden/DialogMiniKeyboardUI_Component")
 export class DialogMiniKeyboardUI_Component extends ComponentController {
-  public bubbleWindow: BubbleWindow = null;
+  public _bubbleWindow: BubbleWindow = null;
 
   private _titleToggleContainer: ToggleContainer = null;
 
@@ -29,7 +29,9 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
     this.printNodeMap();
 
     // 挂载气泡弹窗组件
-    this.bubbleWindow = this.node.addComponent(BubbleWindow);
+    this._bubbleWindow = this.node
+      .getChildByName("MainView")
+      .addComponent(BubbleWindow);
 
     [, this._titleToggleContainer] = this.getNodeComponent(
       "MainView/Title",
@@ -89,7 +91,7 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
    * 关闭弹窗
    */
   public close() {
-    this.bubbleWindow.close(() => {
+    this._bubbleWindow.close(() => {
       ComponentManager.Instance.destroyNode(this.node);
     });
   }

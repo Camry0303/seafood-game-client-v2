@@ -1,10 +1,7 @@
 import moment from "moment";
 import Singleton from "../Common/Singleton";
 import { Common, Gateway } from "../Types/typing";
-// import { PlazaMainUI_Component } from "../UiScripts/Prefabs/Plaza/PlazaMain/PlazaMainUI_Component";
-import { ComponentManager } from "./ComponentManager";
 import { game, sys } from "cc";
-import { ClubChaoShanMahjongGameRoomData } from "../Types/gateway/returned/games/chaoshanMahjong";
 import CommonDailogHandler from "../Utils/CommonDailogHandler";
 import { WAITING_TYPE } from "../UiScripts/Prefabs/Common/CircleLoadingUI_Component";
 
@@ -275,16 +272,18 @@ export class GlobalData extends Singleton {
   //#region 游戏相关
 
   /**
+   * TODO - 申明游戏信息类型
    * 当前游戏相关
    */
-  private _currentGameInfo: Gateway.Returned.Common.CurrentGameInfo<ClubChaoShanMahjongGameRoomData>;
+  private _currentGameInfo: Gateway.Returned.Common.CurrentGameInfo<any>;
 
   /**
+   * TODO - 申明游戏信息类型
    * 设置当前游戏信息
    * @param currentGameInfo
    */
   public setCurrentGameInfo<T>(
-    currentGameInfo: Gateway.Returned.Common.CurrentGameInfo<ClubChaoShanMahjongGameRoomData> | null,
+    currentGameInfo: Gateway.Returned.Common.CurrentGameInfo<any> | null,
   ) {
     this._currentGameInfo = currentGameInfo;
   }
@@ -306,184 +305,81 @@ export class GlobalData extends Singleton {
   //#region 默认游戏配置相关
 
   /**
-   * 默认激K游戏配置
+   * 默认骰子游戏配置
    */
-  private _defaultJKHoldemConfig: Gateway.Returned.Games.JKHoldem.JKHoldemGameConfig =
-    {
-      type: 0,
-      max_player: 8,
-      score_limit_mode: 0,
-      total_game_round: 10,
-      hidden_cards: 1,
-      base_ante: 1,
-      max_call: 1,
-      wild_aces_mode: 0,
-      double_call_at_last: 0,
-      straight_flush_call: 0,
-      can_all_in: 0,
-      can_pass: 0,
-      can_check_hidden_cards: 0,
-      raise_times: 0,
-      raise_times_at_last: 0,
-      spectate_mode: 0,
-      wait_timeout: 10,
-      is_timeout_pass: 0,
-      allow_chat: 0,
-      anti_cheat: 0,
-      location_min_distance: 50,
-    };
+  private _defaultDicesConfig: Gateway.Returned.Games.Dices.DicesGameConfig = {
+    dice_num: 2,
+    score_mode: 1,
+    total_game_rounds: 5,
+    max_players: 10,
+    score_limit: "20000,8000,4000",
+    move_limit: 0,
+  };
   /**
-   * 默认激K游戏配置
+   * 默认骰子游戏配置
    */
-  public get defaultJKHoldemConfig() {
+  public get defaultDicesConfig() {
     // 先从本地存储中获取
-    const localDataString = this.getDataFromStorage(`defaultJKHoldemConfig`);
+    const localDataString = this.getDataFromStorage(`defaultDicesConfig`);
     if (localDataString) {
-      this._defaultJKHoldemConfig = JSON.parse(
+      this._defaultDicesConfig = JSON.parse(
         localDataString,
-      ) as Gateway.Returned.Games.JKHoldem.JKHoldemGameConfig;
+      ) as Gateway.Returned.Games.Dices.DicesGameConfig;
     }
-    return this._defaultJKHoldemConfig;
+    return this._defaultDicesConfig;
   }
   /**
-   * 默认激K游戏配置
+   * 默认骰子游戏配置
    */
-  public set defaultJKHoldemConfig(
-    value: Gateway.Returned.Games.JKHoldem.JKHoldemGameConfig,
+  public set defaultDicesConfig(
+    value: Gateway.Returned.Games.Dices.DicesGameConfig,
   ) {
-    this._defaultJKHoldemConfig = value;
+    this._defaultDicesConfig = value;
     // 保存到本地存储
-    this.setDataToStorage(`defaultJKHoldemConfig`, this._defaultJKHoldemConfig);
+    this.setDataToStorage(`defaultDicesConfig`, this._defaultDicesConfig);
   }
 
   /**
-   * 默认潮汕麻将配置
+   * 默认俱乐部骰子游戏配置
    */
-  private _defaultChaoShanMahjongConfig: Gateway.Returned.Games.ChaoShanMahjong.ChaoShanMahjongGameConfig =
+  private _defaultClubDicesConfig: Gateway.Returned.Games.Dices.DicesGameConfig =
     {
-      total_game_round: 4,
-      max_player: 4,
-      base_score: 1,
-      start_dealer: 1,
-      dealer_rotation: 1,
-      dealer_following: 1,
-      winning_streak_mode: 0,
-      tiles_pool_type: 0,
-      no_caiming_pung_after_pass: 1,
-      no_caiming_kong_after_pass: 1,
-      drawn_game_settle_kong: 1,
-      can_chow_win: 0,
-      chow_win_cannot_pass: 0,
-      pass_chow_win_rules: 0,
-      can_rob_kong_win: 1,
-      rob_kong_win_multiple: 2,
-      kong_robbed_lose_pay_all: 1,
-      can_kong_draw_win: 1,
-      can_kong_draw_win_multiple: 2,
-      give_kong_lose_pay_all: 1,
-      max_lose_score: 0,
-      joker_mode: 0,
-      no_joker_win_double: 1,
-      four_jokers_win: 0,
-      four_jokers_win_double: 0,
-      horse_type: 1,
-      horse_number: 2,
-      horse_use_base_score: 0,
-      horse_settle_kong_score: 1,
-      horse_location: 0,
-      horse_pool: 0,
-      max_muliple: 0,
-      can_chicken_hand: 1,
-      chicken_hand_multiple: 1,
-      can_all_chows_hand: 1,
-      all_chows_hand_multiple: 1,
-      can_all_pungs_hand: 1,
-      all_pungs_hand_multiple: 2,
-      can_mixed_one_suit: 1,
-      mixed_one_suit_multiple: 2,
-      can_seven_pairs: 1,
-      seven_pairs_multiple: 2,
-      can_pure_one_suit: 1,
-      pure_one_suit_multiple: 4,
-      can_mixed_pung: 1,
-      mixed_pung_multiple: 4,
-      can_great_seven_pairs: 1,
-      great_seven_pairs_multiple: 4,
-      can_little_three_dragons: 1,
-      little_three_dragons_multiple: 4,
-      can_little_four_winds: 1,
-      little_four_winds_multiple: 8,
-      can_pure_pung: 1,
-      pure_pung_multiple: 8,
-      can_mixed_terminals: 1,
-      mixed_terminals_multiple: 4,
-      can_mixed_seven_pairs: 0,
-      mixed_seven_pairs_multiple: 4,
-      can_pure_seven_pairs: 0,
-      pure_seven_pairs_multiple: 8,
-      can_big_three_dragons: 1,
-      big_three_dragons_multiple: 8,
-      can_big_four_winds: 1,
-      big_four_winds_multiple: 16,
-      can_all_honors: 1,
-      all_honors_multiple: 16,
-      can_pure_terminals: 1,
-      pure_terminals_multiple: 16,
-      can_heavenly_win: 1,
-      heavenly_win_multiple: 16,
-      can_earthly_win: 1,
-      earthly_win_multiple: 16,
-      can_thirteen_orphans: 1,
-      thirteen_orphans_multiple: 16,
-      can_double_great_seven_pairs: 1,
-      double_great_seven_pairs_multiple: 8,
-      can_triple_great_seven_pairs: 1,
-      triple_great_seven_pairs_multiple: 16,
-      can_eighteen_arhats: 1,
-      eighteen_arhats_multiple: 16,
-      wait_timeout: 10,
-      spectate_mode: 0,
-      allow_chat: 0,
-      anti_cheat: 4,
-      location_min_distance: 50,
+      dice_num: 2,
+      score_mode: 1,
+      total_game_rounds: 5,
+      max_players: 10,
+      score_limit: "1000,400,200",
+      move_limit: 0,
     };
   /**
-   * 默认潮汕麻将配置
+   * 默认俱乐部骰子游戏配置
    */
-  public get defaultChaoShanMahjongConfig() {
+  public get defaultClubDicesConfig() {
     // 先从本地存储中获取
-    const localDataString = this.getDataFromStorage(
-      `defaultChaoShanMahjongConfig`,
-    );
+    const localDataString = this.getDataFromStorage(`defaultClubDicesConfig`);
     if (localDataString) {
-      this._defaultChaoShanMahjongConfig = JSON.parse(
+      this._defaultClubDicesConfig = JSON.parse(
         localDataString,
-      ) as Gateway.Returned.Games.ChaoShanMahjong.ChaoShanMahjongGameConfig;
+      ) as Gateway.Returned.Games.Dices.DicesGameConfig;
     }
-    return this._defaultChaoShanMahjongConfig;
+    return this._defaultClubDicesConfig;
   }
   /**
-   * 默认潮汕麻将配置
+   * 默认俱乐部骰子游戏配置
    */
-  public set defaultChaoShanMahjongConfig(
-    value: Gateway.Returned.Games.ChaoShanMahjong.ChaoShanMahjongGameConfig,
+  public set defaultClubDicesConfig(
+    value: Gateway.Returned.Games.Dices.DicesGameConfig,
   ) {
-    this._defaultChaoShanMahjongConfig = value;
+    this._defaultClubDicesConfig = value;
     // 保存到本地存储
     this.setDataToStorage(
-      `defaultChaoShanMahjongConfig`,
-      this._defaultChaoShanMahjongConfig,
+      `defaultClubDicesConfig`,
+      this._defaultClubDicesConfig,
     );
   }
-
   //#endregion
 
   //#region Socket事件标记
-
-  /**
-   * 游戏设置事件返回目标
-   */
-  public clubGameConfigReturnedTarget: "ToSetting" | "ToCreateRoom";
 
   //#endregion
 }

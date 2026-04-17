@@ -1,5 +1,3 @@
-import * as ChaoShanMahjongModule from "./chaoshanMahjong";
-import * as JKHoldemModule from "./jkHoldem";
+import * as DicesModule from "./dices";
 
-export import ChaoShanMahjong = ChaoShanMahjongModule;
-export import JKHoldem = JKHoldemModule;
+export import Dices = DicesModule;
