@@ -14,6 +14,7 @@ import { InviteUI_Component } from "./InviteUI_Component";
 import { CustomerServiceUI_Component } from "./CustomerServiceUI_Component";
 import { PlazaGameRecordUI_Component } from "./PlazaGameRecordUI_Component";
 import { GameSettingUI_Component } from "../GameSetting/GameSettingUI_Component";
+import { ClubMainUI_Component } from "../Club/ClubMainUI_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("PlazaMainUI_Component")
@@ -218,7 +219,12 @@ export class PlazaMainUI_Component extends ComponentController {
    * @param event
    */
   private onClubBtnClick(event: Event) {
-    CommonDailogHandler.showBubbleMessage("敬请期待");
+    ComponentManager.Instance.renderUiNode<ClubMainUI_Component>(
+      "ClubMainUI",
+      "Prefabs",
+      "Club/ClubMainUI",
+      ClubMainUI_Component,
+    );
   }
 
   /**

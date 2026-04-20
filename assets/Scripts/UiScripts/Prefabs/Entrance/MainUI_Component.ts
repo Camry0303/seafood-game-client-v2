@@ -10,6 +10,7 @@ import WebClipboard from "../../../Utils/WebClipboard";
 import _ from "lodash";
 import { WAITING_TYPE } from "../Common/CircleLoadingUI_Component";
 import { PlazaMainUI_Component } from "../Plaza/PlazaMainUI_Component";
+import { ClubMainUI_Component } from "../Club/ClubMainUI_Component";
 
 const { ccclass, menu } = _decorator;
 
@@ -205,6 +206,18 @@ export class MainUI_Component extends ComponentController {
       "Prefabs",
       "Plaza/PlazaMainUI",
       PlazaMainUI_Component,
+    );
+  }
+
+  /**
+   * 测试俱乐部主界面
+   */
+  private testClubMainUI() {
+    ComponentManager.Instance.renderUiNode<ClubMainUI_Component>(
+      "ClubMainUI",
+      "Prefabs",
+      "Club/ClubMainUI",
+      ClubMainUI_Component,
     );
   }
 }
