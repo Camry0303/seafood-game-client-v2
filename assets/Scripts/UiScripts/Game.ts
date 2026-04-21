@@ -100,7 +100,7 @@ export class Game extends SingletonComponent {
         // 俱乐部组件预设体资源
         {
           assetType: Prefab,
-          urls: ["Club/ClubMainUI"],
+          urls: ["Club/ClubMainUI", "Club/ClubSettingUI"],
         },
         // 游戏设置相关预设体资源
         {

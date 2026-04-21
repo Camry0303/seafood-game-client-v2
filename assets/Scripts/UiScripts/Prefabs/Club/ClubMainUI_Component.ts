@@ -16,6 +16,7 @@ import { InformationMarquee_Component } from "../../Components/Common/Informatio
 import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
 import { GameSettingUI_Component } from "../GameSetting/GameSettingUI_Component";
 import { GlobalData } from "../../../Runtime/GlobalData";
+import { ClubSettingUI_Component } from "./ClubSettingUI_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("ClubMainUI_Component")
@@ -267,7 +268,12 @@ export class ClubMainUI_Component extends ComponentController {
    */
   private onClubSettingBtnClick(event: Event) {
     // TODO - 俱乐部设置
-    console.log(`onClubSettingBtnClick--->`);
+    ComponentManager.Instance.renderUiNode<ClubSettingUI_Component>(
+      "ClubSettingUI",
+      "Prefabs",
+      "Club/ClubSettingUI",
+      ClubSettingUI_Component,
+    );
   }
 
   /**
