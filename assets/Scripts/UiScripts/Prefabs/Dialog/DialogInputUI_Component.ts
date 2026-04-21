@@ -8,6 +8,7 @@ import {
   Overflow,
   HorizontalTextAlignment,
   VerticalTextAlignment,
+  ToggleContainer,
 } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import BubbleWindow from "../../../Common/BubbleWindow";
@@ -20,13 +21,11 @@ const { ccclass, menu } = _decorator;
 @ccclass("DialogInputUI_Component")
 @menu("Hidden/DialogInputUI_Component")
 export class DialogInputUI_Component extends ComponentController {
-  public bubbleWindow: BubbleWindow = null;
+  public _bubbleWindow: BubbleWindow = null;
+
+  private _titleToggleContainer: ToggleContainer = null;
 
   private _callbackFunction: Function = null;
-
-  private _tipsNode: Node = null;
-
-  private _tipsLabel: Label = null;
 
   private _editBoxNode: Node = null;
 
@@ -52,13 +51,26 @@ export class DialogInputUI_Component extends ComponentController {
     this.printNodeMap();
 
     // 挂载气泡弹窗组件
-    this.bubbleWindow = this.node.addComponent(BubbleWindow);
+    this._bubbleWindow = this.node.addComponent(BubbleWindow);
+
+    [, this._titleToggleContainer] = this.getNodeComponent(
+      "MainView/Title",
+      ToggleContainer,
+    );
 
     // 设置确定按钮事件
     this.setButtonClickEvent(
-      "MainView/Content/ScrollView/view/content/LayoutContent/ButtonPanel/ConfirmBtn",
+      "MainView/Content/ScrollView/view/content/Form/ButtonPanel/OKBtn",
       0,
       "onConfirmBtnClick",
+      this.getClassName(),
+    );
+
+    // 设置取消按钮事件
+    this.setButtonClickEvent(
+      "MainView/Content/ScrollView/view/content/Form/ButtonPanel/CancelBtn",
+      0,
+      "close",
       this.getClassName(),
     );
 
@@ -73,36 +85,26 @@ export class DialogInputUI_Component extends ComponentController {
     // 设置蒙版关闭按钮点击事件
     this.setButtonClickEvent("MaskNode", 0, "close", this.getClassName());
 
-    const [tipsNode, tipsLabel] = this.getNodeComponent(
-      "MainView/Content/ScrollView/view/content/LayoutContent/Tips",
-      Label,
-    );
-    this._tipsNode = tipsNode;
-    this._tipsLabel = tipsLabel;
-
-    const [editBoxNode, editBoxComponent] = this.getNodeComponent(
-      "MainView/Content/ScrollView/view/content/LayoutContent/InputPanel/EditBox",
+    // 获取输入文本组件
+    [this._editBoxNode, this._editBoxComponent] = this.getNodeComponent(
+      "MainView/Content/ScrollView/view/content/Form/Input/Value",
       EditBox,
     );
-    this._editBoxNode = editBoxNode;
-    this._editBoxComponent = editBoxComponent;
 
-    const [labelNode, labelComponent] = this.getNodeComponent(
-      "MainView/Content/ScrollView/view/content/LayoutContent/InputPanel/EditBox/TEXT_LABEL",
+    // 获取显示文本组件
+    [this._labelNode, this._labelComponent] = this.getNodeComponent(
+      "MainView/Content/ScrollView/view/content/Form/Input/Value/TEXT_LABEL",
       Label,
     );
-    this._labelNode = labelNode;
-    this._labelComponent = labelComponent;
 
-    const [limitNode, limitLabel] = this.getNodeComponent(
-      "MainView/Content/ScrollView/view/content/LayoutContent/InputPanel/EditBox/LIMIT_LABEL",
+    // 获取限制文本组件
+    [this._limitNode, this._limitLabel] = this.getNodeComponent(
+      "MainView/Content/ScrollView/view/content/Form/Input/Value/LIMIT_LABEL",
       Label,
     );
-    this._limitNode = limitNode;
-    this._limitLabel = limitLabel;
 
     // 监听输入框文本变化
-    editBoxComponent.textChanged[0] = NewEventHandler(
+    this._editBoxComponent.textChanged[0] = NewEventHandler(
       this.node,
       this.getClassName(),
       "onTextInputChanged",
@@ -113,7 +115,7 @@ export class DialogInputUI_Component extends ComponentController {
    * 关闭弹窗
    */
   public close() {
-    this.bubbleWindow.close(() => {
+    this._bubbleWindow.close(() => {
       ComponentManager.Instance.destroyNode(this.node);
     });
   }
@@ -126,7 +128,7 @@ export class DialogInputUI_Component extends ComponentController {
   public setInputProperty(props: UI.InputProperty, callback: Function) {
     // 设置回调函数
     this._callbackFunction = callback;
-    this._tipsLabel.string = props.tips;
+
     this._limitNode.active = props.showLimitInfo;
     this._limitLabel.string = `${props.defaultValue?.length || 0}/${
       props.maxLength
@@ -137,7 +139,7 @@ export class DialogInputUI_Component extends ComponentController {
     this._editBoxComponent.string = props.defaultValue || "";
     this._labelComponent.overflow =
       props.overFlow === undefined ? Overflow.SHRINK : props.overFlow;
-    this._labelComponent.horizontalAlign = HorizontalTextAlignment.CENTER;
+    this._labelComponent.horizontalAlign = HorizontalTextAlignment.LEFT;
     this._labelComponent.verticalAlign = VerticalTextAlignment.CENTER;
 
     this._isRequired = props.isRequired ? true : false;

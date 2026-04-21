@@ -102,7 +102,11 @@ export default class CommonDailogHandler {
    * @param props
    * @param callback
    */
-  public static showDialogInput(props: UI.InputProperty, callback?: Function) {
+  public static showDialogInput(
+    title: "CreateClubToggle",
+    props: UI.InputProperty,
+    callback?: Function,
+  ) {
     const [, uiComponent] =
       ComponentManager.Instance.renderUiNode<DialogInputUI_Component>(
         "DialogInputUI",
@@ -141,6 +145,7 @@ export default class CommonDailogHandler {
    * @param parentNode
    */
   public static showDialogMiniKeyboard(
+    title: "JoinRoomToggle" | "InvitePlayerToggle" | "JoinClubToggle",
     numDigits: 2 | 4 | 6,
     callback: Function,
     parentNode?: Node,
@@ -154,10 +159,6 @@ export default class CommonDailogHandler {
         true,
         parentNode ? parentNode : null,
       );
-    uiComponent.setDialogMiniKeyboard(
-      "InvitePlayerToggle",
-      numDigits,
-      callback,
-    );
+    uiComponent.setDialogMiniKeyboard(title, numDigits, callback);
   }
 }

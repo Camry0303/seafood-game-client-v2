@@ -7,10 +7,6 @@ export namespace UI {
   /**输入属性 */
   export type InputProperty = {
     /**
-     * 提示内容
-     */
-    tips: string;
-    /**
      * 是否允许空值
      */
     isRequired: boolean;

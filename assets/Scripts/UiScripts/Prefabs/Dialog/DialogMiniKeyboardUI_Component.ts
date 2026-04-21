@@ -102,7 +102,7 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
    * @param callback
    */
   public setDialogMiniKeyboard(
-    title: "JoinRoomToggle" | "InvitePlayerToggle",
+    title: "JoinRoomToggle" | "InvitePlayerToggle" | "JoinClubToggle",
     numDigits: 2 | 4 | 6,
     callback: Function,
   ) {

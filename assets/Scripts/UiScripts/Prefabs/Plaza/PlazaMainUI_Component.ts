@@ -191,12 +191,16 @@ export class PlazaMainUI_Component extends ComponentController {
    * @param event
    */
   private onJoinGameCardBtnClick(event: Event) {
-    CommonDailogHandler.showDialogMiniKeyboard(6, (value: string) => {
-      console.log("房间ID--->", value);
-      // TODO - 加入游戏
-      console.log("加入游戏");
-      CommonDailogHandler.showBubbleMessage(`加入游戏:${value}`);
-    });
+    CommonDailogHandler.showDialogMiniKeyboard(
+      "JoinRoomToggle",
+      6,
+      (value: string) => {
+        console.log("房间ID--->", value);
+        // TODO - 加入游戏
+        console.log("加入游戏");
+        CommonDailogHandler.showBubbleMessage(`加入游戏:${value}`);
+      },
+    );
   }
 
   /**

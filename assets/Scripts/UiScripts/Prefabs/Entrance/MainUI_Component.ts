@@ -55,6 +55,7 @@ export class MainUI_Component extends ComponentController {
     console.log(`onTestBtnClick`);
     this.testPlazaMainUI();
     // this.testMiniKeyboard();
+    // this.testDialogInput();
   }
 
   /**
@@ -101,9 +102,13 @@ export class MainUI_Component extends ComponentController {
    * 测试小键盘
    */
   private testMiniKeyboard() {
-    CommonDailogHandler.showDialogMiniKeyboard(6, (value: string) => {
-      console.log("玩家ID--->", value);
-    });
+    CommonDailogHandler.showDialogMiniKeyboard(
+      "InvitePlayerToggle",
+      6,
+      (value: string) => {
+        console.log("玩家ID--->", value);
+      },
+    );
   }
 
   /**
@@ -132,12 +137,12 @@ export class MainUI_Component extends ComponentController {
    */
   private testDialogInput() {
     CommonDailogHandler.showDialogInput(
+      "CreateClubToggle",
       {
-        tips: "请输入你的微信号！",
         isRequired: true,
         maxLength: 8,
-        placeholder: "请输入！",
-        height: 50,
+        placeholder: "输入俱乐部名称",
+        height: 60,
         defaultValue: "",
         showLimitInfo: true,
       },
