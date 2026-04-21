@@ -227,9 +227,8 @@ export class ClubMainUI_Component extends ComponentController {
    * @param event
    */
   private onJoinClubBtnClick(event: Event) {
-    console.log(`onJoinClubBtnClick--->`);
     CommonDailogHandler.showDialogMiniKeyboard(
-      "InvitePlayerToggle",
+      "JoinClubToggle",
       6,
       (value: string) => {
         console.log("俱乐部ID--->", value);
@@ -253,7 +252,7 @@ export class ClubMainUI_Component extends ComponentController {
         placeholder: "输入俱乐部名称",
         height: 60,
         defaultValue: "",
-        showLimitInfo: true,
+        showLimitInfo: false,
       },
       (inputValue: string) => {
         // TODO - 创建俱乐部

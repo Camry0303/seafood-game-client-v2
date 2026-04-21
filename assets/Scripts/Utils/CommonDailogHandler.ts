@@ -145,7 +145,12 @@ export default class CommonDailogHandler {
    * @param parentNode
    */
   public static showDialogMiniKeyboard(
-    title: "JoinRoomToggle" | "InvitePlayerToggle" | "JoinClubToggle",
+    title:
+      | "JoinRoomToggle"
+      | "InvitePlayerToggle"
+      | "JoinClubToggle"
+      | "AddScoreToggle"
+      | "SubScoreToggle",
     numDigits: 2 | 4 | 6,
     callback: Function,
     parentNode?: Node,
