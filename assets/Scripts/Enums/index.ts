@@ -114,8 +114,9 @@ export enum QUIT_CLUB_RESULT {
  * 俱乐部成员角色
  */
 export enum CLUB_PLAYER_ROLE {
-  OWNER = 0, // 群主
-  ADMIN = 1, // 管理员
+  ADMIN = 0, // 管理员(群主)
+  SUB_ADMIN = 1, // 副管理员
+  PARTNER = 2, // 合伙人
   MEMBER = 2, // 普通成员
 }
 
