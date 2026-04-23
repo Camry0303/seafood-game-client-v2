@@ -7,7 +7,7 @@ const { ccclass, menu } = _decorator;
 @ccclass("DialogMessageUI_Component")
 @menu("Hidden/DialogMessageUI_Component")
 export class DialogMessageUI_Component extends ComponentController {
-  public bubbleWindow: BubbleWindow = null;
+  public _bubbleWindow: BubbleWindow = null;
 
   start() {}
 
@@ -18,7 +18,7 @@ export class DialogMessageUI_Component extends ComponentController {
     this.printNodeMap();
 
     // 挂载气泡弹窗组件
-    this.bubbleWindow = this.node.addComponent(BubbleWindow);
+    this._bubbleWindow = this.node.addComponent(BubbleWindow);
 
     // 设置关闭按钮点击事件
     this.setButtonClickEvent(
@@ -36,7 +36,7 @@ export class DialogMessageUI_Component extends ComponentController {
    * 关闭弹窗
    */
   public close() {
-    this.bubbleWindow.close(() => {
+    this._bubbleWindow.close(() => {
       ComponentManager.Instance.destroyNode(this.node);
     });
   }
@@ -48,7 +48,7 @@ export class DialogMessageUI_Component extends ComponentController {
    */
   public setMessage(message: string, callback?: Function) {
     const [messageNode, messageLabel] = this.getNodeComponent(
-      "MainView/Content/ScrollView/view/content/MessageLabel",
+      "MainView/Content/ScrollView/view/content/Message",
       Label,
     );
     messageLabel.string = message;
