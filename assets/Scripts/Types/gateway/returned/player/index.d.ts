@@ -70,19 +70,24 @@ export type Player = {
   is_test: number;
 
   /**
-   * 我的代理邀请码
+   * 邀请码
    */
-  my_agent_code: number;
+  invite_code: number;
 
   /**
-   * 绑定的代理邀请码
+   * 代理id
    */
-  bind_agent_code?: number;
+  agent_id: number;
 
   /**
-   * 绑定的代理昵称
+   * 代理邀请码
    */
-  bind_agent_nickname?: string;
+  agent_invite_code: number;
+
+  /**
+   * 代理昵称
+   */
+  agent_nickname: string;
 
   /**
    * 是否在线
