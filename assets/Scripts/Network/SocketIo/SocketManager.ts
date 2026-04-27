@@ -9,6 +9,7 @@ import Constants from "../../Common/Constants";
 import { GlobalData } from "../../Runtime/GlobalData";
 import CommonDailogHandler from "../../Utils/CommonDailogHandler";
 import { WAITING_TYPE } from "../../UiScripts/Prefabs/Common/CircleLoadingUI_Component";
+import PlazaEvents from "./PlazaEvents";
 const { ccclass, property } = _decorator;
 
 /**
@@ -41,17 +42,17 @@ export default class SocketManager extends SingletonComponent {
    */
   private initInstance() {
     if (this.SocketInstance) return;
-    // 取出socket url @TODO 改为配置获取
-    let url = "";
-    if (GlobalData.Instance.isLocalDev) {
-      url = `${"http://localhost:17888"}/main`;
-    } else {
-      url = `${"http://61.164.174.115:17888"}/main`;
-    }
+    // TODO - 改为配置获取
+    const host = GlobalData.Instance.isLocalDev
+      ? "localhost"
+      : "61.164.174.115";
+    const port = 18300;
+
+    const url = `${host}:${port}/main`;
 
     // 申明socket配置
     const opts: Partial<ManagerOptions & SocketOptions> = {};
-    // 配置path @TODO 改为配置获取
+    // TODO - 改为配置获取 配置path
     opts.path = "/socket.io";
     // 设置传输方式:移动端弱网-["websocket", "polling"]-优先 WebSocket 节省流量，失败回退
     opts.transports = ["websocket", "polling"];
@@ -65,8 +66,8 @@ export default class SocketManager extends SingletonComponent {
     this.SocketInstance = io(url, opts);
     // 监听基础事件
     this.setBaseEventsOn();
-    // // 监听大厅事件
-    // this.setPlazaEventsOn();
+    // 监听大厅事件
+    this.setPlazaEventsOn();
     // // 监听俱乐部事件
     // this.setClubEventsOn();
     // // 监听俱乐部玩家操作事件
@@ -87,19 +88,19 @@ export default class SocketManager extends SingletonComponent {
     BaseEvents.setBaseEventsOff(this.SocketInstance);
   }
 
-  // /**
-  //  * 监听大厅事件
-  //  */
-  // public setPlazaEventsOn() {
-  //   PlazaEvents.setPlazaEventsOn(this.SocketInstance);
-  // }
+  /**
+   * 监听大厅事件
+   */
+  public setPlazaEventsOn() {
+    PlazaEvents.setPlazaEventsOn(this.SocketInstance);
+  }
 
-  // /**
-  //  * 取消监听大厅事件
-  //  */
-  // public setPlazaEventsOff() {
-  //   PlazaEvents.setPlazaEventsOff(this.SocketInstance);
-  // }
+  /**
+   * 取消监听大厅事件
+   */
+  public setPlazaEventsOff() {
+    PlazaEvents.setPlazaEventsOff(this.SocketInstance);
+  }
 
   // /**
   //  * 监听俱乐部事件

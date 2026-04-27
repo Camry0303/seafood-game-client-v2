@@ -53,7 +53,8 @@ export class MainUI_Component extends ComponentController {
    */
   private async onTestBtnClick(event: Event) {
     console.log(`onTestBtnClick`);
-    this.testPlazaMainUI();
+    this.testDialogMessage();
+    // this.testPlazaMainUI();
     // this.testMiniKeyboard();
     // this.testDialogInput();
   }

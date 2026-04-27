@@ -64,7 +64,11 @@ export class Game extends SingletonComponent {
         // 对话框预设体资源
         {
           assetType: Prefab,
-          urls: ["Dialog/DialogMiniKeyboardUI", "Dialog/DialogInputUI"],
+          urls: [
+            "Dialog/DialogMiniKeyboardUI",
+            "Dialog/DialogInputUI",
+            "Dialog/DialogMessageUI",
+          ],
         },
         // 登录注册预设体资源
         {
@@ -218,21 +222,21 @@ export class Game extends SingletonComponent {
     ComponentManager.Instance.destroyNodeByName("HotUpdateUI");
     console.log("热更新界面销毁成功！");
 
-    // // 正式：挂载登录注册界面
-    // ComponentManager.Instance.renderUiNode<LoginRegisterMainUI_Component>(
-    //   "LoginRegisterMainUI",
-    //   "Prefabs",
-    //   "LoginRegister/LoginRegisterMainUI",
-    //   LoginRegisterMainUI_Component,
-    // );
-
-    // NOTE - 测试：挂载主界面
-    ComponentManager.Instance.renderUiNode<MainUI_Component>(
-      "MainUI",
+    // 正式：挂载登录注册界面
+    ComponentManager.Instance.renderUiNode<LoginRegisterMainUI_Component>(
+      "LoginRegisterMainUI",
       "Prefabs",
-      "Entrance/MainUI",
-      MainUI_Component,
+      "LoginRegister/LoginRegisterMainUI",
+      LoginRegisterMainUI_Component,
     );
+
+    // // NOTE - 测试：挂载主界面
+    // ComponentManager.Instance.renderUiNode<MainUI_Component>(
+    //   "MainUI",
+    //   "Prefabs",
+    //   "Entrance/MainUI",
+    //   MainUI_Component,
+    // );
 
     console.log("挂载登陆界面成功！");
   }

@@ -15,6 +15,9 @@ import { CustomerServiceUI_Component } from "./CustomerServiceUI_Component";
 import { PlazaGameRecordUI_Component } from "./PlazaGameRecordUI_Component";
 import { GameSettingUI_Component } from "../GameSetting/GameSettingUI_Component";
 import { ClubMainUI_Component } from "../Club/ClubMainUI_Component";
+import PlazaEvents from "../../../Network/SocketIo/PlazaEvents";
+import { Gateway } from "../../../Types/gateway";
+import { PlayerInfoEditUI_Component } from "./PlayerInfoEditUI_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("PlazaMainUI_Component")
@@ -27,7 +30,7 @@ export class PlazaMainUI_Component extends ComponentController {
   private _informationMarqueeComponent: InformationMarquee_Component = null;
 
   start() {
-    // NOTE - 播放大厅音乐
+    // 播放大厅音乐
     if (sys.isNative) {
       SoundsManager.Instance.playMusic("bgm_01");
     } else {
@@ -35,6 +38,11 @@ export class PlazaMainUI_Component extends ComponentController {
         SoundsManager.Instance.playMusic("bgm_01");
       }, 1);
     }
+
+    // 获取跑马灯信息
+    PlazaEvents.getMarquees();
+    // // NOTE - 此版本忽略 获取是否有俱乐部提示
+    // PlazaEvents.getClubHasHint();
   }
 
   update(deltaTime: number) {}
@@ -294,5 +302,29 @@ export class PlazaMainUI_Component extends ComponentController {
       "Plaza/PlazaGameRecordUI",
       PlazaGameRecordUI_Component,
     );
+  }
+
+  /**
+   * 渲染跑马灯信息
+   * @param marqueeMsgs
+   */
+  public renderMarquees(marqueeMsgs: string[]) {
+    this._informationMarqueeComponent.setMessages(marqueeMsgs);
+  }
+
+  /**
+   * 渲染玩家信息
+   */
+  public renderPlayerInformation(player: Gateway.Returned.Player.Player) {
+    // 设置状态栏玩家信息
+    this._playerInfoComponent?.setPlayerInformation(player);
+
+    //  设置编辑玩家信息界面
+    const [playerInforEditUiNode, playerInfoEditUiComponent] =
+      ComponentManager.Instance.getNodeComponent(
+        "PlazaMainUI/PlazaPlayerInfoUI",
+        PlayerInfoEditUI_Component,
+      );
+    playerInfoEditUiComponent?.setPlayerInformation(player);
   }
 }

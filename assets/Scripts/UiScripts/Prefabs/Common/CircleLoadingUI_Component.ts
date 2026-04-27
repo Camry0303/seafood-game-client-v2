@@ -15,7 +15,12 @@ export enum WAITING_TYPE {
   RESET_PASSWORD = "正在重置密码",
   LOGIN = "正在登录服务器",
 
-  BINDING_AGENT = "正在绑定代理", //绑定代理
+  GET_CURRENT_PLAYER = "正在获取当前玩家信息",
+  CHANGE_NICKNAME = "正在修改昵称",
+  CUSTOM_AVATAR = "正在设置头像",
+  BINDING_AGENT = "正在绑定代理",
+
+  GAME_RECONNECT = "正在重连游戏",
 }
 
 @ccclass("CircleLoadingUI_Component")

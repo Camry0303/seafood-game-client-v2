@@ -11,3 +11,10 @@ export type ChangeNicknameParams = {
 export type SetCustomAvatarParams = {
   avatar: string;
 };
+
+/**
+ * 绑定代理参数
+ */
+export type BindAgentParams = {
+  invite_code: number;
+};

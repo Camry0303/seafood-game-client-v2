@@ -199,8 +199,6 @@ export class ComponentManager extends SingletonComponent {
         }
       }
     }
-    // // @TODO 打印信息
-    // console.log(`uiMap-->`, this._uiMap);
   }
 
   /**
@@ -221,8 +219,6 @@ export class ComponentManager extends SingletonComponent {
         }
       }
     }
-    // // @TODO 打印信息
-    // console.log(`uiMap-->`, this._uiMap);
   }
 
   /**

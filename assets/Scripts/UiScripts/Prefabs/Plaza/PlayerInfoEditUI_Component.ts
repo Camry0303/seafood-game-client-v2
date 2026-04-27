@@ -3,6 +3,10 @@ import { ComponentController } from "../../../Common/ComponentController";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
 import BubbleWindow from "../../../Common/BubbleWindow";
 import { getAvatarSpriteFrame } from "../../../Utils/RemoteSpriteFrameLoader";
+import { Gateway } from "../../../Types/gateway";
+import { GlobalData } from "../../../Runtime/GlobalData";
+import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
+import PlazaEvents from "../../../Network/SocketIo/PlazaEvents";
 
 const { ccclass, menu } = _decorator;
 
@@ -20,15 +24,6 @@ export class PlayerInfoEditUI_Component extends ComponentController {
     // 初始化玩家信息编辑界面数据
     this._nicknameEditBox.enabled = false;
     this._editOrSaveBtnLabel.string = "编辑";
-
-    // TODO - 从玩家数据中获取并显示玩家信息
-    this._idLabel.string = "123456";
-    this._phoneNumberLabel.string = "13800138000";
-    // TODO - 显示玩家头像
-    const spriteFrame = await getAvatarSpriteFrame(
-      "https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83erEia7Tic6IL9wDRqtefBNt7qZ0s69WwV4BM3IzicxKlArCbYUUIT3L2VtMlWFjbwghlOgg47nd7dicYw/132",
-    );
-    this._avatarSprite.spriteFrame = spriteFrame;
   }
 
   update(deltaTime: number) {}
@@ -96,9 +91,16 @@ export class PlayerInfoEditUI_Component extends ComponentController {
       // 当前处于编辑状态，切换到保存状态
       this._nicknameEditBox.enabled = false;
       this._editOrSaveBtnLabel.string = "编辑";
-      // TODO - 保存修改后的昵称
       const nickname = this._nicknameEditBox.string;
-      console.log(`保存修改后的昵称: ${nickname}`);
+      if (
+        nickname.trim() &&
+        nickname !== GlobalData.Instance.getCurrentPlayerInfo()?.nickname
+      ) {
+        // 发送修改昵称请求
+        PlazaEvents.changeNickname(nickname);
+      } else {
+        CommonDailogHandler.showBubbleMessage(`没有任何修改`);
+      }
     } else {
       // 当前处于保存状态，切换到编辑状态
       this._nicknameEditBox.enabled = true;
@@ -114,5 +116,17 @@ export class PlayerInfoEditUI_Component extends ComponentController {
     this._bubbleWindow.close(() => {
       ComponentManager.Instance.destroyNode(this.node);
     });
+  }
+
+  /**
+   * 设置当前玩家信息
+   * @param player
+   */
+  public async setPlayerInformation(player: Gateway.Returned.Player.Player) {
+    console.log(`<PlayerInfo_Component> setPlayerInformation called!`);
+    this._idLabel.string = `${String(player?.id) || ""}`;
+    this._nicknameEditBox.string = player?.nickname || "";
+    this._phoneNumberLabel.string = player?.phone_number || "未绑定";
+    this._avatarSprite.spriteFrame = await getAvatarSpriteFrame(player?.avatar);
   }
 }

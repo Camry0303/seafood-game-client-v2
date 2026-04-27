@@ -57,7 +57,7 @@ export default class LocationService {
    */
   private static getLastLocationFromNative(): void {
     if (this.isAndroid) {
-      // @TODO
+      // TODO
       const location_Android = NativeAPI.getLastLocationAndroid();
       console.log(
         `location from android--->`,

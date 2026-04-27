@@ -12,10 +12,10 @@ const { ccclass, menu } = _decorator;
 @ccclass("LoginRegisterMainUI_Component")
 @menu("Hidden/LoginRegisterMainUI_Component")
 export class LoginRegisterMainUI_Component extends ComponentController {
-  private _isAgreeToggleNode: Node = null;
   private _isAgreeToggle: Toggle = null;
 
   start() {
+    // 播放登录音乐
     if (sys.isNative) {
       SoundsManager.Instance.playMusic("bgm_00");
     } else {
@@ -60,7 +60,7 @@ export class LoginRegisterMainUI_Component extends ComponentController {
     );
 
     // 设置协议按钮点击事件
-    [this._isAgreeToggleNode, this._isAgreeToggle] = this.setToggleClickEvent(
+    [, this._isAgreeToggle] = this.setToggleClickEvent(
       "ButtonPanel/Agreement/Toggle",
       0,
       "onAgreementToggleClick",

@@ -65,6 +65,8 @@ export async function getAvatarSpriteFrame(
         `Common/default_avatar_01`,
       );
     }
+  } else {
+    return null;
   }
 }
 

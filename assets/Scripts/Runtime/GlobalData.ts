@@ -4,6 +4,8 @@ import { Common, Gateway } from "../Types/typing";
 import { game, sys } from "cc";
 import CommonDailogHandler from "../Utils/CommonDailogHandler";
 import { WAITING_TYPE } from "../UiScripts/Prefabs/Common/CircleLoadingUI_Component";
+import { ComponentManager } from "./ComponentManager";
+import { PlazaMainUI_Component } from "../UiScripts/Prefabs/Plaza/PlazaMainUI_Component";
 
 /**
  * 全局数据存储
@@ -103,12 +105,12 @@ export class GlobalData extends Singleton {
   ) {
     this._currentPlayerInfo = playerInfo;
     // 响应数据到相应界面
-    // const [plazaMainUiNode, plazaMainUiComponent] =
-    //   ComponentManager.Instance.getNodeComponent(
-    //     "PlazaMainUI",
-    //     PlazaMainUI_Component,
-    //   );
-    // plazaMainUiComponent?.renderPlayerInformation(this._currentPlayerInfo);
+    const [plazaMainUiNode, plazaMainUiComponent] =
+      ComponentManager.Instance.getNodeComponent(
+        "PlazaMainUI",
+        PlazaMainUI_Component,
+      );
+    plazaMainUiComponent?.renderPlayerInformation(this._currentPlayerInfo);
   }
   /**
    * 获取当前玩家信息
@@ -257,7 +259,7 @@ export class GlobalData extends Singleton {
   ) {
     this._currentClubPlayerInfo = clubPlayerInfo;
     if (clubPlayerInfo) {
-      // 响应数据到相应界面 @TODO
+      // TODO - 响应数据到相应界面
     }
   }
   /**

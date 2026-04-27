@@ -5,6 +5,7 @@ import { Gateway } from "../../../Types/typing";
 import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
 import { PlayerInfoEditUI_Component } from "./PlayerInfoEditUI_Component";
+import { GlobalData } from "../../../Runtime/GlobalData";
 const { ccclass, menu } = _decorator;
 
 @ccclass("PlazaPlayerInfo_Component")
@@ -84,12 +85,14 @@ export class PlazaPlayerInfo_Component extends ComponentController {
    * 打开信息编辑对话框
    */
   private openInfoEditDialog() {
-    ComponentManager.Instance.renderUiNode<PlayerInfoEditUI_Component>(
-      "PlayerInfoEditUI",
-      "Prefabs",
-      "Plaza/PlayerInfoEditUI",
-      PlayerInfoEditUI_Component,
-    );
+    const [node, component] =
+      ComponentManager.Instance.renderUiNode<PlayerInfoEditUI_Component>(
+        "PlayerInfoEditUI",
+        "Prefabs",
+        "Plaza/PlayerInfoEditUI",
+        PlayerInfoEditUI_Component,
+      );
+    component.setPlayerInformation(GlobalData.Instance.getCurrentPlayerInfo());
   }
 
   /**

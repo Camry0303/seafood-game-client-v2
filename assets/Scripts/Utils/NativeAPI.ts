@@ -162,7 +162,8 @@ export default class NativeAPI {
   }
 
   /**
-   * 原生接收电池信息信息并处理 @TODO
+   * 原生接收电池信息信息并处理
+   * TODO
    * @param msg
    */
   public static receiveBatteryInfo(batteryPct: string, batteryStatus: string) {
@@ -323,7 +324,7 @@ export default class NativeAPI {
    * Android定位设置页面
    */
   public static openLocationSettingsAndroid() {
-    // @TODO
+    // TODO
     // native.reflection.callStaticMethod(
     //   "com/cocos/game/AppActivity",
     //   "openLocationSettings",

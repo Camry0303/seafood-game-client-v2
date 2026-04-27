@@ -20,13 +20,11 @@ export default class HttpApiServices {
     }>
   > {
     // TODO - 改为配置获取
-    let host = "";
-    if (GlobalData.Instance.isLocalDev) {
-      host = "http://localhost";
-    } else {
-      host = "http://61.164.174.115";
-    }
+    const host = GlobalData.Instance.isLocalDev
+      ? "http://localhost"
+      : "http://61.164.174.115";
     const port = "18000";
+
     const reponse = await fly.get(`${host}:${port}/get-captcha`);
     const data = reponse.data as Gateway.Returned.Common.Result<{
       captcha_token: string;

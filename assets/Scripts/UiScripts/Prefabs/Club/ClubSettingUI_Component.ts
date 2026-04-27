@@ -197,7 +197,7 @@ export class ClubSettingUI_Component extends ComponentController {
         const player_id = parseInt(inputstring);
         console.log(`onTransferClubBtnClick player_id--->`, player_id);
       } else {
-        throw new Error("请输入玩家ID");
+        throw new Error("缺少用户id");
       }
     } catch (error) {
       const e = error as Error;
@@ -216,7 +216,7 @@ export class ClubSettingUI_Component extends ComponentController {
         const player_id = parseInt(inputstring);
         console.log(`onSetSubAdminBtnClick player_id--->`, player_id);
       } else {
-        throw new Error("请输入玩家ID");
+        throw new Error("缺少用户id");
       }
     } catch (error) {
       const e = error as Error;
