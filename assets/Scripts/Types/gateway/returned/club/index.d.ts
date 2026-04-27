@@ -13,11 +13,6 @@ export type Club = {
   club_name: string;
 
   /**
-   * 游戏状态:0:游戏打烊;1:游戏开张;
-   */
-  game_status: number;
-
-  /**
    * 玩家数量
    */
   player_num: number;
@@ -26,11 +21,6 @@ export type Club = {
    * 在线玩家数量
    */
   online_player_num: number;
-
-  /**
-   * 房间数量
-   */
-  room_count: number;
 
   /**
    * 群主id
@@ -78,31 +68,6 @@ export type ClubDetail = {
   announcement: string;
 
   /**
-   * 创建房间方式 0:玩家选择房间规则;1:俱乐部规则;
-   */
-  create_room_type: number;
-
-  /**
-   * 激K游戏配置
-   */
-  jk_game_setting: string;
-
-  /**
-   * 上游游戏配置
-   */
-  sy_game_setting: string;
-
-  /**
-   * 麻将游戏配置
-   */
-  mj_game_setting: string;
-
-  /**
-   * 扣钻方式选项 0:仅AA扣钻;1:仅俱乐部扣钻;2:两者都可选;
-   */
-  deduction_opts: number;
-
-  /**
    * 关闭未开始的房间时间:单位秒;
    */
   room_timeout: number;
@@ -118,16 +83,6 @@ export type ClubDetail = {
   dissolve_vote_timeout: number;
 
   /**
-   * 游戏状态:0:游戏打烊;1:游戏开张;
-   */
-  game_status: number;
-
-  /**
-   * 允许的游戏:0:激K;1:上游;2:麻将;例:[0,1,2]
-   */
-  allowed_games: string;
-
-  /**
    * 加入需要审核:0:不需要;1:需要;
    */
   join_audit: number;
@@ -136,26 +91,6 @@ export type ClubDetail = {
    * 退出需要审核:0:不需要;1:需要;
    */
   quit_audit: number;
-
-  /**
-   * 积分模式:0:日结模式;1:上分模式;
-   */
-  score_mode: number;
-
-  /**
-   * 大赢家抽成分数基数
-   */
-  big_winner_deduction_base: number;
-
-  /**
-   * 大赢家抽成门槛分数
-   */
-  big_winner_deduction_limit: number;
-
-  /**
-   * 是否允许聊天 0:不允许;1:允许;
-   */
-  allow_chat: number;
 
   /**
    * 群主id
@@ -186,27 +121,4 @@ export type ClubDetail = {
    * 在线玩家数量
    */
   online_player_num: number;
-};
-
-/**
- * 俱乐部基础配置
- */
-export type ClubBaseConfig = {
-  game_status: number;
-  allowed_games: string;
-  join_audit: number;
-  quit_audit: number;
-  score_mode: number;
-};
-
-/**
- * 俱乐部游戏配置
- */
-export type ClubGameConfigCommon = {
-  deduction_opts: number;
-  create_room_type: number;
-  allow_chat: number;
-  dissolve_limit: number;
-  dissolve_vote_timeout: number;
-  room_timeout: number;
 };
