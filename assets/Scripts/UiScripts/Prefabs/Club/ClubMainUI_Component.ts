@@ -1,7 +1,9 @@
 import {
   _decorator,
   Event,
+  instantiate,
   Node,
+  Prefab,
   Size,
   Toggle,
   ToggleContainer,
@@ -17,6 +19,11 @@ import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
 import { GameSettingUI_Component } from "../GameSetting/GameSettingUI_Component";
 import { GlobalData } from "../../../Runtime/GlobalData";
 import { ClubSettingUI_Component } from "./ClubSettingUI_Component";
+import ClubEvents from "../../../Network/SocketIo/ClubEvents";
+import { Gateway } from "../../../Types/gateway";
+import { ResourceManager } from "../../../Runtime/ResourceManager";
+import { ClubToggle_Component } from "./ClubToggle_Component";
+import { CLUB_PLAYER_ROLE } from "../../../Enums";
 const { ccclass, menu } = _decorator;
 
 @ccclass("ClubMainUI_Component")
@@ -27,11 +34,21 @@ export class ClubMainUI_Component extends ComponentController {
   private _mainViewUITransform: UITransform = null;
 
   private _clubToggleContainer: ToggleContainer = null;
-
   private _clubContentNode: Node = null;
 
-  private _marqueeComponent: InformationMarquee_Component = null;
+  private _settingBtnNode: Node = null;
+  private _memberManageBtnNode: Node = null;
+  private _memberBtnNode: Node = null;
+  private _partnerBtnNode: Node = null;
+  private _myMemberBtnNode: Node = null;
+  private _scoreRankBtnNode: Node = null;
+  private _gameRecordBtnNode: Node = null;
+  private _scoreOperateLogBtnNode: Node = null;
 
+  private _invitePlayerBtnNode: Node = null;
+  private _createTableBtnNode: Node = null;
+
+  private _marqueeComponent: InformationMarquee_Component = null;
   private _tableContentNode: Node = null;
 
   start() {
@@ -45,7 +62,8 @@ export class ClubMainUI_Component extends ComponentController {
       (1136 * height) / 640,
       height,
     );
-    // this.updateWidgets();
+    // 获取玩家加入的俱乐部列表
+    ClubEvents.getPlayerClubList();
   }
 
   update(deltaTime: number) {}
@@ -90,7 +108,7 @@ export class ClubMainUI_Component extends ComponentController {
     );
 
     // 设置俱乐部设置按钮点击事件
-    this.setButtonClickEvent(
+    [this._settingBtnNode] = this.setButtonClickEvent(
       "MainView/Content/RightContent/TopMenu/SettingBtn",
       0,
       "onClubSettingBtnClick",
@@ -98,7 +116,7 @@ export class ClubMainUI_Component extends ComponentController {
     );
 
     // 设置俱乐部成员管理按钮点击事件
-    this.setButtonClickEvent(
+    [this._memberManageBtnNode] = this.setButtonClickEvent(
       "MainView/Content/RightContent/TopMenu/MemberManageBtn",
       0,
       "onClubMemberManageBtnClick",
@@ -106,7 +124,7 @@ export class ClubMainUI_Component extends ComponentController {
     );
 
     // 设置俱乐部成员按钮点击事件
-    this.setButtonClickEvent(
+    [this._memberBtnNode] = this.setButtonClickEvent(
       "MainView/Content/RightContent/TopMenu/MemberBtn",
       0,
       "onClubMemberBtnClick",
@@ -114,15 +132,25 @@ export class ClubMainUI_Component extends ComponentController {
     );
 
     // 设置俱乐部合伙人按钮点击事件
-    this.setButtonClickEvent(
+    [this._partnerBtnNode] = this.setButtonClickEvent(
       "MainView/Content/RightContent/TopMenu/PartnerBtn",
       0,
       "onClubPartnerBtnClick",
       this.getClassName(),
     );
 
-    // 设置俱乐部积分排行按钮点击事件
-    this.setButtonClickEvent(
+    // 设置俱乐部我的成员按钮点击事件
+    [this._myMemberBtnNode] = this.setButtonClickEvent(
+      "MainView/Content/RightContent/TopMenu/MyMemberBtn",
+      0,
+      "onClubMyMemberBtnClick",
+      this.getClassName(),
+    );
+
+    [
+      // 设置俱乐部积分排行按钮点击事件
+      this._scoreRankBtnNode,
+    ] = this.setButtonClickEvent(
       "MainView/Content/RightContent/TopMenu/ScoreRankBtn",
       0,
       "onClubScoreRankBtnClick",
@@ -130,7 +158,7 @@ export class ClubMainUI_Component extends ComponentController {
     );
 
     // 设置俱乐部战绩按钮点击事件
-    this.setButtonClickEvent(
+    [this._gameRecordBtnNode] = this.setButtonClickEvent(
       "MainView/Content/RightContent/TopMenu/GameRecordBtn",
       0,
       "onClubGameRecordBtnClick",
@@ -138,7 +166,7 @@ export class ClubMainUI_Component extends ComponentController {
     );
 
     // 设置俱乐部上下分记录日志按钮点击事件
-    this.setButtonClickEvent(
+    [this._scoreOperateLogBtnNode] = this.setButtonClickEvent(
       "MainView/Content/RightContent/TopMenu/ScoreOperateLogBtn",
       0,
       "onClubScoreOperateLogBtnClick",
@@ -146,7 +174,7 @@ export class ClubMainUI_Component extends ComponentController {
     );
 
     // 设置邀请玩家按钮点击事件
-    this.setButtonClickEvent(
+    [this._invitePlayerBtnNode] = this.setButtonClickEvent(
       "MainView/Content/RightContent/ButtonPanel/InvitePlayerBtn",
       0,
       "onInvitePlayerBtnClick",
@@ -154,7 +182,7 @@ export class ClubMainUI_Component extends ComponentController {
     );
 
     // 设置创建房间按钮点击事件
-    this.setButtonClickEvent(
+    [this._createTableBtnNode] = this.setButtonClickEvent(
       "MainView/Content/RightContent/ButtonPanel/CreateRoomBtn",
       0,
       "onCreateRoomBtnClick",
@@ -188,29 +216,44 @@ export class ClubMainUI_Component extends ComponentController {
    * 关闭弹窗
    */
   public close() {
+    // 如果在俱乐部中，则退出俱乐部
+    if (GlobalData.Instance.getCurrentClubInfoDetail()) {
+      ClubEvents.leaveClub();
+    }
     this._bubbleWindow.close(() => {
+      // 销毁节点
       ComponentManager.Instance.destroyNode(this.node);
     });
   }
 
   /**
-   * 更新UI布局适配
+   * 渲染俱乐部列表
+   * @param clubList
    */
-  private updateWidgets() {
-    const [, contentWidget] = this.getNodeComponent("MainView/Content", Widget);
-    contentWidget.updateAlignment();
-
-    const [, leftMenuWidget] = this.getNodeComponent(
-      "MainView/Content/LeftMenu",
-      Widget,
+  public renderClubList(clubList: Gateway.Returned.Club.Club[]) {
+    // TODO - 渲染俱乐部列表
+    this._clubContentNode.removeAllChildren();
+    const clubTogglePrefab: Prefab = ResourceManager.Instance.getAsset<Prefab>(
+      "Prefabs",
+      "Club/ClubToggle",
     );
-    leftMenuWidget.updateAlignment();
 
-    const [, rightContentWidget] = this.getNodeComponent(
-      "MainView/Content/RightContent",
-      Widget,
-    );
-    rightContentWidget.updateAlignment();
+    clubList.forEach((club) => {
+      const clubToggleNode = instantiate(clubTogglePrefab);
+      const clubToggleComponent =
+        clubToggleNode.addComponent(ClubToggle_Component);
+      clubToggleComponent.setData(club);
+      this._clubContentNode.addChild(clubToggleNode);
+    });
+
+    // 设置默认进入第一个俱乐部
+    const nodes = this._clubContentNode.children;
+    if (nodes.length > 0) {
+      const node = nodes[0];
+      const toggle = node.getComponent(Toggle);
+      toggle.setIsCheckedWithoutNotify(true);
+      this._clubToggleContainer.notifyToggleCheck(toggle);
+    }
   }
 
   /**
@@ -221,6 +264,11 @@ export class ClubMainUI_Component extends ComponentController {
     // TODO - 切换
     const toggle: Toggle = event.target.getComponent(Toggle);
     console.log(`onClubToggleCheck--->`, toggle);
+    const clubToggle = toggle.getComponent(ClubToggle_Component);
+    console.log(`onClubToggleCheck--->`, clubToggle.getData());
+    if (clubToggle.getData()) {
+      ClubEvents.enterClub(clubToggle.getData().club_id);
+    }
   }
 
   /**
@@ -248,7 +296,7 @@ export class ClubMainUI_Component extends ComponentController {
     CommonDailogHandler.showDialogInput(
       "CreateClubToggle",
       {
-        isRequired: true,
+        isRequired: false,
         maxLength: 8,
         placeholder: "输入俱乐部名称",
         height: 60,
@@ -256,8 +304,10 @@ export class ClubMainUI_Component extends ComponentController {
         showLimitInfo: false,
       },
       (inputValue: string) => {
-        // TODO - 创建俱乐部
-        console.log(`确认回调--->`, inputValue);
+        if (inputValue.trim()) {
+          // 创建俱乐部
+          ClubEvents.createClub(inputValue);
+        }
       },
     );
   }
@@ -295,12 +345,21 @@ export class ClubMainUI_Component extends ComponentController {
   }
 
   /**
-   * 俱乐部积分排行按钮点击事件
+   * 俱乐部合伙人按钮点击事件
    * @param event
    */
   private onClubPartnerBtnClick(event: Event) {
     // TODO - 俱乐部合伙人
     console.log(`onClubPartnerBtnClick--->`);
+  }
+
+  /**
+   * 俱乐部我的成员按钮点击事件
+   * @param event
+   */
+  private onClubMyMemberBtnClick(event: Event) {
+    // TODO - 俱乐部我的成员
+    console.log(`onClubMyMemberBtnClick--->`);
   }
 
   /**
@@ -360,5 +419,89 @@ export class ClubMainUI_Component extends ComponentController {
         GameSettingUI_Component,
       );
     component.setData("CLUB", GlobalData.Instance.defaultClubDicesConfig);
+  }
+
+  /**
+   * 渲染俱乐部详情内容
+   */
+  public renderClubDetailContent() {
+    const clubDetail = GlobalData.Instance.getCurrentClubInfoDetail();
+    const clubPlayer = GlobalData.Instance.getCurrentClubPlayerInfo();
+    if (!clubDetail || !clubPlayer) {
+      return;
+    }
+    const role = clubPlayer.role;
+
+    // 按钮相关
+    switch (role) {
+      // 管理员和副管理员拥有相同的界面权限
+      case CLUB_PLAYER_ROLE.ADMIN:
+      case CLUB_PLAYER_ROLE.SUB_ADMIN:
+        // 设置按钮
+        this._settingBtnNode.active = true;
+        // 成员管理按钮
+        this._memberManageBtnNode.active = true;
+        // 成员按钮
+        this._memberBtnNode.active = true;
+        // 合伙人按钮
+        this._partnerBtnNode.active = true;
+        // 我的成员按钮
+        this._myMemberBtnNode.active = false;
+        // 积分排行按钮
+        this._scoreRankBtnNode.active = true;
+        // 战绩按钮
+        this._gameRecordBtnNode.active = true;
+        // 上下分记录日志按钮
+        this._scoreOperateLogBtnNode.active = true;
+        // 邀请玩家按钮
+        this._invitePlayerBtnNode.active = true;
+        // 创建房间按钮
+        this._createTableBtnNode.active = false;
+        break;
+      case CLUB_PLAYER_ROLE.PARTNER:
+        // 设置按钮
+        this._settingBtnNode.active = true;
+        // 成员管理按钮
+        this._memberManageBtnNode.active = false;
+        // 成员按钮
+        this._memberBtnNode.active = true;
+        // 合伙人按钮
+        this._partnerBtnNode.active = false;
+        // 我的成员按钮
+        this._myMemberBtnNode.active = true;
+        // 积分排行按钮
+        this._scoreRankBtnNode.active = true;
+        // 战绩按钮
+        this._gameRecordBtnNode.active = true;
+        // 上下分记录日志按钮
+        this._scoreOperateLogBtnNode.active = true;
+        // 邀请玩家按钮
+        this._invitePlayerBtnNode.active = true;
+        // 创建房间按钮
+        this._createTableBtnNode.active = false;
+        break;
+      default:
+        // 设置按钮
+        this._settingBtnNode.active = true;
+        // 成员管理按钮
+        this._memberManageBtnNode.active = false;
+        // 成员按钮
+        this._memberBtnNode.active = true;
+        // 合伙人按钮
+        this._partnerBtnNode.active = false;
+        // 我的成员按钮
+        this._myMemberBtnNode.active = false;
+        // 积分排行按钮
+        this._scoreRankBtnNode.active = true;
+        // 战绩按钮
+        this._gameRecordBtnNode.active = true;
+        // 上下分记录日志按钮
+        this._scoreOperateLogBtnNode.active = true;
+        // 邀请玩家按钮
+        this._invitePlayerBtnNode.active = false;
+        // 创建房间按钮
+        this._createTableBtnNode.active = false;
+        break;
+    }
   }
 }

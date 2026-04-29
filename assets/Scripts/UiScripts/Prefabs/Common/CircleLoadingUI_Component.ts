@@ -20,6 +20,13 @@ export enum WAITING_TYPE {
   CUSTOM_AVATAR = "正在设置头像",
   BINDING_AGENT = "正在绑定代理",
 
+  GET_PLAYER_CLUB_LIST = "正在获取玩家俱乐部列表",
+  CREATE_CLUB = "正在创建俱乐部",
+  JOIN_CLUB_BY_ID = "正在加入俱乐部",
+  QUIT_CLUB = "正在退出俱乐部",
+  ENTER_CLUB = "正在进入俱乐部",
+  LEAVE_CLUB = "正在离开俱乐部",
+
   GAME_RECONNECT = "正在重连游戏",
 }
 

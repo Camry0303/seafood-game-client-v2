@@ -10,6 +10,7 @@ import { GlobalData } from "../../Runtime/GlobalData";
 import CommonDailogHandler from "../../Utils/CommonDailogHandler";
 import { WAITING_TYPE } from "../../UiScripts/Prefabs/Common/CircleLoadingUI_Component";
 import PlazaEvents from "./PlazaEvents";
+import ClubEvents from "./ClubEvents";
 const { ccclass, property } = _decorator;
 
 /**
@@ -68,8 +69,8 @@ export default class SocketManager extends SingletonComponent {
     this.setBaseEventsOn();
     // 监听大厅事件
     this.setPlazaEventsOn();
-    // // 监听俱乐部事件
-    // this.setClubEventsOn();
+    // 监听俱乐部事件
+    this.setClubEventsOn();
     // // 监听俱乐部玩家操作事件
     // this.setClubPlayerEventsOn();
   }
@@ -102,19 +103,19 @@ export default class SocketManager extends SingletonComponent {
     PlazaEvents.setPlazaEventsOff(this.SocketInstance);
   }
 
-  // /**
-  //  * 监听俱乐部事件
-  //  */
-  // public setClubEventsOn() {
-  //   ClubEvents.setClubEventsOn(this.SocketInstance);
-  // }
+  /**
+   * 监听俱乐部事件
+   */
+  public setClubEventsOn() {
+    ClubEvents.setClubEventsOn(this.SocketInstance);
+  }
 
-  // /**
-  //  * 取消监听俱乐部事件
-  //  */
-  // public setClubEventsOff() {
-  //   ClubEvents.setClubEventsOff(this.SocketInstance);
-  // }
+  /**
+   * 取消监听俱乐部事件
+   */
+  public setClubEventsOff() {
+    ClubEvents.setClubEventsOff(this.SocketInstance);
+  }
 
   // /**
   //  * 监听俱乐部玩家操作事件

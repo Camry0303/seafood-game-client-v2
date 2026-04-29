@@ -41,37 +41,6 @@ export type AlterClubAnnounceParams = {
 };
 
 /**
- * 设置俱乐部基础配置参数
- */
-export type SetClubBaseConfigParams = {
-  game_status: number;
-  allowed_games_list: Array<number>;
-  join_audit: number;
-  quit_audit: number;
-  score_mode: number;
-};
-
-/**
- * 设置俱乐部房间费设置参数
- */
-export type SetClubRoomFeeParams = {
-  big_winner_deduction_base: number;
-  big_winner_deduction_limit: number;
-};
-
-/**
- * 设置俱乐部游戏配置参数
- */
-export type SetClubGameConfigCommonParams = {
-  deduction_opts: number;
-  create_room_type: number;
-  allow_chat: number;
-  dissolve_limit: number;
-  dissolve_vote_timeout: number;
-  room_timeout: number;
-};
-
-/**
  * 转让俱乐部参数
  */
 export type HandOverClubParams = {

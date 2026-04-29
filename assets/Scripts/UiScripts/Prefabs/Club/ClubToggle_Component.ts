@@ -85,6 +85,14 @@ export class ClubToggle_Component extends ComponentController {
   }
 
   /**
+   * 获取数据
+   * @returns
+   */
+  public getData() {
+    return this._clubData;
+  }
+
+  /**
    * 点击申请按钮事件
    * @param event
    */

@@ -1,0 +1,313 @@
+import { Socket } from "socket.io-client";
+import { Gateway } from "../../Types/typing";
+import SocketManager from "./SocketManager";
+import { ComponentManager } from "../../Runtime/ComponentManager";
+import { GlobalData } from "../../Runtime/GlobalData";
+import CommonDailogHandler from "../../Utils/CommonDailogHandler";
+import { WAITING_TYPE } from "../../UiScripts/Prefabs/Common/CircleLoadingUI_Component";
+import PlazaEvents from "./PlazaEvents";
+import { CLUB_EVENT } from "../../Enums/Events/Club";
+import {
+  JOIN_CLUB_RESULT,
+  QUIT_CLUB_RESULT,
+  RESPONE_RESULT,
+} from "../../Enums";
+import { ClubMainUI_Component } from "../../UiScripts/Prefabs/Club/ClubMainUI_Component";
+
+/**
+ * 俱乐部事件处理类
+ */
+export default class ClubEvents {
+  // 事件映射表
+  private static _eventsMap: Map<
+    CLUB_EVENT,
+    (data: Gateway.Returned.Common.Result<any>) => void
+  > = new Map<CLUB_EVENT, (data: Gateway.Returned.Common.Result<any>) => void>([
+    [CLUB_EVENT.GET_PLAYER_CLUB_LIST_RESULT, this.onGetPlayerClubListResult],
+    [CLUB_EVENT.CREATE_CLUB_RESULT, this.onCreateClubResult],
+    [CLUB_EVENT.JOIN_CLUB_BY_ID_RESULT, this.onJoinClubByIdResult],
+    [CLUB_EVENT.QUIT_CLUB_RESULT, this.onQuitClubResult],
+    [CLUB_EVENT.ENTER_CLUB_RESULT, this.onEnterClubResult],
+    [CLUB_EVENT.LEAVE_CLUB_RESULT, this.onLeaveClubResult],
+  ]);
+
+  /**
+   * 监听所有俱乐部事件
+   * @param SocketInstance
+   */
+  public static setClubEventsOn(SocketInstance: Socket) {
+    // 批量绑定事件监听器
+    for (const [eventName, listener] of this._eventsMap) {
+      SocketInstance.on(eventName, listener);
+    }
+  }
+
+  /**
+   * 取消监听所有俱乐部事件
+   * @param SocketInstance
+   */
+  public static setClubEventsOff(SocketInstance: Socket) {
+    // 批量解绑事件监听器
+    for (const eventName in this._eventsMap) {
+      const listener = this._eventsMap[eventName];
+      SocketInstance.off(eventName, listener);
+    }
+  }
+
+  /**
+   * 获取玩家俱乐部列表
+   */
+  public static getPlayerClubList() {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.GET_PLAYER_CLUB_LIST);
+      socket.emit(CLUB_EVENT.GET_PLAYER_CLUB_LIST);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.GET_PLAYER_CLUB_LIST);
+    }
+  }
+
+  /**
+   * 处理获取玩家俱乐部列表结果事件
+   * @param returnData
+   */
+  private static onGetPlayerClubListResult(
+    returnData: Gateway.Returned.Common.Result<Gateway.Returned.Club.Club[]>,
+  ) {
+    console.log(
+      "<ClubEvent> onGetPlayerClubListResult called --->",
+      returnData,
+    );
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      // 渲染俱乐部列表菜单
+      const [node, component, created] =
+        ComponentManager.Instance.renderUiNode<ClubMainUI_Component>(
+          "ClubMainUI",
+          "Prefabs",
+          "Club/ClubMainUI",
+          ClubMainUI_Component,
+        );
+      component.renderClubList(data);
+    } else {
+      // 连接失败，弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.GET_PLAYER_CLUB_LIST);
+  }
+
+  /**
+   * 创建俱乐部
+   * @param club_name
+   */
+  public static createClub(club_name: string) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      const params: Gateway.Requested.Club.CreateClubParams = {
+        club_name,
+      };
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.CREATE_CLUB);
+      socket.emit(CLUB_EVENT.CREATE_CLUB, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.CREATE_CLUB);
+    }
+  }
+
+  /**
+   * 处理创建俱乐部结果事件
+   * @param returnData
+   */
+  private static onCreateClubResult(
+    returnData: Gateway.Returned.Common.Result<boolean>,
+  ) {
+    console.log("<ClubEvent> onCreateClubResult called --->", returnData);
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      // 重新请求获取玩家俱乐部列表
+      ClubEvents.getPlayerClubList();
+    } else {
+      // 连接失败，弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.CREATE_CLUB);
+  }
+
+  /**
+   * 通过俱乐部id加入俱乐部
+   * @param club_id
+   */
+  public static joinClubById(club_id: number) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      const params: Gateway.Requested.Club.JoinClubByIdParams = {
+        club_id,
+      };
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.JOIN_CLUB_BY_ID);
+      socket.emit(CLUB_EVENT.JOIN_CLUB_BY_ID, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.JOIN_CLUB_BY_ID);
+    }
+  }
+
+  /**
+   * 处理通过俱乐部id加入俱乐部结果事件
+   * @param returnData
+   */
+  private static onJoinClubByIdResult(
+    returnData: Gateway.Returned.Common.Result<JOIN_CLUB_RESULT>,
+  ) {
+    console.log("<ClubEvent> onJoinClubByIdResult called --->", returnData);
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      // 判断加入情况
+      if (returnData.data === JOIN_CLUB_RESULT.JOIN_SUCCESS) {
+        // 重重新请求获取玩家俱乐部列表
+        ClubEvents.getPlayerClubList();
+      } else if (returnData.data === JOIN_CLUB_RESULT.APPLY_SUCCESS) {
+        // 申请加入成功
+        CommonDailogHandler.showBubbleMessage(`申请成功！请等待同意...`);
+      }
+    } else {
+      // 连接失败，弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.JOIN_CLUB_BY_ID);
+  }
+
+  /**
+   * 退出俱乐部
+   */
+  public static quitClub() {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.QUIT_CLUB);
+      socket.emit(CLUB_EVENT.QUIT_CLUB);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.QUIT_CLUB);
+    }
+  }
+
+  /**
+   * 处理退出俱乐部结果事件
+   * @param returnData
+   */
+  private static onQuitClubResult(
+    returnData: Gateway.Returned.Common.Result<QUIT_CLUB_RESULT>,
+  ) {
+    console.log("<ClubEvent> onQuitClubResult called --->", returnData);
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      // 判断退出情况
+      if (data === QUIT_CLUB_RESULT.QUIT_SUCCESS) {
+        // @TODO 处理退出俱乐部
+      } else if (data === QUIT_CLUB_RESULT.APPLY_SUCCESS) {
+        // 申请退出成功
+        CommonDailogHandler.showBubbleMessage(`申请成功！请等待同意...`);
+      }
+    } else {
+      // 连接失败，弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.QUIT_CLUB);
+  }
+
+  /**
+   * 进入俱乐部
+   * @param club_id
+   */
+  public static enterClub(club_id: number) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (!club_id) {
+      return;
+    }
+    if (socket) {
+      const params: Gateway.Requested.Club.EnterClubParams = {
+        club_id,
+      };
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.ENTER_CLUB);
+      socket.emit(CLUB_EVENT.ENTER_CLUB, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.ENTER_CLUB);
+    }
+  }
+
+  /**
+   * 处理进入俱乐部结果事件
+   * @param returnData
+   */
+  private static onEnterClubResult(
+    returnData: Gateway.Returned.Common.Result<{
+      clubInfoDetail: Gateway.Returned.Club.ClubDetail;
+      clubPlayerInfo: Gateway.Returned.ClubPlayer.CurrentClubPlayer;
+    }>,
+  ) {
+    console.log("<ClubEvent> onEnterClubResult called --->", returnData);
+    const { code, data, msg } = returnData;
+    const { clubInfoDetail, clubPlayerInfo } = data;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      GlobalData.Instance.setCurrentClubInfoDetail(clubInfoDetail);
+      GlobalData.Instance.setCurrentClubPlayerInfo(clubPlayerInfo);
+
+      // 进入俱乐部成功
+      const [node, component, created] =
+        ComponentManager.Instance.renderUiNode<ClubMainUI_Component>(
+          "ClubMainUI",
+          "Prefabs",
+          "Club/ClubMainUI",
+          ClubMainUI_Component,
+        );
+
+      // 渲染俱乐部详情内容
+      component.renderClubDetailContent();
+
+      const currentPlayer = GlobalData.Instance.getCurrentPlayerInfo();
+      // 判断是否需要重连俱乐部游戏
+      if (currentPlayer.in_game_type.includes("club_")) {
+        PlazaEvents.gameReconnect();
+      }
+    } else {
+      // 连接失败，弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.ENTER_CLUB);
+  }
+
+  /**
+   * 离开俱乐部
+   */
+  public static leaveClub() {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.LEAVE_CLUB);
+      socket.emit(CLUB_EVENT.LEAVE_CLUB);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.LEAVE_CLUB);
+    }
+  }
+
+  /**
+   * 处理离开俱乐部结果事件
+   * @param returnData
+   */
+  private static onLeaveClubResult(
+    returnData: Gateway.Returned.Common.Result<boolean>,
+  ) {
+    console.log("<ClubEvent> onLeaveClubResult called --->", returnData);
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      // @TODO 处理离开俱乐部成功
+      console.log("离开俱乐部成功:", data);
+      GlobalData.Instance.setCurrentClubInfoDetail(null);
+    } else {
+      // 连接失败，弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.LEAVE_CLUB);
+  }
+}
