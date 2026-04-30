@@ -537,6 +537,12 @@ export class ClubMainUI_Component extends ComponentController {
         break;
       }
     }
+
+    const [node, component] = ComponentManager.Instance.getNodeComponent(
+      "ClubSettingUI",
+      ClubSettingUI_Component,
+    );
+    component && component.updateClubName(club_name);
   }
 
   /**

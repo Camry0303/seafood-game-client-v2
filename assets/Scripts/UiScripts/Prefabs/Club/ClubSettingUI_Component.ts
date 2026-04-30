@@ -277,6 +277,14 @@ export class ClubSettingUI_Component extends ComponentController {
       CommonDailogHandler.showBubbleMessage(e.message);
     }
   }
+
+  /**
+   * 更新当前俱乐部名称
+   * @param club_name
+   */
+  public updateClubName(club_name: string) {
+    this._currentClubNameLabel.string = club_name;
+  }
   //#endregion
 
   //#region 公告
