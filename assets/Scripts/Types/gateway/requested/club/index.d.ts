@@ -29,14 +29,14 @@ export type EnterClubParams = {
 /**
  * 修改俱乐部名称参数
  */
-export type RenameClubParams = {
+export type ChangeClubNameParams = {
   club_name: string;
 };
 
 /**
  * 修改俱乐部公告参数
  */
-export type AlterClubAnnounceParams = {
+export type ChangeClubAnnouncementParams = {
   announcement: string;
 };
 

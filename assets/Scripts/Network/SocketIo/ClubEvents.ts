@@ -30,8 +30,11 @@ export default class ClubEvents {
     [CLUB_EVENT.ENTER_CLUB_RESULT, this.onEnterClubResult],
     [CLUB_EVENT.LEAVE_CLUB_RESULT, this.onLeaveClubResult],
 
-    [CLUB_EVENT.RENAME_CLUB_RESULT, this.onRenameClubResult],
-    [CLUB_EVENT.CHANGE_ANNOUNCEMENT_RESULT, this.onAlterClubAnnounceResult],
+    [CLUB_EVENT.CHANGE_NAME_RESULT, this.onChangeClubNameResult],
+    [
+      CLUB_EVENT.CHANGE_ANNOUNCEMENT_RESULT,
+      this.onChangeClubAnnouncementResult,
+    ],
   ]);
 
   /**
@@ -318,14 +321,14 @@ export default class ClubEvents {
    * 修改俱乐部名称
    * @param club_name
    */
-  public static renameClub(club_name: string) {
+  public static changeClubName(club_name: string) {
     const socket = SocketManager.Instance.SocketInstance;
     if (socket) {
-      const params: Gateway.Requested.Club.RenameClubParams = {
+      const params: Gateway.Requested.Club.ChangeClubNameParams = {
         club_name,
       };
       CommonDailogHandler.showCircleLoading(WAITING_TYPE.CHANGE_CLUB_NAME);
-      socket.emit(CLUB_EVENT.RENAME_CLUB, params);
+      socket.emit(CLUB_EVENT.CHANGE_NAME, params);
     } else {
       CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
       CommonDailogHandler.hideCircleLoading(WAITING_TYPE.CHANGE_CLUB_NAME);
@@ -336,10 +339,10 @@ export default class ClubEvents {
    * 处理修改俱乐部名称结果事件
    * @param returnData
    */
-  private static onRenameClubResult(
+  private static onChangeClubNameResult(
     returnData: Gateway.Returned.Common.Result<{ newClubName: string }>,
   ) {
-    console.log("<ClubEvent> onRenameClubResult called --->", returnData);
+    console.log("<ClubEvent> onChangeClubNameResult called --->", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       // 处理修改俱乐部名称成功结果
@@ -372,10 +375,10 @@ export default class ClubEvents {
    * 修改俱乐部公告
    * @param announcement
    */
-  public static alterClubAnnounce(announcement: string) {
+  public static changeClubAnouncement(announcement: string) {
     const socket = SocketManager.Instance.SocketInstance;
     if (socket) {
-      const params: Gateway.Requested.Club.AlterClubAnnounceParams = {
+      const params: Gateway.Requested.Club.ChangeClubAnnouncementParams = {
         announcement,
       };
       CommonDailogHandler.showCircleLoading(
@@ -394,13 +397,13 @@ export default class ClubEvents {
    * 处理修改俱乐部公告结果事件
    * @param returnData
    */
-  private static onAlterClubAnnounceResult(
+  private static onChangeClubAnnouncementResult(
     returnData: Gateway.Returned.Common.Result<{
       newAnnouncement: string;
     }>,
   ) {
     console.log(
-      "<ClubEvent> onAlterClubAnnounceResult called --->",
+      "<ClubEvent> onChangeClubAnnouncementResult called --->",
       returnData,
     );
     const { code, data, msg } = returnData;

@@ -268,7 +268,7 @@ export class ClubSettingUI_Component extends ComponentController {
           CommonDailogHandler.showBubbleMessage("修改俱乐部成功");
           return;
         }
-        ClubEvents.renameClub(inputstring);
+        ClubEvents.changeClubName(inputstring);
       } else {
         throw new Error("请填写俱乐部名称");
       }
@@ -318,7 +318,7 @@ export class ClubSettingUI_Component extends ComponentController {
       this.close();
       return;
     } else {
-      ClubEvents.alterClubAnnounce(inputstring);
+      ClubEvents.changeClubAnouncement(inputstring);
     }
   }
   //#endregion
