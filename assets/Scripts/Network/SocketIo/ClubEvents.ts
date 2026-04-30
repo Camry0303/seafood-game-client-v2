@@ -29,6 +29,9 @@ export default class ClubEvents {
     [CLUB_EVENT.QUIT_CLUB_RESULT, this.onQuitClubResult],
     [CLUB_EVENT.ENTER_CLUB_RESULT, this.onEnterClubResult],
     [CLUB_EVENT.LEAVE_CLUB_RESULT, this.onLeaveClubResult],
+
+    [CLUB_EVENT.RENAME_CLUB_RESULT, this.onRenameClubResult],
+    [CLUB_EVENT.CHANGE_ANNOUNCEMENT_RESULT, this.onAlterClubAnnounceResult],
   ]);
 
   /**
@@ -164,7 +167,7 @@ export default class ClubEvents {
     if (code === RESPONE_RESULT.SUCCESS) {
       // 判断加入情况
       if (returnData.data === JOIN_CLUB_RESULT.JOIN_SUCCESS) {
-        // 重重新请求获取玩家俱乐部列表
+        // 重新请求获取玩家俱乐部列表
         ClubEvents.getPlayerClubList();
       } else if (returnData.data === JOIN_CLUB_RESULT.APPLY_SUCCESS) {
         // 申请加入成功
@@ -309,5 +312,121 @@ export default class ClubEvents {
       CommonDailogHandler.showBubbleMessage(`${msg}`);
     }
     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.LEAVE_CLUB);
+  }
+
+  /**
+   * 修改俱乐部名称
+   * @param club_name
+   */
+  public static renameClub(club_name: string) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      const params: Gateway.Requested.Club.RenameClubParams = {
+        club_name,
+      };
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.CHANGE_CLUB_NAME);
+      socket.emit(CLUB_EVENT.RENAME_CLUB, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.CHANGE_CLUB_NAME);
+    }
+  }
+
+  /**
+   * 处理修改俱乐部名称结果事件
+   * @param returnData
+   */
+  private static onRenameClubResult(
+    returnData: Gateway.Returned.Common.Result<{ newClubName: string }>,
+  ) {
+    console.log("<ClubEvent> onRenameClubResult called --->", returnData);
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      // 处理修改俱乐部名称成功结果
+      const currentClubInfoDetail =
+        GlobalData.Instance.getCurrentClubInfoDetail();
+
+      if (!currentClubInfoDetail) return;
+
+      // 更新最新的俱乐部名称
+      currentClubInfoDetail.club_name = data.newClubName;
+
+      const [node, component] = ComponentManager.Instance.getNodeComponent(
+        "ClubMainUI",
+        ClubMainUI_Component,
+      );
+      component &&
+        component.updateCheckedToggleClubName(
+          currentClubInfoDetail.club_id,
+          currentClubInfoDetail.club_name,
+        );
+      CommonDailogHandler.showBubbleMessage(`修改俱乐部成功`);
+    } else {
+      // 连接失败，弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.CHANGE_CLUB_NAME);
+  }
+
+  /**
+   * 修改俱乐部公告
+   * @param announcement
+   */
+  public static alterClubAnnounce(announcement: string) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      const params: Gateway.Requested.Club.AlterClubAnnounceParams = {
+        announcement,
+      };
+      CommonDailogHandler.showCircleLoading(
+        WAITING_TYPE.CHANGE_CLUB_ANNOUNCEMENT,
+      );
+      socket.emit(CLUB_EVENT.CHANGE_ANNOUNCEMENT, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(
+        WAITING_TYPE.CHANGE_CLUB_ANNOUNCEMENT,
+      );
+    }
+  }
+
+  /**
+   * 处理修改俱乐部公告结果事件
+   * @param returnData
+   */
+  private static onAlterClubAnnounceResult(
+    returnData: Gateway.Returned.Common.Result<{
+      newAnnouncement: string;
+    }>,
+  ) {
+    console.log(
+      "<ClubEvent> onAlterClubAnnounceResult called --->",
+      returnData,
+    );
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      // 处理修改俱乐部公告成功结果
+      const currentClubInfoDetail =
+        GlobalData.Instance.getCurrentClubInfoDetail();
+
+      if (!currentClubInfoDetail) return;
+
+      // 更新最新的俱乐部公告
+      currentClubInfoDetail.announcement = data.newAnnouncement;
+
+      const [node, component] = ComponentManager.Instance.getNodeComponent(
+        "ClubMainUI",
+        ClubMainUI_Component,
+      );
+      component &&
+        component.updateAnnouncement(currentClubInfoDetail.announcement);
+      CommonDailogHandler.showBubbleMessage(`修改成功`);
+    } else {
+      // 连接失败，弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(
+      WAITING_TYPE.CHANGE_CLUB_ANNOUNCEMENT,
+    );
   }
 }

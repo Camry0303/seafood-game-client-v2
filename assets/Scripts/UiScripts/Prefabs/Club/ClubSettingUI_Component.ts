@@ -13,6 +13,7 @@ import { ComponentManager } from "../../../Runtime/ComponentManager";
 import { CLUB_PLAYER_ROLE } from "../../../Enums";
 import { GlobalData } from "../../../Runtime/GlobalData";
 import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
+import ClubEvents from "../../../Network/SocketIo/ClubEvents";
 const { ccclass, menu } = _decorator;
 
 @ccclass("ClubSettingUI_Component")
@@ -123,10 +124,10 @@ export class ClubSettingUI_Component extends ComponentController {
    * 初始化
    */
   private init() {
-    // TODO - 根据当前用户权限初始化菜单(只有管理员才有管理、修改名称、公告、解散权限)
+    // 根据当前用户权限初始化菜单(只有管理员才有管理、修改名称、公告、解散权限)
     const role =
       GlobalData.Instance.getCurrentClubPlayerInfo()?.role ??
-      CLUB_PLAYER_ROLE.ADMIN;
+      CLUB_PLAYER_ROLE.MEMBER;
     const toggles = this._menuToggleContainer.toggleItems;
     toggles.forEach((toggle: Toggle) => {
       if (toggle.node.name === "QuitToggle") {
@@ -234,7 +235,8 @@ export class ClubSettingUI_Component extends ComponentController {
       "MainView/Content/MainContent/Content/ChangeNameContent/MainView/Current/Value",
       Label,
     );
-    this._currentClubNameLabel.string = "当前俱乐部名称";
+    this._currentClubNameLabel.string =
+      GlobalData.Instance.getCurrentClubInfoDetail()?.club_name || "";
 
     [, this._changeNameEditbox] = this.getNodeComponent(
       "MainView/Content/MainContent/Content/ChangeNameContent/MainView/ClubName/Value",
@@ -242,7 +244,7 @@ export class ClubSettingUI_Component extends ComponentController {
     );
 
     this._changeNameEditbox.maxLength = 8;
-    this._changeNameEditbox.inputMode = EditBox.InputMode.ANY;
+    this._changeNameEditbox.inputMode = EditBox.InputMode.SINGLE_LINE;
     this._changeNameEditbox.inputFlag = EditBox.InputFlag.DEFAULT;
 
     this.setButtonClickEvent(
@@ -262,9 +264,13 @@ export class ClubSettingUI_Component extends ComponentController {
     try {
       const inputstring = this._changeNameEditbox.string;
       if (inputstring.trim()) {
-        console.log(`onChangeNameBtnClick inputstring--->`, inputstring);
+        if (inputstring === this._currentClubNameLabel.string) {
+          CommonDailogHandler.showBubbleMessage("修改俱乐部成功");
+          return;
+        }
+        ClubEvents.renameClub(inputstring);
       } else {
-        throw new Error("请输入俱乐部名称");
+        throw new Error("请填写俱乐部名称");
       }
     } catch (error) {
       const e = error as Error;
@@ -285,8 +291,9 @@ export class ClubSettingUI_Component extends ComponentController {
     this._announcementEditbox.maxLength = 50;
     this._announcementEditbox.inputMode = EditBox.InputMode.ANY;
     this._announcementEditbox.inputFlag = EditBox.InputFlag.DEFAULT;
-    // TODO - 初始化公告内容
-    this._announcementEditbox.string = "公告内容";
+    // 初始化公告内容
+    this._announcementEditbox.string =
+      GlobalData.Instance.getCurrentClubInfoDetail()?.announcement || "";
 
     this.setButtonClickEvent(
       "MainView/Content/MainContent/Content/AnnouncementContent/MainView/Announcement/ComfrimBtn",
@@ -301,8 +308,18 @@ export class ClubSettingUI_Component extends ComponentController {
    * @param event
    */
   private onAnnouncementBtnClick(event: Event) {
+    this._announcementEditbox.blur();
     const inputstring = this._announcementEditbox.string.trim();
-    console.log(`onAnnouncementBtnClick inputstring--->`, inputstring);
+    if (
+      inputstring ===
+      GlobalData.Instance.getCurrentClubInfoDetail()?.announcement
+    ) {
+      CommonDailogHandler.showBubbleMessage("修改公告成功");
+      this.close();
+      return;
+    } else {
+      ClubEvents.alterClubAnnounce(inputstring);
+    }
   }
   //#endregion
 

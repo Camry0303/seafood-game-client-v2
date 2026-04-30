@@ -54,6 +54,15 @@ export class ClubToggle_Component extends ComponentController {
   }
 
   /**
+   * 点击申请按钮事件
+   * @param event
+   */
+  private onApplicationBtnClick(event: Event) {
+    // 打开并且获取俱乐部申请列表
+    console.log(`onApplicationBtnClick--->`, this._clubData);
+  }
+
+  /**
    * 设置数据
    * @param clubData
    */
@@ -93,11 +102,11 @@ export class ClubToggle_Component extends ComponentController {
   }
 
   /**
-   * 点击申请按钮事件
-   * @param event
+   * 更新俱乐部名称
+   * @param name
    */
-  private onApplicationBtnClick(event: Event) {
-    // 打开并且获取俱乐部申请列表
-    console.log(`onApplicationBtnClick--->`, this._clubData);
+  public updateClubName(name: string) {
+    this._clubName.string = name;
+    this._clubNameChecked.string = name;
   }
 }

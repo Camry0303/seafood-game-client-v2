@@ -261,7 +261,6 @@ export class ClubMainUI_Component extends ComponentController {
    * @param event
    */
   private onClubToggleCheck(event: Event) {
-    // TODO - 切换
     const toggle: Toggle = event.target.getComponent(Toggle);
     console.log(`onClubToggleCheck--->`, toggle);
     const clubToggle = toggle.getComponent(ClubToggle_Component);
@@ -317,7 +316,7 @@ export class ClubMainUI_Component extends ComponentController {
    * @param event
    */
   private onClubSettingBtnClick(event: Event) {
-    // TODO - 俱乐部设置
+    // 打开俱乐部设置
     ComponentManager.Instance.renderUiNode<ClubSettingUI_Component>(
       "ClubSettingUI",
       "Prefabs",
@@ -456,7 +455,7 @@ export class ClubMainUI_Component extends ComponentController {
         // 邀请玩家按钮
         this._invitePlayerBtnNode.active = true;
         // 创建房间按钮
-        this._createTableBtnNode.active = false;
+        this._createTableBtnNode.active = true;
         break;
       case CLUB_PLAYER_ROLE.PARTNER:
         // 设置按钮
@@ -503,5 +502,53 @@ export class ClubMainUI_Component extends ComponentController {
         this._createTableBtnNode.active = false;
         break;
     }
+
+    // 公告相关
+    if (clubDetail.announcement) {
+      this._marqueeComponent.node.active = true;
+      this._marqueeComponent.setMessages([clubDetail.announcement]);
+    } else {
+      this._marqueeComponent.node.active = false;
+      this._marqueeComponent.setMessages([]);
+    }
+
+    // TODO - 获取游戏桌子列表
+    console.log(`获取游戏桌子列表请求`);
+  }
+
+  /**
+   * 渲染俱乐部游戏桌子列表
+   * @param tableList
+   */
+  public renderClubGameTableList(tableList: any[]) {
+    // TODO - 渲染俱乐部游戏桌子列表
+    console.log(`渲染游戏桌子列表--->`, tableList);
+  }
+
+  /**
+   * 更新选中Toggle俱乐部名称
+   */
+  public updateCheckedToggleClubName(club_id: number, club_name: string) {
+    const toggles = this._clubToggleContainer.toggleItems;
+    for (const toggle of toggles) {
+      const clubToggle = toggle.getComponent(ClubToggle_Component);
+      if (clubToggle.getData()?.club_id === club_id) {
+        clubToggle?.updateClubName(club_name);
+        break;
+      }
+    }
+  }
+
+  /**
+   * 更新俱乐部公告
+   * @param announcement
+   */
+  public updateAnnouncement(announcement: string) {
+    this._marqueeComponent.setMessages([announcement]);
+    const [node, component] = ComponentManager.Instance.getNodeComponent(
+      "ClubSettingUI",
+      ClubSettingUI_Component,
+    );
+    component && component.close(); // 关闭设置界面
   }
 }

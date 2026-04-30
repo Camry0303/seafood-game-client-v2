@@ -19,4 +19,10 @@ export enum CLUB_EVENT {
 
   LEAVE_CLUB = "Club.LeaveClub",
   LEAVE_CLUB_RESULT = "Club.LeaveClub.Result",
+
+  RENAME_CLUB = "Club.RenameClub",
+  RENAME_CLUB_RESULT = "Club.RenameClub.Result",
+
+  CHANGE_ANNOUNCEMENT = "Club.ChangeAnnouncement",
+  CHANGE_ANNOUNCEMENT_RESULT = "Club.ChangeAnnouncement.Result",
 }
