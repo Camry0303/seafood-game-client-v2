@@ -46,6 +46,11 @@ export type Club = {
    * 是否有未读消息 0:没有;1:有;
    */
   has_hint?: number;
+
+  /**
+   * 创建时间
+   */
+  created_time?: Date | null;
 };
 
 /**
