@@ -128,7 +128,7 @@ export default class PlazaEvents {
     returnData: Gateway.Returned.Common.Result<{ club_id: number }>,
   ) {
     console.log("<PlazaEvent> onIncomingClubHintResult called!");
-    // // 获取俱乐部申请提示信息
+    // // TODO - 判断如果在俱乐部界面，则更新相应的toggle上的申请标记
     // PlazaEvents.getClubHasHint();
   }
 
