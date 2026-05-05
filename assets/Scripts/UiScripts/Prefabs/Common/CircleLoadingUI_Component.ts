@@ -26,6 +26,9 @@ export enum WAITING_TYPE {
   QUIT_CLUB = "正在退出俱乐部",
   ENTER_CLUB = "正在进入俱乐部",
   LEAVE_CLUB = "正在离开俱乐部",
+  QUERY_CLUB_PLAYER_UNREVIEWED_APPLICATION_LIST = "正在获取未审核的俱乐部玩家申请列表",
+  REVIEW_CLUB_PLAYER_APPLICATION = "正在审核俱乐部玩家申请",
+
   CHANGE_CLUB_NAME = "正在修改俱乐部名称",
   CHANGE_CLUB_ANNOUNCEMENT = "正在修改俱乐部公告",
 

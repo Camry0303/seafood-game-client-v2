@@ -25,4 +25,10 @@ export enum CLUB_EVENT {
 
   CHANGE_ANNOUNCEMENT = "Club.ChangeAnnouncement",
   CHANGE_ANNOUNCEMENT_RESULT = "Club.ChangeAnnouncement.Result",
+
+  QUERY_CLUB_PLAYER_UNREVIEWED_APPLICATION_LIST = "Club.QueryClubPlayerUnreviewedApplicationList",
+  QUERY_CLUB_PLAYER_UNREVIEWED_APPLICATION_LIST_RESULT = "Club.QueryClubPlayerUnreviewedApplicationList.Result",
+
+  REVIEW_CLUB_PLAYER_APPLICATION = "Club.ReviewClubPlayerApplication",
+  REVIEW_CLUB_PLAYER_APPLICATION_RESULT = "Club.ReviewClubPlayerApplication.Result",
 }

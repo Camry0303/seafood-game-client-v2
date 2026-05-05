@@ -13,6 +13,7 @@ import {
   RESPONE_RESULT,
 } from "../../Enums";
 import { ClubMainUI_Component } from "../../UiScripts/Prefabs/Club/ClubMainUI_Component";
+import { ApplicationUI_Component } from "../../UiScripts/Prefabs/Club/ApplicationUI_Component";
 
 /**
  * 俱乐部事件处理类
@@ -29,6 +30,15 @@ export default class ClubEvents {
     [CLUB_EVENT.QUIT_CLUB_RESULT, this.onQuitClubResult],
     [CLUB_EVENT.ENTER_CLUB_RESULT, this.onEnterClubResult],
     [CLUB_EVENT.LEAVE_CLUB_RESULT, this.onLeaveClubResult],
+
+    [
+      CLUB_EVENT.QUERY_CLUB_PLAYER_UNREVIEWED_APPLICATION_LIST_RESULT,
+      this.onQueryClubPlayrUnreviewedApplicationListResult,
+    ],
+    [
+      CLUB_EVENT.REVIEW_CLUB_PLAYER_APPLICATION_RESULT,
+      this.onReviewClubPlayerApplicationResult,
+    ],
 
     [CLUB_EVENT.CHANGE_NAME_RESULT, this.onChangeClubNameResult],
     [
@@ -315,6 +325,129 @@ export default class ClubEvents {
       CommonDailogHandler.showBubbleMessage(`${msg}`);
     }
     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.LEAVE_CLUB);
+  }
+
+  /**
+   * 获取当前俱乐部未审核加入申请列表
+   * @param current
+   * @param pageSize
+   */
+  public static queryClubPlayrUnreviewedApplicationList(
+    current: number = 1,
+    pageSize: number = 100,
+  ) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      const params: Gateway.Requested.ClubPlayerApplication.QueryClubPlayerApplicationListParams =
+        {
+          club_id: GlobalData.Instance.getCurrentClubInfoDetail()?.club_id,
+          review_status: 0,
+          current,
+          pageSize,
+        };
+      CommonDailogHandler.showCircleLoading(
+        WAITING_TYPE.QUERY_CLUB_PLAYER_UNREVIEWED_APPLICATION_LIST,
+      );
+      socket.emit(
+        CLUB_EVENT.QUERY_CLUB_PLAYER_UNREVIEWED_APPLICATION_LIST,
+        params,
+      );
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(
+        WAITING_TYPE.QUERY_CLUB_PLAYER_UNREVIEWED_APPLICATION_LIST,
+      );
+    }
+  }
+
+  /**
+   * 处理获取当前俱乐部未审核加入申请列表结果事件
+   * @param returnData
+   */
+  private static onQueryClubPlayrUnreviewedApplicationListResult(
+    returnData: Gateway.Returned.Common.Result<
+      Gateway.Returned.Common.Pagenation<
+        Gateway.Returned.ClubPlayerApplication.ClubPlayerApplication[]
+      >
+    >,
+  ) {
+    console.log(
+      "<ClubEvent> onQueryClubPlayrUnreviewedApplicationListResult called --->",
+      returnData,
+    );
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      // TODO - 渲染未审核加入申请列表
+      const [node, component] = ComponentManager.Instance.getNodeComponent(
+        "ApplicationUI",
+        ApplicationUI_Component,
+      );
+      component && component.renderUnreviewedApplicationList(data);
+    } else {
+      // 连接失败，弹出提示框
+      CommonDailogHandler.showDialogMessage(`错误：${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(
+      WAITING_TYPE.QUERY_CLUB_PLAYER_UNREVIEWED_APPLICATION_LIST,
+    );
+  }
+
+  /**
+   * 审核俱乐部玩家申请单
+   * @param application_id
+   * @param review_status
+   * @param application_type
+   */
+  public static reviewClubPlayerApplication(
+    application_id: number,
+    review_status: number,
+    application_type: number,
+  ) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      const params: Gateway.Requested.ClubPlayerApplication.ReviewClubPlayerApplicationParams =
+        {
+          application_id,
+          review_status,
+          application_type,
+        };
+      CommonDailogHandler.showCircleLoading(
+        WAITING_TYPE.REVIEW_CLUB_PLAYER_APPLICATION,
+      );
+      socket.emit(CLUB_EVENT.REVIEW_CLUB_PLAYER_APPLICATION, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(
+        WAITING_TYPE.REVIEW_CLUB_PLAYER_APPLICATION,
+      );
+    }
+  }
+
+  /**
+   * 处理审核俱乐部玩家申请结果事件
+   * @param returnData
+   */
+  private static onReviewClubPlayerApplicationResult(
+    returnData: Gateway.Returned.Common.Result<boolean>,
+  ) {
+    console.log(
+      "<ClubEvent> onReviewClubPlayerApplicationResult called --->",
+      returnData,
+    );
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      // TODO - 刷新申请列表
+      const [node, component] = ComponentManager.Instance.getNodeComponent(
+        "ClubMainUI",
+        ClubMainUI_Component,
+      );
+    } else {
+      // 连接失败，弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(
+      WAITING_TYPE.REVIEW_CLUB_PLAYER_APPLICATION,
+    );
   }
 
   /**

@@ -1558,7 +1558,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "cancel",
+    "_name": "CancelBtn",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -1694,7 +1694,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "ok",
+    "_name": "OKBtn",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -2197,6 +2197,7 @@
       "__id__": 0
     },
     "fileId": "3d5yJeO19GW4h/zCViq+O0",
+    "instance": null,
     "targetOverrides": null
   }
 ]
