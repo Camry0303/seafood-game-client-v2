@@ -10,6 +10,7 @@ import { PlazaMainUI_Component } from "../../UiScripts/Prefabs/Plaza/PlazaMainUI
 import { PLAZA_EVENT } from "../../Enums/Events/Plaza";
 import { ClubMainUI_Component } from "../../UiScripts/Prefabs/Club/ClubMainUI_Component";
 import { InviteUI_Component } from "../../UiScripts/Prefabs/Plaza/InviteUI_Component";
+import ClubEvents from "./ClubEvents";
 
 /**
  * 大厅事件处理类
@@ -145,12 +146,16 @@ export default class PlazaEvents {
     returnData: Gateway.Returned.Common.Result<boolean>,
   ) {
     console.log("<PlazaEvent> onApplyClubJoinResult called!");
-    const clubListMainUi = ComponentManager.Instance.getNode("ClubListMainUI");
-    if (clubListMainUi && clubListMainUi.active === true) {
+    const [node, component] = ComponentManager.Instance.getNodeComponent(
+      "ClubMainUI",
+      ClubMainUI_Component,
+    );
+    const isInGame = GlobalData.Instance.getCurrentGameInfo();
+    if (node && node.active === true && !isInGame) {
       // 处理申请加入俱乐部审核结果
       if (returnData.code === RESPONE_RESULT.SUCCESS && returnData.data) {
-        // // TODO - 同意加入,获取俱乐部列表
-        // ClubEvents.getPlayerClubList();
+        // 同意加入,获取俱乐部列表
+        ClubEvents.getPlayerClubList();
       } else if (
         returnData.code === RESPONE_RESULT.SUCCESS &&
         returnData.data === false
