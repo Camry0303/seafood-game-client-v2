@@ -2,6 +2,7 @@ import { _decorator, Button, Label, Sprite, Node, Event } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import { getAvatarSpriteFrame } from "../../../Utils/RemoteSpriteFrameLoader";
 import { Gateway } from "../../../Types/gateway";
+import ClubEvents from "../../../Network/SocketIo/ClubEvents";
 const { ccclass, menu } = _decorator;
 
 @ccclass("ClubToggle_Component")
@@ -18,7 +19,6 @@ export class ClubToggle_Component extends ComponentController {
   private _applicationBtnNode: Node = null;
   private _applicationBtnButton: Button = null;
 
-  // TODO - 完善类型
   private _clubData: Gateway.Returned.Club.Club = null;
 
   start() {}
@@ -59,7 +59,7 @@ export class ClubToggle_Component extends ComponentController {
    */
   private onApplicationBtnClick(event: Event) {
     // 打开并且获取俱乐部申请列表
-    console.log(`onApplicationBtnClick--->`, this._clubData);
+    ClubEvents.queryClubPlayrUnreviewedApplicationList(this._clubData.club_id);
   }
 
   /**
@@ -108,5 +108,24 @@ export class ClubToggle_Component extends ComponentController {
   public updateClubName(name: string) {
     this._clubName.string = name;
     this._clubNameChecked.string = name;
+  }
+
+  /**
+   * 更新俱乐部提示
+   */
+  public updateApplicationHint() {
+    // 是否有申请
+    if (this._clubData.has_hint) {
+      this._applicationBtnNode.active = true;
+      // 设置申请按钮点击事件
+      this.setButtonClickEvent(
+        "ApplicationBtn",
+        0,
+        "onApplicationBtnClick",
+        this.getClassName(),
+      );
+    } else {
+      this._applicationBtnNode.active = false;
+    }
   }
 }

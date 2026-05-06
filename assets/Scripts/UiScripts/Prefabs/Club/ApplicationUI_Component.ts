@@ -1,10 +1,12 @@
-import { _decorator, Node } from "cc";
+import { _decorator, instantiate, Node, Prefab } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import BubbleWindow from "../../../Common/BubbleWindow";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
 import ClubEvents from "../../../Network/SocketIo/ClubEvents";
 import { Pagenation } from "../../../Types/gateway/returned/common";
 import { Gateway } from "../../../Types/gateway";
+import { ResourceManager } from "../../../Runtime/ResourceManager";
+import { ApplicationItem_Component } from "./ApplicationItem_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("ApplicationUI_Component")
@@ -13,6 +15,10 @@ export class ApplicationUI_Component extends ComponentController {
   public _bubbleWindow: BubbleWindow = null;
 
   private _tableContentNode: Node = null;
+
+  private _data: Pagenation<
+    Gateway.Returned.ClubPlayerApplication.ClubPlayerApplication[]
+  > = null;
 
   start() {
     // ClubEvents.
@@ -66,8 +72,36 @@ export class ApplicationUI_Component extends ComponentController {
       Gateway.Returned.ClubPlayerApplication.ClubPlayerApplication[]
     >,
   ) {
+    this._data = data;
     this._tableContentNode.removeAllChildren();
 
-    // TODO - 渲染申请列表
+    const datalist = data.data;
+    const prefab: Prefab = ResourceManager.Instance.getAsset<Prefab>(
+      "Prefabs",
+      "Club/ApplicationItem",
+    );
+
+    // 渲染申请列表
+    datalist.forEach((item) => {
+      const node = instantiate(prefab);
+      const component = node.addComponent(ApplicationItem_Component);
+      this._tableContentNode.addChild(node);
+      component.setData(item);
+    });
+  }
+
+  /**
+   * 设置已审核
+   */
+  public setReviewed(): number {
+    const nodes = this._tableContentNode.children;
+    for (let index = 0; index < nodes.length; index++) {
+      const node = nodes[index];
+      const component = node.getComponent(ApplicationItem_Component);
+      if (component.isWaitingResult) {
+        const club_id = component.setReviewed();
+        return club_id;
+      }
+    }
   }
 }

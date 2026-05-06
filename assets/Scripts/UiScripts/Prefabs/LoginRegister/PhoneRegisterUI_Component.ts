@@ -258,6 +258,8 @@ export class PhoneRegisterUI_Component extends ComponentController {
         // 关闭手机注册界面并销毁
         this.close();
 
+        CommonDailogHandler.hideCircleLoading(WAITING_TYPE.REGIST_PHONE);
+
         // 连接网关服务器，进行登录
         SocketManager.Instance.connect();
       } else {

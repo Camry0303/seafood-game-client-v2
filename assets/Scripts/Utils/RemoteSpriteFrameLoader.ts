@@ -53,7 +53,7 @@ export async function getAvatarSpriteFrame(
   if (url.startsWith(prefix)) {
     return ResourceManager.Instance.getSpriteFrame(
       "Images",
-      `/Common/Avatars/${url.replace(prefix, "")}`,
+      `Avatars/${url.replace(prefix, "")}`,
     );
   } else if (url.startsWith("https") || url.startsWith("http")) {
     const spriteFrame = await wechatSpriteFrameLoader(url);

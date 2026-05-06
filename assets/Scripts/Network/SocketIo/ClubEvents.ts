@@ -8,6 +8,7 @@ import { WAITING_TYPE } from "../../UiScripts/Prefabs/Common/CircleLoadingUI_Com
 import PlazaEvents from "./PlazaEvents";
 import { CLUB_EVENT } from "../../Enums/Events/Club";
 import {
+  CLUB_APPLICATION_TYPE,
   JOIN_CLUB_RESULT,
   QUIT_CLUB_RESULT,
   RESPONE_RESULT,
@@ -182,9 +183,12 @@ export default class ClubEvents {
       if (returnData.data === JOIN_CLUB_RESULT.JOIN_SUCCESS) {
         // 重新请求获取玩家俱乐部列表
         ClubEvents.getPlayerClubList();
+        CommonDailogHandler.showBubbleMessage(`加入成功！`);
       } else if (returnData.data === JOIN_CLUB_RESULT.APPLY_SUCCESS) {
         // 申请加入成功
-        CommonDailogHandler.showBubbleMessage(`申请成功！请等待同意...`);
+        CommonDailogHandler.showBubbleMessage(
+          `提交申请成功，请耐心等待俱乐部管理人员审核`,
+        );
       }
     } else {
       // 连接失败，弹出提示框
@@ -333,6 +337,7 @@ export default class ClubEvents {
    * @param pageSize
    */
   public static queryClubPlayrUnreviewedApplicationList(
+    club_id: number,
     current: number = 1,
     pageSize: number = 100,
   ) {
@@ -340,8 +345,9 @@ export default class ClubEvents {
     if (socket) {
       const params: Gateway.Requested.ClubPlayerApplication.QueryClubPlayerApplicationListParams =
         {
-          club_id: GlobalData.Instance.getCurrentClubInfoDetail()?.club_id,
+          club_id: club_id,
           review_status: 0,
+          type: CLUB_APPLICATION_TYPE.JOIN,
           current,
           pageSize,
         };
@@ -377,9 +383,11 @@ export default class ClubEvents {
     );
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
-      // TODO - 渲染未审核加入申请列表
-      const [node, component] = ComponentManager.Instance.getNodeComponent(
+      // 渲染未审核加入申请列表
+      const [node, component] = ComponentManager.Instance.renderUiNode(
         "ApplicationUI",
+        "Prefabs",
+        "Club/ApplicationUI",
         ApplicationUI_Component,
       );
       component && component.renderUnreviewedApplicationList(data);
@@ -436,11 +444,22 @@ export default class ClubEvents {
     );
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
-      // TODO - 刷新申请列表
+      // 刷新申请列表
       const [node, component] = ComponentManager.Instance.getNodeComponent(
-        "ClubMainUI",
-        ClubMainUI_Component,
+        "ApplicationUI",
+        ApplicationUI_Component,
       );
+      if (component) {
+        const club_id = component.setReviewed();
+        const [clubMainNode, clubMainComponent] =
+          ComponentManager.Instance.getNodeComponent(
+            "ClubMainUI",
+            ClubMainUI_Component,
+          );
+        if (clubMainComponent) {
+          clubMainComponent.setApplicationHint(club_id, -1);
+        }
+      }
     } else {
       // 连接失败，弹出提示框
       CommonDailogHandler.showBubbleMessage(`${msg}`);

@@ -93,6 +93,14 @@ export enum ANDROID_LOCATION_STATUS {
 }
 
 /**
+ * 俱乐部申请类型
+ */
+export enum CLUB_APPLICATION_TYPE {
+  JOIN = 0, // 加入
+  QUIT = 1, // 退出
+}
+
+/**
  * 加入俱乐部结果枚举
  */
 export enum JOIN_CLUB_RESULT {

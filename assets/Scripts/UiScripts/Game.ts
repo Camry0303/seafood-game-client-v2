@@ -99,12 +99,12 @@ export class Game extends SingletonComponent {
         // 俱乐部相关预设体资源
         {
           assetType: Prefab,
-          urls: ["Club/ClubMainUI", "Club/ClubSettingUI"],
+          urls: ["Club/ClubMainUI", "Club/ClubSettingUI", "Club/ApplicationUI"],
         },
         // 俱乐部组件预设体资源
         {
           assetType: Prefab,
-          urls: ["Club/ClubToggle"],
+          urls: ["Club/ClubToggle", "Club/ApplicationItem"],
         },
         // 游戏设置相关预设体资源
         {
@@ -137,7 +137,12 @@ export class Game extends SingletonComponent {
         // 内置头像资源
         {
           assetType: ImageAsset,
-          urls: ["Common/default_avatar_01"],
+          urls: [
+            "Common/default_avatar_01",
+            ...Array.from({ length: 40 }).map((_, i) => {
+              return `Avatars/avatar_${i.toString().padStart(3, "0")}`;
+            }),
+          ],
         },
         // 俱乐部相关
         {

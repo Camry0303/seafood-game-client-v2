@@ -231,7 +231,7 @@ export class ClubMainUI_Component extends ComponentController {
    * @param clubList
    */
   public renderClubList(clubList: Gateway.Returned.Club.Club[]) {
-    // TODO - 渲染俱乐部列表
+    // 渲染俱乐部列表
     this._clubContentNode.removeAllChildren();
     const clubTogglePrefab: Prefab = ResourceManager.Instance.getAsset<Prefab>(
       "Prefabs",
@@ -262,9 +262,7 @@ export class ClubMainUI_Component extends ComponentController {
    */
   private onClubToggleCheck(event: Event) {
     const toggle: Toggle = event.target.getComponent(Toggle);
-    console.log(`onClubToggleCheck--->`, toggle);
     const clubToggle = toggle.getComponent(ClubToggle_Component);
-    console.log(`onClubToggleCheck--->`, clubToggle.getData());
     if (clubToggle.getData()) {
       ClubEvents.enterClub(clubToggle.getData().club_id);
     }
@@ -279,10 +277,9 @@ export class ClubMainUI_Component extends ComponentController {
       "JoinClubToggle",
       6,
       (value: string) => {
-        console.log("俱乐部ID--->", value);
-        // TODO - 加入俱乐部
-        console.log("加入俱乐部");
-        CommonDailogHandler.showBubbleMessage(`加入俱乐部:${value}`);
+        // 加入俱乐部
+        const club_id = parseInt(value, 10);
+        ClubEvents.joinClubById(club_id);
       },
     );
   }
@@ -556,5 +553,23 @@ export class ClubMainUI_Component extends ComponentController {
       ClubSettingUI_Component,
     );
     component && component.close(); // 关闭设置界面
+  }
+
+  /**
+   * 设置申请提示
+   * @param club_id
+   * @param diff
+   */
+  public setApplicationHint(club_id: number, diff: number) {
+    const toggles = this._clubToggleContainer.toggleItems;
+    for (const toggle of toggles) {
+      const clubToggle = toggle.getComponent(ClubToggle_Component);
+      const clubData = clubToggle.getData();
+      if (clubData?.club_id === club_id) {
+        clubData.has_hint += diff;
+        clubToggle?.updateApplicationHint();
+        break;
+      }
+    }
   }
 }

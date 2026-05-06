@@ -45,7 +45,7 @@ export class ApplicationItem_Component extends ComponentController {
     [, this._nicknameLabel] = this.getNodeComponent("BaseInfo/Nickname", Label);
 
     // 获取ID标签
-    [, this._idLabel] = this.getNodeComponent("BaseInfo/Id", Label);
+    [, this._idLabel] = this.getNodeComponent("BaseInfo/ID", Label);
 
     // 获取选项节点
     this._optionsNode = this.getNode("Options");
@@ -114,6 +114,7 @@ export class ApplicationItem_Component extends ComponentController {
    */
   private onCancelBtnClick(event: Event) {
     this._data.review_status = 2;
+    this.isWaitingResult = true;
     ClubEvents.reviewClubPlayerApplication(
       this._data.id,
       this._data.review_status,
@@ -127,6 +128,7 @@ export class ApplicationItem_Component extends ComponentController {
    */
   private onOKBtnClick(event: Event) {
     this._data.review_status = 1;
+    this.isWaitingResult = true;
     ClubEvents.reviewClubPlayerApplication(
       this._data.id,
       this._data.review_status,
@@ -150,5 +152,9 @@ export class ApplicationItem_Component extends ComponentController {
     this._reviewStatusLabel.string = statusText;
 
     this._reviewStatusLabel.node.active = true;
+
+    this.isWaitingResult = false;
+
+    return this._data.club_id;
   }
 }
