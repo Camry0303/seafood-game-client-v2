@@ -9,7 +9,6 @@ import {
   ToggleContainer,
   UITransform,
   view,
-  Widget,
 } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import BubbleWindow from "../../../Common/BubbleWindow";
@@ -37,7 +36,7 @@ export class ClubMainUI_Component extends ComponentController {
   private _clubContentNode: Node = null;
 
   private _settingBtnNode: Node = null;
-  private _memberManageBtnNode: Node = null;
+  private _memberManagementBtnNode: Node = null;
   private _memberBtnNode: Node = null;
   private _partnerBtnNode: Node = null;
   private _myMemberBtnNode: Node = null;
@@ -116,10 +115,10 @@ export class ClubMainUI_Component extends ComponentController {
     );
 
     // 设置俱乐部成员管理按钮点击事件
-    [this._memberManageBtnNode] = this.setButtonClickEvent(
-      "MainView/Content/RightContent/TopMenu/MemberManageBtn",
+    [this._memberManagementBtnNode] = this.setButtonClickEvent(
+      "MainView/Content/RightContent/TopMenu/MemberManagementBtn",
       0,
-      "onClubMemberManageBtnClick",
+      "onClubMemberManagementBtnClick",
       this.getClassName(),
     );
 
@@ -326,9 +325,9 @@ export class ClubMainUI_Component extends ComponentController {
    * 俱乐部成员管理按钮点击事件
    * @param event
    */
-  private onClubMemberManageBtnClick(event: Event) {
+  private onClubMemberManagementBtnClick(event: Event) {
     // TODO - 俱乐部成员管理
-    console.log(`onClubMemberManageBtnClick--->`);
+    console.log(`onClubMemberManagementBtnClick--->`);
   }
 
   /**
@@ -436,7 +435,7 @@ export class ClubMainUI_Component extends ComponentController {
         // 设置按钮
         this._settingBtnNode.active = true;
         // 成员管理按钮
-        this._memberManageBtnNode.active = true;
+        this._memberManagementBtnNode.active = true;
         // 成员按钮
         this._memberBtnNode.active = true;
         // 合伙人按钮
@@ -458,7 +457,7 @@ export class ClubMainUI_Component extends ComponentController {
         // 设置按钮
         this._settingBtnNode.active = true;
         // 成员管理按钮
-        this._memberManageBtnNode.active = false;
+        this._memberManagementBtnNode.active = false;
         // 成员按钮
         this._memberBtnNode.active = true;
         // 合伙人按钮
@@ -480,7 +479,7 @@ export class ClubMainUI_Component extends ComponentController {
         // 设置按钮
         this._settingBtnNode.active = true;
         // 成员管理按钮
-        this._memberManageBtnNode.active = false;
+        this._memberManagementBtnNode.active = false;
         // 成员按钮
         this._memberBtnNode.active = true;
         // 合伙人按钮

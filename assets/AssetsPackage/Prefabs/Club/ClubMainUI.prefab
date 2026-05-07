@@ -2398,7 +2398,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "MemberManageBtn",
+    "_name": "MemberManagementBtn",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -6267,6 +6267,7 @@
       "__id__": 0
     },
     "fileId": "b5eMQGmuNG76+yYMXMBeUb",
-    "instance": null
+    "instance": null,
+    "targetOverrides": null
   }
 ]
