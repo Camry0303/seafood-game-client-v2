@@ -52,17 +52,6 @@ export class ApplicationItem_Component extends ComponentController {
 
     // 获取审核状态标签
     [, this._reviewStatusLabel] = this.getNodeComponent("ReviewStatus", Label);
-
-    // 设置关闭按钮点击事件
-    this.setButtonClickEvent(
-      "MainView/CloseBtn",
-      0,
-      "close",
-      this.getClassName(),
-    );
-
-    // 设置蒙版关闭按钮点击事件
-    this.setButtonClickEvent("MaskNode", 0, "close", this.getClassName());
   }
 
   /**

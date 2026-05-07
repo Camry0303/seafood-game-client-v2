@@ -96,15 +96,24 @@ export class Game extends SingletonComponent {
             "Plaza/PlazaGameRecordUI",
           ],
         },
-        // 俱乐部相关预设体资源
+        // 俱乐部弹窗相关预设体资源
         {
           assetType: Prefab,
-          urls: ["Club/ClubMainUI", "Club/ClubSettingUI", "Club/ApplicationUI"],
+          urls: [
+            "Club/ClubMainUI",
+            "Club/ClubSettingUI",
+            "Club/ApplicationUI",
+            "Club/MemberManagementUI",
+          ],
         },
         // 俱乐部组件预设体资源
         {
           assetType: Prefab,
-          urls: ["Club/ClubToggle", "Club/ApplicationItem"],
+          urls: [
+            "Club/ClubToggle",
+            "Club/ApplicationItem",
+            "CLub/MemberManagementItem",
+          ],
         },
         // 游戏设置相关预设体资源
         {

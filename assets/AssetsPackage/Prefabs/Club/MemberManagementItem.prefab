@@ -157,7 +157,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 858,
+      "width": 1320,
       "height": 2
     },
     "_anchorPoint": {
@@ -1506,7 +1506,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Id",
+    "_name": "ID",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -2803,6 +2803,8 @@
       "__id__": 0
     },
     "fileId": "c0fXXFFx9PZ7sqrEUDLuJp",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -2819,7 +2821,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 818,
+      "width": 1280,
       "height": 60
     },
     "_anchorPoint": {
@@ -2916,6 +2918,7 @@
       "__id__": 0
     },
     "fileId": "aeEMWOU4VKK5rRacBVSMht",
+    "instance": null,
     "targetOverrides": null
   }
 ]
