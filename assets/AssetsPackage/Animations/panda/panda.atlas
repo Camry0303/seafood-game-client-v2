@@ -1,0 +1,165 @@
+panda.png
+size:777,157
+filter:Linear,Linear
+pma:true
+scale:0.2
+erduo-a
+bounds:599,64,27,30
+erduo-b
+bounds:691,24,18,21
+rotate:90
+hong-a
+bounds:431,2,16,12
+hong-b
+bounds:267,2,16,14
+hong-c
+bounds:672,29,17,13
+hong-d
+bounds:720,3,17,13
+jiao-a
+bounds:545,96,59,81
+rotate:90
+jiao-b
+bounds:661,2,23,16
+rotate:90
+kou-a
+bounds:699,3,19,19
+kou-b
+bounds:367,2,15,22
+rotate:90
+qiqiu-a
+bounds:431,16,47,55
+qiqiu-b
+bounds:452,94,61,91
+rotate:90
+shou-a
+bounds:300,14,57,65
+offsets:0,0,57,67
+rotate:90
+shou-b
+bounds:578,7,47,35
+rotate:90
+shou-c
+bounds:720,18,18,18
+shou-d
+bounds:158,2,34,27
+rotate:90
+shouzhang-a
+bounds:674,44,40,38
+shouzhi-a
+bounds:637,2,18,22
+rotate:90
+shouzhi-b
+bounds:615,2,20,17
+shouzhi-c
+bounds:679,2,18,20
+shouzhi-d
+bounds:226,19,17,32
+rotate:90
+shouzhi-e
+bounds:636,22,19,23
+shouzhi-f
+bounds:758,20,17,17
+shouzhi-g
+bounds:758,2,16,16
+shouzhi-h
+bounds:247,2,18,14
+tou
+bounds:158,38,140,117
+toufa-a
+bounds:215,6,7,9
+rotate:90
+xian-a
+bounds:452,78,14,77
+rotate:90
+yan-a
+bounds:628,47,44,35
+yan-b
+bounds:187,15,21,37
+rotate:90
+yan-e
+bounds:187,2,16,11
+yan-f
+bounds:226,2,19,15
+yan-m
+bounds:449,2,15,12
+yan-n
+bounds:767,48,13,8
+rotate:90
+yanzhu-a
+bounds:466,2,12,12
+yanzhu-b
+bounds:205,2,8,11
+ye-a
+bounds:716,38,18,24
+rotate:90
+ye-b
+bounds:740,18,18,16
+rotate:90
+ye-c
+bounds:531,78,12,14
+ye-d
+bounds:391,2,15,20
+rotate:90
+ye-e
+bounds:503,3,22,9
+yifu-a
+bounds:300,73,150,82
+yifu-b
+bounds:367,19,62,52
+yifu-c
+bounds:2,4,154,151
+zhuzi-a
+bounds:708,85,62,70
+zhuzi-b
+bounds:628,84,78,71
+zui-a
+bounds:545,56,38,52
+rotate:90
+zui-b
+bounds:534,2,42,52
+图层 10
+bounds:657,24,2,1
+图层 11
+bounds:527,4,8,5
+rotate:90
+图层 12
+bounds:452,73,4,3
+图层 13
+bounds:534,56,2,2
+图层 14
+bounds:480,2,21,10
+图层 17
+bounds:599,57,5,5
+图层 18
+bounds:767,39,7,7
+图层 19
+bounds:285,3,13,7
+rotate:90
+图层 27
+bounds:480,14,62,52
+rotate:90
+图层 29
+bounds:716,58,24,25
+图层 30
+bounds:742,39,23,22
+图层 31
+bounds:742,63,27,20
+图层 39
+bounds:534,60,9,16
+图层 42
+bounds:615,21,19,24
+图层 43
+bounds:260,18,18,30
+rotate:90
+图层 50
+bounds:714,28,8,4
+rotate:90
+图层 55
+bounds:739,3,13,17
+rotate:90
+图层 65
+bounds:413,2,16,15
+图层 67
+bounds:657,27,18,13
+rotate:90

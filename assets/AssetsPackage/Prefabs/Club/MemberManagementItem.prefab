@@ -1665,7 +1665,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "TDBY",
+    "_name": "TdbyScore",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -1824,7 +1824,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "YDay",
+    "_name": "YdayScore",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -1983,7 +1983,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "TDay",
+    "_name": "TdayScore",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {

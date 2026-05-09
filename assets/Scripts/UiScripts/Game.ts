@@ -112,7 +112,7 @@ export class Game extends SingletonComponent {
           urls: [
             "Club/ClubToggle",
             "Club/ApplicationItem",
-            "CLub/MemberManagementItem",
+            "Club/MemberManagementItem",
           ],
         },
         // 游戏设置相关预设体资源
