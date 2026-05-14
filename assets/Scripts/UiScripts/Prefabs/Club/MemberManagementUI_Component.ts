@@ -4,6 +4,9 @@ import BubbleWindow from "../../../Common/BubbleWindow";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
 import { ResourceManager } from "../../../Runtime/ResourceManager";
 import { MemberManagementItem_Component } from "./MemberManagementItem_Component";
+import { Gateway } from "../../../Types/typing";
+import { GetMemberManagementListParams } from "../../../Types/gateway/requested/club";
+import ClubEvents from "../../../Network/SocketIo/ClubEvents";
 const { ccclass, menu } = _decorator;
 
 @ccclass("MemberManagementUI_Component")
@@ -14,8 +17,10 @@ export class MemberManagementUI_Component extends ComponentController {
   private _conditionEditbox: EditBox = null;
   private _tableContentNode: Node = null;
 
-  // TODO - 成员列表数据
-  private _data: any[] = [];
+  // 成员列表数据
+  private _data: Gateway.Returned.Common.Pagenation<
+    Gateway.Returned.ClubPlayer.ClubPlayer[]
+  > = null;
 
   start() {}
 
@@ -83,8 +88,22 @@ export class MemberManagementUI_Component extends ComponentController {
    * @param event
    */
   private onSearch(event: Event) {
-    // TODO - 搜索
+    // 搜索
     console.log(`onSearch--->`);
+    let params: GetMemberManagementListParams = {
+      current: 1,
+      pageSize: 1000,
+    };
+
+    const nickname_or_id = this._conditionEditbox.string.trim();
+    if (nickname_or_id) {
+      params = {
+        ...params,
+        nickname_or_id,
+      };
+    }
+
+    ClubEvents.getMemberManagementList(params);
   }
 
   /**
@@ -92,16 +111,26 @@ export class MemberManagementUI_Component extends ComponentController {
    * @param event
    */
   private onGetAll(event: Event) {
-    // TODO - 获取全部
+    // 获取全部
     console.log(`onGetAll--->`);
+    this._conditionEditbox.string = "";
+    let params: GetMemberManagementListParams = {
+      current: 1,
+      pageSize: 1000,
+    };
+
+    ClubEvents.getMemberManagementList(params);
   }
 
   /**
    * 设置数据
    * @param data
-   * TODO - 数据类型
    */
-  public setData(data: any) {
+  public setData(
+    data: Gateway.Returned.Common.Pagenation<
+      Gateway.Returned.ClubPlayer.ClubPlayer[]
+    >,
+  ) {
     this._data = data;
     this._tableContentNode.removeAllChildren();
 

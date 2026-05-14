@@ -10,6 +10,23 @@ import { GlobalData } from "../Runtime/GlobalData";
  */
 export default class HttpApiServices {
   /**
+   * 测试CSW接口请求
+   * @returns
+   */
+  public static async testCSWRequest(params: any) {
+    const host = "http://119.91.54.96";
+    const port = "9909";
+
+    const reponse = await fly.post(
+      `${host}:${port}//api/regByPassword`,
+      params,
+    );
+    const data = reponse.data;
+
+    return data;
+  }
+
+  /**
    * 获取验证码图片
    * @returns
    */

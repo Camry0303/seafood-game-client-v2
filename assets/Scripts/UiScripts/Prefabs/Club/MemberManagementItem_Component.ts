@@ -4,6 +4,7 @@ import BubbleWindow from "../../../Common/BubbleWindow";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
 import { CLUB_PLAYER_ROLE } from "../../../Enums";
 import { getAvatarSpriteFrame } from "../../../Utils/RemoteSpriteFrameLoader";
+import { Gateway } from "../../../Types/gateway";
 const { ccclass, menu } = _decorator;
 
 @ccclass("MemberManagementItem_Component")
@@ -29,7 +30,7 @@ export class MemberManagementItem_Component extends ComponentController {
 
   private _optionsNode: Node = null;
 
-  private _data: any = null; // 数据
+  private _data: Gateway.Returned.ClubPlayer.ClubPlayer = null; // 数据
 
   start() {}
 
@@ -78,16 +79,17 @@ export class MemberManagementItem_Component extends ComponentController {
    * 设置数据
    * @param data
    */
-  public async setData(data: any) {
+  public async setData(data: Gateway.Returned.ClubPlayer.ClubPlayer) {
     this._data = data;
 
-    // TODO - 根据玩家角色显示不同的标记
-    this._roleAdminMarkNode.active = false;
-    this._roleSubAdminMarkNode.active = false;
-    this._rolePartnerMarkNode.active = false;
+    // 根据玩家角色显示不同的标记
+    this._roleAdminMarkNode.active = data.role === CLUB_PLAYER_ROLE.ADMIN;
+    this._roleSubAdminMarkNode.active =
+      data.role === CLUB_PLAYER_ROLE.SUB_ADMIN;
+    this._rolePartnerMarkNode.active = data.role === CLUB_PLAYER_ROLE.PARTNER;
 
-    // TODO - 根据玩家角色显示不同的操作按钮
-    this._optionsNode.active = data.role <= CLUB_PLAYER_ROLE.SUB_ADMIN;
+    // 根据玩家角色显示不同的操作按钮
+    this._optionsNode.active = data.role >= CLUB_PLAYER_ROLE.PARTNER;
     if (this._optionsNode.active) {
       this.setButtonClickEvent(
         "Options/AddScoreBtn",
@@ -107,19 +109,19 @@ export class MemberManagementItem_Component extends ComponentController {
     this._nicknameLabel.string = data.nickname;
 
     // 设置ID
-    this._idLabel.string = data.player_id;
+    this._idLabel.string = data.player_id.toString();
 
     // 设置前天分数
-    this._tdbyLabel.string = data.tdby_score;
+    this._tdbyLabel.string = data.tdby_settlement_score.toString() || "0";
 
     // 设置昨天分数
-    this._ydayLabel.string = data.yday_score;
+    this._ydayLabel.string = data.yday_settlement_score.toString() || "0";
 
     // 设置今天分数
-    this._tdayLabel.string = data.tday_score;
+    this._tdayLabel.string = data.tday_settlement_score.toString() || "0";
 
     // 设置总分数
-    this._totalScoreLabel.string = data.total_score;
+    this._totalScoreLabel.string = data.club_score.toString() || "0";
 
     // 设置头像
     this._avatarSprite.spriteFrame = await getAvatarSpriteFrame(data.avatar);

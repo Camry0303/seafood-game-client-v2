@@ -31,4 +31,7 @@ export enum CLUB_EVENT {
 
   REVIEW_CLUB_PLAYER_APPLICATION = "Club.ReviewClubPlayerApplication",
   REVIEW_CLUB_PLAYER_APPLICATION_RESULT = "Club.ReviewClubPlayerApplication.Result",
+
+  GET_MEMBER_MANAGEMENT_LIST = "Club.GetMemberManagementList",
+  GET_MEMBER_MANAGEMENT_LIST_RESULT = "Club.GetMemberManagementList.Result",
 }

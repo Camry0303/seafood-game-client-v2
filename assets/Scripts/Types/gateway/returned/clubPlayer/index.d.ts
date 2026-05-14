@@ -33,6 +33,21 @@ export type ClubPlayer = {
   daily_score: number;
 
   /**
+   * 前天结算积分
+   */
+  tdby_settlement_score: number;
+
+  /**
+   * 昨天结算积分
+   */
+  yday_settlement_score: number;
+
+  /**
+   * 今天结算积分
+   */
+  tday_settlement_score: number;
+
+  /**
    * 游戏权限:0:禁止游戏;1:允许游戏
    */
   game_permit: number;
@@ -62,7 +77,6 @@ export type ClubPlayer = {
    */
   is_online: number;
 };
-
 /**
  * 当前俱乐部玩家信息
  */

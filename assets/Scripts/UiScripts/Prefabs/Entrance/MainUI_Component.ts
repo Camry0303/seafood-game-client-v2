@@ -11,6 +11,7 @@ import _ from "lodash";
 import { WAITING_TYPE } from "../Common/CircleLoadingUI_Component";
 import { PlazaMainUI_Component } from "../Plaza/PlazaMainUI_Component";
 import { ClubMainUI_Component } from "../Club/ClubMainUI_Component";
+import HttpApiServices from "../../../Utils/HttpApiServices";
 
 const { ccclass, menu } = _decorator;
 
@@ -53,6 +54,7 @@ export class MainUI_Component extends ComponentController {
    */
   private async onTestBtnClick(event: Event) {
     console.log(`onTestBtnClick`);
+    // this.testCSWRequest();
     this.testDialogMessage();
     // this.testPlazaMainUI();
     // this.testMiniKeyboard();
@@ -225,5 +227,21 @@ export class MainUI_Component extends ComponentController {
       "Club/ClubMainUI",
       ClubMainUI_Component,
     );
+  }
+
+  /**
+   * 测试请求传送注册接口
+   */
+  private async testCSWRequest() {
+    // 测试
+    const params = {
+      nickname: "ABCDEFGHIJKLMNOPQRST",
+      password: "123456789a123456789b",
+      avatar:
+        "https://avatar-1259520887.cos.ap-guangzhou.myqcloud.com/dev/avatar/20260510142752354311.png.https://avatar-1259520887.cos.ap-guangzhou.myqcloud.com/dev/avatar/20260510142752354311.png",
+      d: false,
+    };
+    const data = await HttpApiServices.testCSWRequest(params);
+    console.log(`testCSWRequest response data--->`, data);
   }
 }

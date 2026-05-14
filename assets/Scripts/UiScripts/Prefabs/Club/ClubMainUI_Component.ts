@@ -24,6 +24,7 @@ import { ResourceManager } from "../../../Runtime/ResourceManager";
 import { ClubToggle_Component } from "./ClubToggle_Component";
 import { CLUB_PLAYER_ROLE } from "../../../Enums";
 import { MemberManagementUI_Component } from "./MemberManagementUI_Component";
+import { GetMemberManagementListParams } from "../../../Types/gateway/requested/club";
 const { ccclass, menu } = _decorator;
 
 @ccclass("ClubMainUI_Component")
@@ -329,14 +330,11 @@ export class ClubMainUI_Component extends ComponentController {
   private onClubMemberManagementBtnClick(event: Event) {
     console.log(`onClubMemberManagementBtnClick--->`);
 
-    // TODO - 考虑在返回数据后，再打开
-    const [node, component] =
-      ComponentManager.Instance.renderUiNode<MemberManagementUI_Component>(
-        "MemberManagementUI",
-        "Prefabs",
-        "Club/MemberManagementUI",
-        MemberManagementUI_Component,
-      );
+    const params: GetMemberManagementListParams = {
+      current: 1,
+      pageSize: 1000,
+    };
+    ClubEvents.getMemberManagementList(params);
   }
 
   /**

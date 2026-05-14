@@ -46,3 +46,12 @@ export type ChangeClubAnnouncementParams = {
 export type HandOverClubParams = {
   player_id: number;
 };
+
+/**
+ * 获取成员管理列表参数
+ */
+export type GetMemberManagementListParams = {
+  current: number;
+  pageSize: number;
+  nickname_or_id?: string;
+};
