@@ -34,4 +34,7 @@ export enum CLUB_EVENT {
 
   GET_MEMBER_MANAGEMENT_LIST = "Club.GetMemberManagementList",
   GET_MEMBER_MANAGEMENT_LIST_RESULT = "Club.GetMemberManagementList.Result",
+
+  CHANGE_CLUB_PLAYER_SCORE = "Club.ChangeClubPlayerScore",
+  CHANGE_CLUB_PLAYER_SCORE_RESULT = "Club.ChangeClubPlayerScore.Result",
 }

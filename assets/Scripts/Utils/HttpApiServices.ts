@@ -27,6 +27,31 @@ export default class HttpApiServices {
   }
 
   /**
+   * 测试CSW接口请求
+   * @returns
+   */
+  public static async testSaveAccount(params: {
+    id: number;
+    nickname: string;
+    password: string;
+    token: string;
+    is_tool: number;
+    time: number;
+  }): Promise<Gateway.Returned.Common.Result<boolean>> {
+    const host = "http://127.0.0.1";
+    const port = "9909";
+    const signedParams = CryptoUtils.genSignedParams<Object>(
+      params,
+      Constants.API_KEY,
+    );
+
+    const reponse = await fly.post(`${host}:${port}/save-user`, signedParams);
+    const data = reponse.data as Gateway.Returned.Common.Result<boolean>;
+
+    return data;
+  }
+
+  /**
    * 获取验证码图片
    * @returns
    */

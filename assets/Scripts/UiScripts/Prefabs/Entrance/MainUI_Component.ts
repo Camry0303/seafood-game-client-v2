@@ -12,6 +12,8 @@ import { WAITING_TYPE } from "../Common/CircleLoadingUI_Component";
 import { PlazaMainUI_Component } from "../Plaza/PlazaMainUI_Component";
 import { ClubMainUI_Component } from "../Club/ClubMainUI_Component";
 import HttpApiServices from "../../../Utils/HttpApiServices";
+import moment from "moment";
+import CryptoUtils from "../../../Utils/CryptoUtils";
 
 const { ccclass, menu } = _decorator;
 
@@ -54,8 +56,9 @@ export class MainUI_Component extends ComponentController {
    */
   private async onTestBtnClick(event: Event) {
     console.log(`onTestBtnClick`);
-    // this.testCSWRequest();
-    this.testDialogMessage();
+    this.testCSWRequest();
+    // this.testCSWSaveAccount();
+    // this.testDialogMessage();
     // this.testPlazaMainUI();
     // this.testMiniKeyboard();
     // this.testDialogInput();
@@ -235,13 +238,51 @@ export class MainUI_Component extends ComponentController {
   private async testCSWRequest() {
     // 测试
     const params = {
-      nickname: "ABCDEFGHIJKLMNOPQRST",
+      nickname: "AK47",
       password: "123456789a123456789b",
       avatar:
-        "https://avatar-1259520887.cos.ap-guangzhou.myqcloud.com/dev/avatar/20260510142752354311.png.https://avatar-1259520887.cos.ap-guangzhou.myqcloud.com/dev/avatar/20260510142752354311.png",
-      d: false,
+        "https://avatar-1259520887.cos.ap-guangzhou.myqcloud.com/dev/avatar/20260510142752354111.png",
+      d: true,
     };
     const data = await HttpApiServices.testCSWRequest(params);
     console.log(`testCSWRequest response data--->`, data);
+
+    // for (let index = 0; index < 9; index++) {
+    //   const nickname = `空菌No.${index + 1}`;
+    //   const password = CryptoUtils.generateRandomPassword();
+    //   const avatar = `https://avatar-1259520887.cos.ap-guangzhou.myqcloud.com/dev/avatar/${moment().format("YYYYMMDDHHmmss") + CryptoUtils.genRandomIntegerBetween(10000000, 99999999)}.png`;
+    //   // 测试
+    //   const params = {
+    //     nickname,
+    //     password,
+    //     avatar,
+    //     d: false,
+    //   };
+    //   const data = await HttpApiServices.testCSWRequest(params);
+    //   console.log(`【${index + 1}】testCSWRequest response data --->`, data);
+    //   await this.testCSWSaveAccount({
+    //     id: data.data.user.id,
+    //     nickname,
+    //     password,
+    //     token: data.data.user.token,
+    //     is_tool: 1, // 工具账号
+    //     time: moment().unix(),
+    //   });
+    // }
+  }
+
+  /**
+   * 测试保存账号接口
+   */
+  private async testCSWSaveAccount(params: {
+    id: number;
+    nickname: string;
+    password: string;
+    token: string;
+    is_tool: number;
+    time: number;
+  }) {
+    const data = await HttpApiServices.testSaveAccount(params);
+    console.log(`testCSWSaveAccount response data --->`, data);
   }
 }

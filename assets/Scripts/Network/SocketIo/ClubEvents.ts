@@ -613,7 +613,7 @@ export default class ClubEvents {
   }
 
   /**
-   * TODO - 处理获取成员管理列表结果事件
+   * 处理获取成员管理列表结果事件
    * @param returnData
    */
   private static onGetMemberManagementListResult(
@@ -644,6 +644,65 @@ export default class ClubEvents {
     }
     CommonDailogHandler.hideCircleLoading(
       WAITING_TYPE.GET_MEMBER_MANAGEMENT_LIST,
+    );
+  }
+
+  /**
+   * 成员上下分
+   * @param params
+   */
+  public static changeClubPlayerScore(
+    params: Gateway.Requested.Club.ChangeClubPlayerScoreParams,
+  ) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(
+        WAITING_TYPE.CHANGE_CLUB_PLAYER_SCORE,
+      );
+      socket.emit(CLUB_EVENT.CHANGE_CLUB_PLAYER_SCORE, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(
+        WAITING_TYPE.CHANGE_CLUB_PLAYER_SCORE,
+      );
+    }
+  }
+
+  /**
+   * 处理成员上下分结果事件
+   * @param returnData
+   */
+  private static onChangeClubPlayerScoreResult(
+    returnData: Gateway.Returned.Common.Result<{
+      club_id: number;
+      player_id: number;
+      club_score: number;
+    }>,
+  ) {
+    console.log(
+      "<ClubEvent> onChangeClubPlayerScoreResult called --->",
+      returnData,
+    );
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      // 处理上下分成功结果
+
+      // 更新最新的俱乐部积分
+      const [node, component] = ComponentManager.Instance.getNodeComponent(
+        "MemberManagementUI",
+        MemberManagementUI_Component,
+      );
+
+      component &&
+        component.updateClubPlayerScore(data.player_id, data.club_score);
+
+      CommonDailogHandler.showBubbleMessage(`操作成功`);
+    } else {
+      // 连接失败，弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(
+      WAITING_TYPE.CHANGE_CLUB_PLAYER_SCORE,
     );
   }
 }

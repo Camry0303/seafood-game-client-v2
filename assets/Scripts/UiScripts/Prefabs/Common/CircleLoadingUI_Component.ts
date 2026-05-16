@@ -33,6 +33,7 @@ export enum WAITING_TYPE {
   CHANGE_CLUB_ANNOUNCEMENT = "正在修改俱乐部公告",
 
   GET_MEMBER_MANAGEMENT_LIST = "正在获取成员管理列表",
+  CHANGE_CLUB_PLAYER_SCORE = "正在处理俱乐部玩家积分",
 
   GAME_RECONNECT = "正在重连游戏",
 }

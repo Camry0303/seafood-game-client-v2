@@ -5,6 +5,8 @@ import { ComponentManager } from "../../../Runtime/ComponentManager";
 import { CLUB_PLAYER_ROLE } from "../../../Enums";
 import { getAvatarSpriteFrame } from "../../../Utils/RemoteSpriteFrameLoader";
 import { Gateway } from "../../../Types/gateway";
+import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
+import ClubEvents from "../../../Network/SocketIo/ClubEvents";
 const { ccclass, menu } = _decorator;
 
 @ccclass("MemberManagementItem_Component")
@@ -128,12 +130,43 @@ export class MemberManagementItem_Component extends ComponentController {
   }
 
   /**
+   * 获取数据
+   * @returns
+   */
+  public getData() {
+    return this._data;
+  }
+
+  /**
+   * 更新分数
+   * @param club_score
+   */
+  public updateClubScore(club_score: number) {
+    // 更新分数
+    this._data.club_score = club_score;
+    this._totalScoreLabel.string = club_score.toString() || "0";
+  }
+
+  /**
    * 添加分数按钮点击事件
    * @param event
    */
   private onAddScoreBtnClick(event: Event) {
-    // TODO - 添加分数
+    // 添加分数
     console.log(`onAddScoreBtnClick`);
+    CommonDailogHandler.showDialogMiniKeyboard(
+      "AddScoreToggle",
+      6,
+      (value: string) => {
+        // 添加分数
+        const score = parseInt(value, 10);
+        const params = {
+          player_id: this._data.player_id,
+          score,
+        };
+        ClubEvents.changeClubPlayerScore(params);
+      },
+    );
   }
 
   /**
@@ -141,7 +174,20 @@ export class MemberManagementItem_Component extends ComponentController {
    * @param event
    */
   private onSubScoreBtnClick(event: Event) {
-    // TODO - 减少分数
+    // 减少分数
     console.log(`onSubScoreBtnClick`);
+    CommonDailogHandler.showDialogMiniKeyboard(
+      "SubScoreToggle",
+      6,
+      (value: string) => {
+        // 添加分数
+        const score = -parseInt(value, 10);
+        const params = {
+          player_id: this._data.player_id,
+          score,
+        };
+        ClubEvents.changeClubPlayerScore(params);
+      },
+    );
   }
 }

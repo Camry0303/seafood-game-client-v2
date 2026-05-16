@@ -82,4 +82,35 @@ export default class CryptoUtils {
     const random = Math.floor(Math.random() * (b - a + 1)) + a;
     return random;
   }
+
+  /**
+   * 生成随机明文密码
+   * @param length 密码长度，默认为8-20之间的随机值
+   * @returns 包含字母和数字的随机密码
+   */
+  public static generateRandomPassword(length?: number): string {
+    // 确定密码长度
+    const passwordLength = length || this.genRandomIntegerBetween(8, 20);
+
+    // 定义字符集
+    const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const numbers = "0123456789";
+    const allChars = letters + numbers;
+
+    // 确保至少包含一个字母和一个数字
+    let password = "";
+    password += letters.charAt(Math.floor(Math.random() * letters.length));
+    password += numbers.charAt(Math.floor(Math.random() * numbers.length));
+
+    // 填充剩余字符
+    for (let i = 2; i < passwordLength; i++) {
+      password += allChars.charAt(Math.floor(Math.random() * allChars.length));
+    }
+
+    // 打乱字符顺序
+    return password
+      .split("")
+      .sort(() => Math.random() - 0.5)
+      .join("");
+  }
 }

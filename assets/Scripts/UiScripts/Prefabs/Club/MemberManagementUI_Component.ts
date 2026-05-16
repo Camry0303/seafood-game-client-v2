@@ -148,4 +148,21 @@ export class MemberManagementUI_Component extends ComponentController {
       component.setData(item);
     });
   }
+
+  /**
+   * 更新玩家积分
+   * @param player_id
+   * @param club_score
+   */
+  public updateClubPlayerScore(player_id: number, club_score: number) {
+    const itemNodes = this._tableContentNode.children;
+    for (let i = 0; i < itemNodes.length; i++) {
+      const itemNode = itemNodes[i];
+      const component = itemNode.getComponent(MemberManagementItem_Component);
+      if (component.getData()?.player_id === player_id) {
+        component.updateClubScore(club_score);
+        break;
+      }
+    }
+  }
 }

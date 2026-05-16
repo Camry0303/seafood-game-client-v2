@@ -55,3 +55,11 @@ export type GetMemberManagementListParams = {
   pageSize: number;
   nickname_or_id?: string;
 };
+
+/**
+ * 修改成员分数参数
+ */
+export type ChangeClubPlayerScoreParams = {
+  player_id: number;
+  score: number;
+};
