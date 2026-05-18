@@ -1,21 +1,36 @@
-import { _decorator, Node, EditBox, Event, Prefab, instantiate } from "cc";
+import {
+  _decorator,
+  Button,
+  EditBox,
+  Event,
+  instantiate,
+  Label,
+  Node,
+  Prefab,
+  Sprite,
+} from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import BubbleWindow from "../../../Common/BubbleWindow";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
-import { ResourceManager } from "../../../Runtime/ResourceManager";
-import { MemberManagementItem_Component } from "./MemberManagementItem_Component";
-import { Gateway } from "../../../Types/typing";
-import { GetMemberManagementListParams } from "../../../Types/gateway/requested/club";
 import ClubEvents from "../../../Network/SocketIo/ClubEvents";
+import { GetMemberListParams } from "../../../Types/gateway/requested/club";
+import { Gateway } from "../../../Types/gateway";
+import { ResourceManager } from "../../../Runtime/ResourceManager";
+import { MemberListItem_Component } from "./MemberListItem_Component";
+import { GlobalData } from "../../../Runtime/GlobalData";
 const { ccclass, menu } = _decorator;
 
-@ccclass("MemberManagementUI_Component")
-@menu("Hidden/MemberManagementUI_Component")
-export class MemberManagementUI_Component extends ComponentController {
+@ccclass("MemberListUI_Component")
+@menu("Hidden/MemberListUI_Component")
+export class MemberListUI_Component extends ComponentController {
   public _bubbleWindow: BubbleWindow = null;
 
+  private _countLabel: Label = null;
   private _conditionEditbox: EditBox = null;
   private _tableContentNode: Node = null;
+  private _deleteMemberBtn: Button = null;
+
+  private _checkedMemberNode: Node = null;
 
   // 成员列表数据
   private _data: Gateway.Returned.Common.Pagenation<
@@ -35,6 +50,12 @@ export class MemberManagementUI_Component extends ComponentController {
       .getChildByName("MainView")
       .addComponent(BubbleWindow);
 
+    // 获取计数标签
+    [, this._countLabel] = this.getNodeComponent(
+      "MainView/Content/SearchBar/Count/Value",
+      Label,
+    );
+
     // 获取条件输入框
     [, this._conditionEditbox] = this.getNodeComponent(
       "MainView/Content/SearchBar/Options/Condition",
@@ -43,7 +64,7 @@ export class MemberManagementUI_Component extends ComponentController {
 
     // 获取表格内容节点
     this._tableContentNode = this.getNode(
-      "MainView/Content/TableScrollView/view/content",
+      "MainView/Content/ScrollView/view/content",
     );
 
     // 设置搜索按钮点击事件
@@ -53,6 +74,17 @@ export class MemberManagementUI_Component extends ComponentController {
       "onSearch",
       this.getClassName(),
     );
+
+    // 获取删除成员按钮
+    [, this._deleteMemberBtn] = this.getNodeComponent(
+      "MainView/Content/BottomBar/DeleteMemberBtn",
+      Button,
+    );
+    // 删除成员按钮权限
+    this._deleteMemberBtn.interactable =
+      GlobalData.Instance.getCurrentClubPlayerInfo().role <= 1;
+    this._deleteMemberBtn.getComponent(Sprite).grayscale =
+      this._deleteMemberBtn.interactable;
 
     // 设置获取全部按钮点击事件
     this.setButtonClickEvent(
@@ -88,7 +120,7 @@ export class MemberManagementUI_Component extends ComponentController {
    * @param event
    */
   private onSearch(event: Event) {
-    let params: GetMemberManagementListParams = {
+    let params: GetMemberListParams = {
       current: 1,
       pageSize: 1000,
     };
@@ -101,7 +133,7 @@ export class MemberManagementUI_Component extends ComponentController {
       };
     }
 
-    ClubEvents.getMemberManagementList(params);
+    ClubEvents.getMemberList(params);
   }
 
   /**
@@ -110,12 +142,30 @@ export class MemberManagementUI_Component extends ComponentController {
    */
   private onGetAll(event: Event) {
     this._conditionEditbox.string = "";
-    let params: GetMemberManagementListParams = {
+    let params: GetMemberListParams = {
       current: 1,
       pageSize: 1000,
     };
 
-    ClubEvents.getMemberManagementList(params);
+    ClubEvents.getMemberList(params);
+  }
+
+  /**
+   * 删除成员事件
+   * @param event
+   * @returns
+   */
+  private onDeleteMember(event: Event) {
+    // TODO - 删除成员
+    console.log(`onDeleteMember--->`);
+    if (this._checkedMemberNode) {
+      // const player_id = this._checkedMemberNode
+      //   .getComponent(MemberListItem_Component)
+      //   .getData()?.player_id;
+      // ClubEvents.deleteMember(player_id);
+    } else {
+      return;
+    }
   }
 
   /**
@@ -128,37 +178,38 @@ export class MemberManagementUI_Component extends ComponentController {
     >,
   ) {
     this._data = data;
+    this._checkedMemberNode = null;
     this._tableContentNode.removeAllChildren();
+    this._countLabel.string = `${data.total}/5000`;
 
     const datalist = data.data;
     const prefab: Prefab = ResourceManager.Instance.getAsset<Prefab>(
       "Prefabs",
-      "Club/MemberManagementItem",
+      "Club/MemberListItem",
     );
 
     // 渲染玩家列表
     datalist.forEach((item) => {
       const node = instantiate(prefab);
-      const component = node.addComponent(MemberManagementItem_Component);
+      const component = node.addComponent(MemberListItem_Component);
       this._tableContentNode.addChild(node);
-      component.setData(item);
+      component.setData(item, this);
     });
   }
 
   /**
-   * 更新玩家积分
-   * @param player_id
-   * @param club_score
+   * 设置选中成员节点
+   * @param node
    */
-  public updateClubPlayerScore(player_id: number, club_score: number) {
-    const itemNodes = this._tableContentNode.children;
-    for (let i = 0; i < itemNodes.length; i++) {
-      const itemNode = itemNodes[i];
-      const component = itemNode.getComponent(MemberManagementItem_Component);
-      if (component.getData()?.player_id === player_id) {
-        component.updateClubScore(club_score);
-        break;
-      }
+  public setCheckedMemberNode(node: Node) {
+    if (this._checkedMemberNode) {
+      this._checkedMemberNode
+        .getComponent(MemberListItem_Component)
+        .setChecked(false);
     }
+    this._checkedMemberNode = node;
+    this._checkedMemberNode
+      .getComponent(MemberListItem_Component)
+      .setChecked(true);
   }
 }

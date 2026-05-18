@@ -35,6 +35,9 @@ export enum WAITING_TYPE {
   GET_MEMBER_MANAGEMENT_LIST = "正在获取成员管理列表",
   CHANGE_CLUB_PLAYER_SCORE = "正在处理俱乐部玩家积分",
 
+  GET_MEMBER_LIST = "正在获取成员列表",
+  DEMOTE_OR_DELETE_MEMBER = "正在处理成员",
+
   GAME_RECONNECT = "正在重连游戏",
 }
 

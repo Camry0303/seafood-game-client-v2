@@ -16,6 +16,7 @@ import {
 import { ClubMainUI_Component } from "../../UiScripts/Prefabs/Club/ClubMainUI_Component";
 import { ApplicationUI_Component } from "../../UiScripts/Prefabs/Club/ApplicationUI_Component";
 import { MemberManagementUI_Component } from "../../UiScripts/Prefabs/Club/MemberManagementUI_Component";
+import { MemberListUI_Component } from "../../UiScripts/Prefabs/Club/MemberListUI_Component";
 
 /**
  * 俱乐部事件处理类
@@ -52,6 +53,12 @@ export default class ClubEvents {
       CLUB_EVENT.GET_MEMBER_MANAGEMENT_LIST_RESULT,
       this.onGetMemberManagementListResult,
     ],
+    [
+      CLUB_EVENT.CHANGE_CLUB_PLAYER_SCORE_RESULT,
+      this.onChangeClubPlayerScoreResult,
+    ],
+
+    [CLUB_EVENT.GET_MEMBER_LIST_RESULT, this.onGetMemberListResult],
   ]);
 
   /**
@@ -704,5 +711,52 @@ export default class ClubEvents {
     CommonDailogHandler.hideCircleLoading(
       WAITING_TYPE.CHANGE_CLUB_PLAYER_SCORE,
     );
+  }
+
+  /**
+   * 获取成员列表
+   * @param params
+   */
+  public static getMemberList(
+    params: Gateway.Requested.Club.GetMemberListParams,
+  ) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.GET_MEMBER_LIST);
+      socket.emit(CLUB_EVENT.GET_MEMBER_LIST, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.GET_MEMBER_LIST);
+    }
+  }
+
+  /**
+   * 处理获取成员列表结果事件
+   * @param returnData
+   */
+  private static onGetMemberListResult(
+    returnData: Gateway.Returned.Common.Result<
+      Gateway.Returned.Common.Pagenation<
+        Gateway.Returned.ClubPlayer.ClubPlayer[]
+      >
+    >,
+  ) {
+    console.log("<ClubEvent> onGetMemberListResult called --->", returnData);
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      //  打开成员列表界面
+      const [node, component] =
+        ComponentManager.Instance.renderUiNode<MemberListUI_Component>(
+          "MemberListUI",
+          "Prefabs",
+          "Club/MemberListUI",
+          MemberListUI_Component,
+        );
+      component && component.setData(data);
+    } else {
+      // 连接失败，弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.GET_MEMBER_LIST);
   }
 }

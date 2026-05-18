@@ -104,6 +104,7 @@ export class Game extends SingletonComponent {
             "Club/ClubSettingUI",
             "Club/ApplicationUI",
             "Club/MemberManagementUI",
+            "Club/MemberListUI",
           ],
         },
         // 俱乐部组件预设体资源
@@ -113,6 +114,7 @@ export class Game extends SingletonComponent {
             "Club/ClubToggle",
             "Club/ApplicationItem",
             "Club/MemberManagementItem",
+            "Club/MemberListItem",
           ],
         },
         // 游戏设置相关预设体资源

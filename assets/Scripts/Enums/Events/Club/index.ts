@@ -37,4 +37,10 @@ export enum CLUB_EVENT {
 
   CHANGE_CLUB_PLAYER_SCORE = "Club.ChangeClubPlayerScore",
   CHANGE_CLUB_PLAYER_SCORE_RESULT = "Club.ChangeClubPlayerScore.Result",
+
+  GET_MEMBER_LIST = "Club.GetMemberList",
+  GET_MEMBER_LIST_RESULT = "Club.GetMemberList.Result",
+
+  DEMOTE_OR_DELETE_MEMBER = "Club.DemoteOrDeleteMember",
+  DEMOTE_OR_DELETE_MEMBER_RESULT = "Club.DemoteOrDeleteMember.Result",
 }
