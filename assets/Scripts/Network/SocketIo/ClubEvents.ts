@@ -759,4 +759,55 @@ export default class ClubEvents {
     }
     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.GET_MEMBER_LIST);
   }
+
+  /**
+   * 降职或删除成员
+   * @param params
+   */
+  public static demoteOrDeleteMember(
+    params: Gateway.Requested.Club.GetMemberListParams,
+  ) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(
+        WAITING_TYPE.DEMOTE_OR_DELETE_MEMBER,
+      );
+      socket.emit(CLUB_EVENT.DEMOTE_OR_DELETE_MEMBER, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(
+        WAITING_TYPE.DEMOTE_OR_DELETE_MEMBER,
+      );
+    }
+  }
+
+  /**
+   * 降职或删除成员结果
+   * @param returnData
+   */
+  private static onDemoteOrDeleteMemberResult(
+    returnData: Gateway.Returned.Common.Result<{
+      club_id: number;
+      player_id: number;
+      result_type: "demote" | "delete"; // 0降职 1踢人
+    }>,
+  ) {
+    console.log(
+      "<ClubEvent> onDemoteOrDeleteMemberResult called --->",
+      returnData,
+    );
+    const { code, data, msg } = returnData;
+
+    if (code === RESPONE_RESULT.SUCCESS) {
+      const [node, component] = ComponentManager.Instance.getNodeComponent(
+        "MemberListUI",
+        MemberListUI_Component,
+      );
+      component &&
+        component.onDemoteOrDeleteMember(data.player_id, data.result_type);
+    } else {
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.DEMOTE_OR_DELETE_MEMBER);
+  }
 }

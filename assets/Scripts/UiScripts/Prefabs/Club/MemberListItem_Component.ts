@@ -118,4 +118,16 @@ export class MemberListItem_Component extends ComponentController {
   private onCheckedBtnClicks(event: Event) {
     this._parentComponent.setCheckedMemberNode(this.node);
   }
+
+  /**
+   * 处理降职结果
+   */
+  public onDemote(player_id: number) {
+    if (this._data.player_id === player_id) {
+      this._data.role = CLUB_PLAYER_ROLE.MEMBER;
+      this._roleAdminMarkNode.active = false;
+      this._roleSubAdminMarkNode.active = false;
+      this._rolePartnerMarkNode.active = false;
+    }
+  }
 }

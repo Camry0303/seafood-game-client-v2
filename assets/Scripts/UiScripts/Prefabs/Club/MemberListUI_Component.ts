@@ -212,4 +212,24 @@ export class MemberListUI_Component extends ComponentController {
       .getComponent(MemberListItem_Component)
       .setChecked(true);
   }
+
+  /**
+   * 处理降职或删除成员
+   * @param player_id
+   * @param type
+   */
+  public onDemoteOrDeleteMember(player_id: number, type: "demote" | "delete") {
+    if (type === "demote") {
+      this._checkedMemberNode
+        .getComponent(MemberListItem_Component)
+        .onDemote(player_id);
+      this._checkedMemberNode
+        .getComponent(MemberListItem_Component)
+        .setChecked(false);
+      this._checkedMemberNode = null;
+    } else {
+      this._tableContentNode.removeChild(this._checkedMemberNode);
+      this._checkedMemberNode = null;
+    }
+  }
 }
