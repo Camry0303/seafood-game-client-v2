@@ -122,7 +122,7 @@ export class MemberListItem_Component extends ComponentController {
   /**
    * 处理降职结果
    */
-  public onDemote(player_id: number) {
+  public onDemoteResult(player_id: number) {
     if (this._data.player_id === player_id) {
       this._data.role = CLUB_PLAYER_ROLE.MEMBER;
       this._roleAdminMarkNode.active = false;

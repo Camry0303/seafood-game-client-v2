@@ -216,6 +216,8 @@ export class ClubSettingUI_Component extends ComponentController {
       if (inputstring.trim()) {
         const player_id = parseInt(inputstring);
         console.log(`onSetSubAdminBtnClick player_id--->`, player_id);
+        ClubEvents.setSubAdmin({ player_id });
+        this._setSubAdminEditbox.string = "";
       } else {
         throw new Error("缺少用户id");
       }

@@ -85,6 +85,15 @@ export class MemberListUI_Component extends ComponentController {
       GlobalData.Instance.getCurrentClubPlayerInfo().role <= 1;
     this._deleteMemberBtn.getComponent(Sprite).grayscale =
       this._deleteMemberBtn.interactable;
+    if (this._deleteMemberBtn.interactable) {
+      // 设置删除成员按钮点击事件
+      this.setButtonClickEvent(
+        "MainView/Content/BottomBar/DeleteMemberBtn",
+        0,
+        "onDemoteOrDeleteMember",
+        this.getClassName(),
+      );
+    }
 
     // 设置获取全部按钮点击事件
     this.setButtonClickEvent(
@@ -151,18 +160,17 @@ export class MemberListUI_Component extends ComponentController {
   }
 
   /**
-   * 删除成员事件
+   * 降职或删除成员事件
    * @param event
    * @returns
    */
-  private onDeleteMember(event: Event) {
-    // TODO - 删除成员
-    console.log(`onDeleteMember--->`);
+  private onDemoteOrDeleteMember(event: Event) {
+    console.log(`onDemoteOrDeleteMember--->`);
     if (this._checkedMemberNode) {
-      // const player_id = this._checkedMemberNode
-      //   .getComponent(MemberListItem_Component)
-      //   .getData()?.player_id;
-      // ClubEvents.deleteMember(player_id);
+      const player_id = this._checkedMemberNode
+        .getComponent(MemberListItem_Component)
+        .getData()?.player_id;
+      ClubEvents.demoteOrDeleteMember({ player_id });
     } else {
       return;
     }
@@ -214,15 +222,18 @@ export class MemberListUI_Component extends ComponentController {
   }
 
   /**
-   * 处理降职或删除成员
+   * 处理降职或删除成员结果
    * @param player_id
    * @param type
    */
-  public onDemoteOrDeleteMember(player_id: number, type: "demote" | "delete") {
+  public onDemoteOrDeleteMemberResult(
+    player_id: number,
+    type: "demote" | "delete",
+  ) {
     if (type === "demote") {
       this._checkedMemberNode
         .getComponent(MemberListItem_Component)
-        .onDemote(player_id);
+        .onDemoteResult(player_id);
       this._checkedMemberNode
         .getComponent(MemberListItem_Component)
         .setChecked(false);

@@ -48,6 +48,7 @@ export default class ClubEvents {
       CLUB_EVENT.CHANGE_ANNOUNCEMENT_RESULT,
       this.onChangeClubAnnouncementResult,
     ],
+    [CLUB_EVENT.SET_SUB_ADMIN_RESULT, this.onSetSubAdminResult],
 
     [
       CLUB_EVENT.GET_MEMBER_MANAGEMENT_LIST_RESULT,
@@ -599,6 +600,40 @@ export default class ClubEvents {
   }
 
   /**
+   * 设置副管理员
+   * @param params
+   */
+  public static setSubAdmin(params: Gateway.Requested.Club.SetSubAdminParams) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.SET_SUB_ADMIN);
+      socket.emit(CLUB_EVENT.SET_SUB_ADMIN, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.SET_SUB_ADMIN);
+    }
+  }
+
+  /**
+   * 处理设置副管理员结果事件
+   * @param returnData
+   */
+  private static onSetSubAdminResult(
+    returnData: Gateway.Returned.Common.Result<boolean>,
+  ) {
+    console.log("<ClubEvent> onSetSubAdminResult called --->", returnData);
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      // 处理设置副管理员成功结果
+      CommonDailogHandler.showBubbleMessage(`设置副管理员成功`);
+    } else {
+      // 连接失败，弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.SET_SUB_ADMIN);
+  }
+
+  /**
    * 获取成员管理列表
    * @param params
    */
@@ -659,7 +694,7 @@ export default class ClubEvents {
    * @param params
    */
   public static changeClubPlayerScore(
-    params: Gateway.Requested.Club.ChangeClubPlayerScoreParams,
+    params: Gateway.Requested.ClubPlayer.ChangeClubPlayerScoreParams,
   ) {
     const socket = SocketManager.Instance.SocketInstance;
     if (socket) {
@@ -765,7 +800,7 @@ export default class ClubEvents {
    * @param params
    */
   public static demoteOrDeleteMember(
-    params: Gateway.Requested.Club.GetMemberListParams,
+    params: Gateway.Requested.ClubPlayer.DemoteOrDeleteMemberParams,
   ) {
     const socket = SocketManager.Instance.SocketInstance;
     if (socket) {
@@ -804,7 +839,10 @@ export default class ClubEvents {
         MemberListUI_Component,
       );
       component &&
-        component.onDemoteOrDeleteMember(data.player_id, data.result_type);
+        component.onDemoteOrDeleteMemberResult(
+          data.player_id,
+          data.result_type,
+        );
     } else {
       CommonDailogHandler.showBubbleMessage(`${msg}`);
     }

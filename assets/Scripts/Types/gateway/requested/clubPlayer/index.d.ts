@@ -26,14 +26,6 @@ export type ChangeClubPlayerRemarkParams = {
 };
 
 /**
- * 俱乐部玩家积分变更参数
- */
-export type ChangeClubPlayerScoreParams = {
-  player_id: number;
-  score: number;
-};
-
-/**
  * 踢出俱乐部玩家参数
  */
 export type KickClubPlayerParams = {
@@ -54,4 +46,19 @@ export type SetClubPlayerScoreLimitParams = {
 export type SetClubPlayerGamePermitParams = {
   player_id: number;
   game_permit: number;
+};
+
+/**
+ * 修改成员分数参数
+ */
+export type ChangeClubPlayerScoreParams = {
+  player_id: number;
+  score: number;
+};
+
+/**
+ * 降职或删除成员参数
+ */
+export type DemoteOrDeleteMemberParams = {
+  player_id: number;
 };

@@ -26,6 +26,9 @@ export enum CLUB_EVENT {
   CHANGE_ANNOUNCEMENT = "Club.ChangeAnnouncement",
   CHANGE_ANNOUNCEMENT_RESULT = "Club.ChangeAnnouncement.Result",
 
+  SET_SUB_ADMIN = "Club.SetSubAdmin",
+  SET_SUB_ADMIN_RESULT = "Club.SetSubAdmin.Result",
+
   QUERY_CLUB_PLAYER_UNREVIEWED_APPLICATION_LIST = "Club.QueryClubPlayerUnreviewedApplicationList",
   QUERY_CLUB_PLAYER_UNREVIEWED_APPLICATION_LIST_RESULT = "Club.QueryClubPlayerUnreviewedApplicationList.Result",
 

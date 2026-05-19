@@ -57,14 +57,13 @@ export type GetMemberManagementListParams = {
 };
 
 /**
- * 修改成员分数参数
- */
-export type ChangeClubPlayerScoreParams = {
-  player_id: number;
-  score: number;
-};
-
-/**
  * 获取成员列表参数
  */
 export type GetMemberListParams = GetMemberManagementListParams;
+
+/**
+ * 设置副管理员参数
+ */
+export type SetSubAdminParams = {
+  player_id: number;
+};
