@@ -5,9 +5,9 @@ import { ComponentManager } from "../../../Runtime/ComponentManager";
 import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
 const { ccclass, menu } = _decorator;
 
-@ccclass("DialogConfirmUI_Component")
-@menu("Hidden/DialogConfirmUI_Component")
-export class DialogConfirmUI_Component extends ComponentController {
+@ccclass("DialogConfirmSmallUI_Component")
+@menu("Hidden/DialogConfirmSmallUI_Component")
+export class DialogConfirmSmallUI_Component extends ComponentController {
   public bubbleWindow: BubbleWindow = null;
 
   private _messageLabelNode: Node = null;
@@ -31,7 +31,7 @@ export class DialogConfirmUI_Component extends ComponentController {
 
     // 设置确认按钮点击事件
     this.setButtonClickEvent(
-      "MainView/Content/ScrollView/view/content/LayoutContent/ButtonPanel/ConfirmBtn",
+      "MainView/Content/ButtonPanel/OKBtn",
       0,
       "onConfirmBtnClick",
       this.getClassName(),
@@ -39,7 +39,7 @@ export class DialogConfirmUI_Component extends ComponentController {
 
     // 设置取消按钮点击事件
     this.setButtonClickEvent(
-      "MainView/Content/ScrollView/view/content/LayoutContent/ButtonPanel/CancelBtn",
+      "MainView/Content/ButtonPanel/CancelBtn",
       0,
       "onCancelBtnClick",
       this.getClassName(),
@@ -57,7 +57,7 @@ export class DialogConfirmUI_Component extends ComponentController {
     this.setButtonClickEvent("MaskNode", 0, "close", this.getClassName());
 
     const [messageLabelNode, messageLabel] = this.getNodeComponent(
-      "MainView/Content/ScrollView/view/content/LayoutContent/MessageLabel",
+      "MainView/Content/ScrollView/view/content/Message",
       Label,
     );
     this._messageLabelNode = messageLabelNode;
@@ -93,7 +93,7 @@ export class DialogConfirmUI_Component extends ComponentController {
    * 确定按钮点击事件
    */
   private onConfirmBtnClick(event: Event) {
-    console.log(`DialogConfirmUI_Component onConfirmBtnClick`);
+    console.log(`DialogConfirmSmallUI_Component onConfirmBtnClick`);
     if (this._confirmCallback) {
       this._confirmCallback();
       this.close();
@@ -106,7 +106,7 @@ export class DialogConfirmUI_Component extends ComponentController {
    * 取消按钮点击事件
    */
   private onCancelBtnClick(event: Event) {
-    console.log(`DialogConfirmUI_Component onCancelBtnClick`);
+    console.log(`DialogConfirmSmallUI_Component onCancelBtnClick`);
     if (this._cancelCallback) {
       this._cancelCallback();
       this.close();

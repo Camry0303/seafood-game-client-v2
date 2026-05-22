@@ -6,7 +6,7 @@ import {
   CircleLoadingUI_Component,
   WAITING_TYPE,
 } from "../UiScripts/Prefabs/Common/CircleLoadingUI_Component";
-import { DialogConfirmUI_Component } from "../UiScripts/Prefabs/Dialog/DialogConfirmUI_Component";
+import { DialogConfirmSmallUI_Component } from "../UiScripts/Prefabs/Dialog/DialogConfirmSmallUI_Component";
 import { DialogInputUI_Component } from "../UiScripts/Prefabs/Dialog/DialogInputUI_Component";
 import { DialogMessageUI_Component } from "../UiScripts/Prefabs/Dialog/DialogMessageUI_Component";
 import { DialogMiniKeyboardUI_Component } from "../UiScripts/Prefabs/Dialog/DialogMiniKeyboardUI_Component";
@@ -123,17 +123,17 @@ export default class CommonDailogHandler {
    * @param confirmCallback
    * @param cancelCallback
    */
-  public static showDialogConfirm(
+  public static showSmallDialogConfirm(
     message: string,
     confirmCallback: Function,
     cancelCallback: Function,
   ) {
     const [, uiComponent] =
-      ComponentManager.Instance.renderUiNode<DialogConfirmUI_Component>(
-        "DialogConfirmUI",
+      ComponentManager.Instance.renderUiNode<DialogConfirmSmallUI_Component>(
+        "DialogConfirmSmallUI",
         "Prefabs",
-        "Dialog/DialogConfirmUI",
-        DialogConfirmUI_Component,
+        "Dialog/DialogConfirmSmallUI",
+        DialogConfirmSmallUI_Component,
       );
     uiComponent.setDialogConfirm(message, confirmCallback, cancelCallback);
   }

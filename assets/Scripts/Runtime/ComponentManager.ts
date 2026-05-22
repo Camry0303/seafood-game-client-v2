@@ -17,7 +17,7 @@ import { DialogMessageUI_Component } from "../UiScripts/Prefabs/Dialog/DialogMes
 import { UI } from "../Types/typing";
 import { DialogMsgCallbackUI_Component } from "../UiScripts/Prefabs/Dialog/DialogMsgCallbackUI_Component";
 import { DialogInputUI_Component } from "../UiScripts/Prefabs/Dialog/DialogInputUI_Component";
-import { DialogConfirmUI_Component } from "../UiScripts/Prefabs/Dialog/DialogConfirmUI_Component";
+import { DialogConfirmSmallUI_Component } from "../UiScripts/Prefabs/Dialog/DialogConfirmSmallUI_Component";
 import { DialogMiniKeyboardUI_Component } from "../UiScripts/Prefabs/Dialog/DialogMiniKeyboardUI_Component";
 import _ from "lodash";
 import ClassNameGetter from "../Utils/ClassNameGetter";

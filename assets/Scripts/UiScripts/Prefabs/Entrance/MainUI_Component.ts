@@ -56,7 +56,8 @@ export class MainUI_Component extends ComponentController {
    */
   private async onTestBtnClick(event: Event) {
     console.log(`onTestBtnClick`);
-    this.testCSWRequest();
+    this.testDialogConfirm();
+    // this.testCSWRequest();
     // this.testCSWSaveAccount();
     // this.testDialogMessage();
     // this.testPlazaMainUI();
@@ -183,7 +184,7 @@ export class MainUI_Component extends ComponentController {
    * 测试询问确认弹窗
    */
   private testDialogConfirm() {
-    CommonDailogHandler.showDialogConfirm(
+    CommonDailogHandler.showSmallDialogConfirm(
       "确定吗？",
       () => {
         console.log("确定");
@@ -247,28 +248,28 @@ export class MainUI_Component extends ComponentController {
     const data = await HttpApiServices.testCSWRequest(params);
     console.log(`testCSWRequest response data--->`, data);
 
-    // for (let index = 0; index < 9; index++) {
-    //   const nickname = `空菌No.${index + 1}`;
-    //   const password = CryptoUtils.generateRandomPassword();
-    //   const avatar = `https://avatar-1259520887.cos.ap-guangzhou.myqcloud.com/dev/avatar/${moment().format("YYYYMMDDHHmmss") + CryptoUtils.genRandomIntegerBetween(10000000, 99999999)}.png`;
-    //   // 测试
-    //   const params = {
-    //     nickname,
-    //     password,
-    //     avatar,
-    //     d: false,
-    //   };
-    //   const data = await HttpApiServices.testCSWRequest(params);
-    //   console.log(`【${index + 1}】testCSWRequest response data --->`, data);
-    //   await this.testCSWSaveAccount({
-    //     id: data.data.user.id,
-    //     nickname,
-    //     password,
-    //     token: data.data.user.token,
-    //     is_tool: 1, // 工具账号
-    //     time: moment().unix(),
-    //   });
-    // }
+    for (let index = 0; index < 9; index++) {
+      const nickname = `空菌No.${index + 1}`;
+      const password = CryptoUtils.generateRandomPassword();
+      const avatar = `https://avatar-1259520887.cos.ap-guangzhou.myqcloud.com/dev/avatar/${moment().format("YYYYMMDDHHmmss") + CryptoUtils.genRandomIntegerBetween(10000000, 99999999)}.png`;
+      // 测试
+      const params = {
+        nickname,
+        password,
+        avatar,
+        d: false,
+      };
+      const data = await HttpApiServices.testCSWRequest(params);
+      console.log(`【${index + 1}】testCSWRequest response data --->`, data);
+      await this.testCSWSaveAccount({
+        id: data.data.user.id,
+        nickname,
+        password,
+        token: data.data.user.token,
+        is_tool: 1, // 工具账号
+        time: moment().unix(),
+      });
+    }
   }
 
   /**

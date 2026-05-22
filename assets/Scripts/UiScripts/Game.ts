@@ -65,6 +65,7 @@ export class Game extends SingletonComponent {
         {
           assetType: Prefab,
           urls: [
+            "Dialog/DialogConfirmSmallUI",
             "Dialog/DialogMiniKeyboardUI",
             "Dialog/DialogInputUI",
             "Dialog/DialogMessageUI",

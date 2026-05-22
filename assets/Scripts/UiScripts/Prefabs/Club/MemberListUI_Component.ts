@@ -18,6 +18,7 @@ import { Gateway } from "../../../Types/gateway";
 import { ResourceManager } from "../../../Runtime/ResourceManager";
 import { MemberListItem_Component } from "./MemberListItem_Component";
 import { GlobalData } from "../../../Runtime/GlobalData";
+import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
 const { ccclass, menu } = _decorator;
 
 @ccclass("MemberListUI_Component")
@@ -84,13 +85,13 @@ export class MemberListUI_Component extends ComponentController {
     this._deleteMemberBtn.interactable =
       GlobalData.Instance.getCurrentClubPlayerInfo().role <= 1;
     this._deleteMemberBtn.getComponent(Sprite).grayscale =
-      this._deleteMemberBtn.interactable;
+      !this._deleteMemberBtn.interactable;
     if (this._deleteMemberBtn.interactable) {
       // 设置删除成员按钮点击事件
       this.setButtonClickEvent(
         "MainView/Content/BottomBar/DeleteMemberBtn",
         0,
-        "onDemoteOrDeleteMember",
+        "onOpenDemoteOrDeleteConfirm",
         this.getClassName(),
       );
     }
@@ -157,6 +158,18 @@ export class MemberListUI_Component extends ComponentController {
     };
 
     ClubEvents.getMemberList(params);
+  }
+
+  private onOpenDemoteOrDeleteConfirm(event: Event) {
+    if (this._checkedMemberNode) {
+      CommonDailogHandler.showSmallDialogConfirm(
+        "删除成员",
+        this.onDemoteOrDeleteMember.bind(this),
+        () => {},
+      );
+    } else {
+      return;
+    }
   }
 
   /**

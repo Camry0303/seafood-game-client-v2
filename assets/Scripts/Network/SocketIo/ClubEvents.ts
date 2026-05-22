@@ -60,6 +60,10 @@ export default class ClubEvents {
     ],
 
     [CLUB_EVENT.GET_MEMBER_LIST_RESULT, this.onGetMemberListResult],
+    [
+      CLUB_EVENT.DEMOTE_OR_DELETE_MEMBER_RESULT,
+      this.onDemoteOrDeleteMemberResult,
+    ],
   ]);
 
   /**
@@ -627,8 +631,9 @@ export default class ClubEvents {
       // 处理设置副管理员成功结果
       CommonDailogHandler.showBubbleMessage(`设置副管理员成功`);
     } else {
+      const message = msg.includes("不存在") ? "被添加的用户不存在" : msg;
       // 连接失败，弹出提示框
-      CommonDailogHandler.showBubbleMessage(`${msg}`);
+      CommonDailogHandler.showBubbleMessage(`${message}`);
     }
     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.SET_SUB_ADMIN);
   }
