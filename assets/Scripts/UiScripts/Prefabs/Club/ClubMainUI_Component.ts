@@ -360,8 +360,13 @@ export class ClubMainUI_Component extends ComponentController {
    * @param event
    */
   private onClubPartnerBtnClick(event: Event) {
-    // TODO - 俱乐部合伙人
     console.log(`onClubPartnerBtnClick--->`);
+
+    const params: GetMemberListParams = {
+      current: 1,
+      pageSize: 1000,
+    };
+    ClubEvents.getPartnerList(params);
   }
 
   /**

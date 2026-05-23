@@ -46,4 +46,13 @@ export enum CLUB_EVENT {
 
   DEMOTE_OR_DELETE_MEMBER = "Club.DemoteOrDeleteMember",
   DEMOTE_OR_DELETE_MEMBER_RESULT = "Club.DemoteOrDeleteMember.Result",
+
+  GET_PARTNER_LIST = "Club.GetPartnerList",
+  GET_PARTNER_LIST_RESULT = "Club.GetPartnerList.Result",
+
+  ADD_PARTNER = "Club.AddPartner",
+  ADD_PARTNER_RESULT = "Club.AddPartner.Result",
+
+  DELETE_PARTNER = "Club.DeletePartner",
+  DELETE_PARTNER_RESULT = "Club.DeletePartner.Result",
 }

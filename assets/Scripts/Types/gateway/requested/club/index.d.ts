@@ -67,3 +67,12 @@ export type GetMemberListParams = GetMemberManagementListParams;
 export type SetSubAdminParams = {
   player_id: number;
 };
+
+/**
+ * 获取合伙人列表参数
+ */
+export type GetPartnerListParams = {
+  current: number;
+  pageSize: number;
+  nickname_or_id?: string;
+};

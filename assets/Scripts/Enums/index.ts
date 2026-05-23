@@ -137,7 +137,11 @@ export enum CLUB_PLAYER_ROLE {
   /**
    * 普通成员
    */
-  MEMBER = 2, // 普通成员
+  MEMBER = 3, // 普通成员
+  /**
+   * 普通成员
+   */
+  ROBOT = 4, // 机器人
 }
 
 /**

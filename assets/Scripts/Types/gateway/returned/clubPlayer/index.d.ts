@@ -58,7 +58,7 @@ export type ClubPlayer = {
   score_limit: number;
 
   /**
-   * 玩家所在俱乐部角色 0:群主,1:管理员;2:成员;3:机器人
+   * 玩家所在俱乐部角色 0:管理员,1:副管理员;2:合伙人;3:成员;4:机器人
    */
   role: number;
 
@@ -122,7 +122,7 @@ export type CurrentClubPlayer = {
   score_limit: number;
 
   /**
-   * 玩家所在俱乐部角色 0:群主,1:管理员;2:成员;3:机器人
+   * 玩家所在俱乐部角色 0:管理员,1:副管理员;2:合伙人;3:成员;4:机器人
    */
   role: number;
 

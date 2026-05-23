@@ -38,7 +38,7 @@ export type Club = {
   owner_avatar: string;
 
   /**
-   * 玩家角色 0:群主;1:管理员;2:成员;
+   * 玩家角色 0:管理员,1:副管理员;2:合伙人;3:成员;4:机器人
    */
   role?: number;
 

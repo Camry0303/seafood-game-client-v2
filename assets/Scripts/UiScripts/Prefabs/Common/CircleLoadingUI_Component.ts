@@ -39,6 +39,10 @@ export enum WAITING_TYPE {
   GET_MEMBER_LIST = "正在获取成员列表",
   DEMOTE_OR_DELETE_MEMBER = "正在处理成员",
 
+  GET_PARTNER_LIST = "正在获取合伙人列表",
+  ADD_PARTNER = "正在添加合伙人",
+  DELETE_PARTNER = "正在删除合伙人",
+
   GAME_RECONNECT = "正在重连游戏",
 }
 
