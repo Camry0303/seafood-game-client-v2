@@ -5,8 +5,9 @@ import { ComponentManager } from "../../../Runtime/ComponentManager";
 import { ResourceManager } from "../../../Runtime/ResourceManager";
 import { PartnerListItem_Component } from "./PartnerListItem_Component";
 import { Gateway } from "../../../Types/typing";
-import { GetMemberManagementListParams } from "../../../Types/gateway/requested/club";
+import { GetPartnerListParams } from "../../../Types/gateway/requested/club";
 import ClubEvents from "../../../Network/SocketIo/ClubEvents";
+import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
 const { ccclass, menu } = _decorator;
 
 @ccclass("PartnerListUI_Component")
@@ -62,6 +63,14 @@ export class PartnerListUI_Component extends ComponentController {
       this.getClassName(),
     );
 
+    // 设置添加合伙人按钮点击事件
+    this.setButtonClickEvent(
+      "MainView/Content/AddPartnerBtn",
+      0,
+      "onOpenAddPartner",
+      this.getClassName(),
+    );
+
     // 设置关闭按钮点击事件
     this.setButtonClickEvent(
       "MainView/CloseBtn",
@@ -88,7 +97,7 @@ export class PartnerListUI_Component extends ComponentController {
    * @param event
    */
   private onSearch(event: Event) {
-    let params: GetMemberManagementListParams = {
+    let params: GetPartnerListParams = {
       current: 1,
       pageSize: 1000,
     };
@@ -101,7 +110,7 @@ export class PartnerListUI_Component extends ComponentController {
       };
     }
 
-    ClubEvents.getMemberManagementList(params);
+    ClubEvents.getPartnerList(params);
   }
 
   /**
@@ -110,12 +119,28 @@ export class PartnerListUI_Component extends ComponentController {
    */
   private onGetAll(event: Event) {
     this._conditionEditbox.string = "";
-    let params: GetMemberManagementListParams = {
+    let params: GetPartnerListParams = {
       current: 1,
       pageSize: 1000,
     };
 
-    ClubEvents.getMemberManagementList(params);
+    ClubEvents.getPartnerList(params);
+  }
+
+  /**
+   * 打开添加合伙人界面
+   * @param event
+   */
+  private onOpenAddPartner(event: Event) {
+    CommonDailogHandler.showDialogMiniKeyboard(
+      "AddPartnerToggle",
+      6,
+      (value: string) => {
+        // 添加合伙人
+        const player_id = parseInt(value, 10);
+        ClubEvents.addParter({ player_id });
+      },
+    );
   }
 
   /**
@@ -143,5 +168,18 @@ export class PartnerListUI_Component extends ComponentController {
       this._tableContentNode.addChild(node);
       component.setData(item);
     });
+  }
+
+  /**
+   * 刷新数据
+   */
+  public reloadData() {
+    this._conditionEditbox.string = "";
+    let params: GetPartnerListParams = {
+      current: 1,
+      pageSize: 1000,
+    };
+
+    ClubEvents.getPartnerList(params);
   }
 }

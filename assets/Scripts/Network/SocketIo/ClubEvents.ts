@@ -67,6 +67,8 @@ export default class ClubEvents {
     ],
 
     [CLUB_EVENT.GET_PARTNER_LIST_RESULT, this.onGetPartnerListResult],
+    [CLUB_EVENT.ADD_PARTNER_RESULT, this.onAddPartnerResult],
+    [CLUB_EVENT.DELETE_PARTNER_RESULT, this.onDeletePartnerResult],
   ]);
 
   /**
@@ -902,5 +904,83 @@ export default class ClubEvents {
       CommonDailogHandler.showBubbleMessage(`${msg}`);
     }
     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.GET_PARTNER_LIST);
+  }
+
+  /**
+   * 添加合伙人
+   * @param params
+   */
+  public static addParter(params: Gateway.Requested.Club.AddPartnerParams) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.ADD_PARTNER);
+      socket.emit(CLUB_EVENT.ADD_PARTNER, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.ADD_PARTNER);
+    }
+  }
+
+  /**
+   * 处理添加合伙人结果事件
+   * @param returnData
+   */
+  private static onAddPartnerResult(
+    returnData: Gateway.Returned.Common.Result<boolean>,
+  ) {
+    console.log("<ClubEvent> onAddPartnerResult called --->", returnData);
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      //  打开合伙人列表界面
+      const [node, component] = ComponentManager.Instance.getNodeComponent(
+        "PartnerListUI",
+        PartnerListUI_Component,
+      );
+      component && component.reloadData();
+    } else {
+      // 连接失败，弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.ADD_PARTNER);
+  }
+
+  /**
+   * 删除合伙人
+   * @param params
+   */
+  public static deletePartner(
+    params: Gateway.Requested.Club.DeletePartnerParams,
+  ) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.DELETE_PARTNER);
+      socket.emit(CLUB_EVENT.DELETE_PARTNER, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.DELETE_PARTNER);
+    }
+  }
+
+  /**
+   * 处理删除合伙人结果事件
+   * @param returnData
+   */
+  private static onDeletePartnerResult(
+    returnData: Gateway.Returned.Common.Result<boolean>,
+  ) {
+    console.log("<ClubEvent> onDeletePartnerResult called --->", returnData);
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      //  打开合伙人列表界面
+      const [node, component] = ComponentManager.Instance.getNodeComponent(
+        "PartnerListUI",
+        PartnerListUI_Component,
+      );
+      component && component.reloadData();
+    } else {
+      // 连接失败，弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.DELETE_PARTNER);
   }
 }

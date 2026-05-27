@@ -76,3 +76,17 @@ export type GetPartnerListParams = {
   pageSize: number;
   nickname_or_id?: string;
 };
+
+/**
+ * 添加合伙人参数
+ */
+export type AddPartnerParams = {
+  player_id: number;
+};
+
+/**
+ * 删除合伙人参数
+ */
+export type DeletePartnerParams = {
+  player_id: number;
+};

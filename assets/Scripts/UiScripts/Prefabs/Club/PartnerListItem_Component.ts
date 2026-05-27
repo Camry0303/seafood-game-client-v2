@@ -116,8 +116,6 @@ export class PartnerListItem_Component extends ComponentController {
    * @param event
    */
   private onOpenDeleteConfirm(event: Event) {
-    // 添加分数
-    console.log(`onOpenDeleteConfirm`);
     CommonDailogHandler.showSmallDialogConfirm(
       "删除合伙人",
       this.onDeletePartner.bind(this),
@@ -131,9 +129,8 @@ export class PartnerListItem_Component extends ComponentController {
    */
   private onDeletePartner(event: Event) {
     const player_id = this._data.player_id;
-    console.log(`onDeletePartner--->`, player_id);
-    // TODO - 删除合伙人
-    // ClubEvents.deletePartner({ player_id });
+    // 删除合伙人
+    ClubEvents.deletePartner({ player_id });
   }
 
   /**
