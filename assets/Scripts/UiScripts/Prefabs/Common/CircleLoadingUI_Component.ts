@@ -29,6 +29,8 @@ export enum WAITING_TYPE {
   QUERY_CLUB_PLAYER_UNREVIEWED_APPLICATION_LIST = "正在获取未审核的俱乐部玩家申请列表",
   REVIEW_CLUB_PLAYER_APPLICATION = "正在审核俱乐部玩家申请",
 
+  INVITE_PLAYER_TO_CLUB = "正在邀请玩家加入俱乐部",
+
   CHANGE_CLUB_NAME = "正在修改俱乐部名称",
   CHANGE_CLUB_ANNOUNCEMENT = "正在修改俱乐部公告",
   SET_SUB_ADMIN = "正在设置副管",

@@ -414,10 +414,9 @@ export class ClubMainUI_Component extends ComponentController {
       "InvitePlayerToggle",
       6,
       (value: string) => {
-        console.log("玩家ID--->", value);
-        // TODO - 邀请玩家
-        console.log("邀请玩家");
-        CommonDailogHandler.showBubbleMessage(`邀请玩家:${value}`);
+        // 邀请玩家
+        const player_id = parseInt(value, 10);
+        ClubEvents.invitePlayerToClub(player_id);
       },
     );
   }

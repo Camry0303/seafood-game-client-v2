@@ -44,6 +44,8 @@ export default class ClubEvents {
       this.onReviewClubPlayerApplicationResult,
     ],
 
+    [CLUB_EVENT.INVITE_PLAYER_TO_CLUB_RESULT, this.onInvitePlayerToClubResult],
+
     [CLUB_EVENT.CHANGE_NAME_RESULT, this.onChangeClubNameResult],
     [
       CLUB_EVENT.CHANGE_ANNOUNCEMENT_RESULT,
@@ -490,6 +492,46 @@ export default class ClubEvents {
     CommonDailogHandler.hideCircleLoading(
       WAITING_TYPE.REVIEW_CLUB_PLAYER_APPLICATION,
     );
+  }
+
+  /**
+   * 邀请玩家加入俱乐部
+   * @param player_id
+   */
+  public static invitePlayerToClub(player_id: number) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      const params: Gateway.Requested.Club.InvitePlayerToClubParams = {
+        player_id,
+      };
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.INVITE_PLAYER_TO_CLUB);
+      socket.emit(CLUB_EVENT.INVITE_PLAYER_TO_CLUB, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.INVITE_PLAYER_TO_CLUB);
+    }
+  }
+
+  /**
+   * 处理邀请玩家加入俱乐部结果事件
+   * @param returnData
+   */
+  private static onInvitePlayerToClubResult(
+    returnData: Gateway.Returned.Common.Result<boolean>,
+  ) {
+    console.log(
+      "<ClubEvent> onInvitePlayerToClubResult called --->",
+      returnData,
+    );
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      // 处理邀请玩家加入俱乐部成功结果
+      CommonDailogHandler.showBubbleMessage(`邀请成功`);
+    } else {
+      // 连接失败，弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.INVITE_PLAYER_TO_CLUB);
   }
 
   /**

@@ -20,6 +20,13 @@ export type JoinClubByInviteCodeParams = {
 };
 
 /**
+ * 邀请玩家加入俱乐部参数
+ */
+export type InvitePlayerToClubParams = {
+  player_id: number;
+};
+
+/**
  * 进入俱乐部参数
  */
 export type EnterClubParams = {

@@ -35,6 +35,9 @@ export enum CLUB_EVENT {
   REVIEW_CLUB_PLAYER_APPLICATION = "Club.ReviewClubPlayerApplication",
   REVIEW_CLUB_PLAYER_APPLICATION_RESULT = "Club.ReviewClubPlayerApplication.Result",
 
+  INVITE_PLAYER_TO_CLUB = "Club.InvitePlayerToClub",
+  INVITE_PLAYER_TO_CLUB_RESULT = "Club.InvitePlayerToClub.Result",
+
   GET_MEMBER_MANAGEMENT_LIST = "Club.GetMemberManagementList",
   GET_MEMBER_MANAGEMENT_LIST_RESULT = "Club.GetMemberManagementList.Result",
 
