@@ -3,13 +3,11 @@ import { ComponentController } from "../../../Common/ComponentController";
 import { Gateway } from "../../../Types/gateway";
 import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
 import ClubEvents from "../../../Network/SocketIo/ClubEvents";
-import { ComponentManager } from "../../../Runtime/ComponentManager";
-import { PartnerMemberListUI_Component } from "./PartnerMemberListUI_Component";
 const { ccclass, menu } = _decorator;
 
-@ccclass("PartnerListItem_Component")
-@menu("Hidden/PartnerListItem_Component")
-export class PartnerListItem_Component extends ComponentController {
+@ccclass("PartnerMemberListItem_Component")
+@menu("Hidden/PartnerMemberListItem_Component")
+export class PartnerMemberListItem_Component extends ComponentController {
   private _nicknameLabel: Label = null;
 
   private _idLabel: Label = null;
@@ -59,22 +57,24 @@ export class PartnerListItem_Component extends ComponentController {
   /**
    * 设置数据
    * @param data
+   * @param showOptions
    */
-  public async setData(data: Gateway.Returned.ClubPlayer.ClubPlayer) {
+  public async setData(
+    data: Gateway.Returned.ClubPlayer.ClubPlayer,
+    showOptions: boolean = true,
+  ) {
     this._data = data;
 
-    this.setButtonClickEvent(
-      "Options/DeleteBtn",
-      0,
-      "onOpenDeleteConfirm",
-      this.getClassName(),
-    );
-    this.setButtonClickEvent(
-      "Options/DetailsBtn",
-      0,
-      "onOpenDetails",
-      this.getClassName(),
-    );
+    if (showOptions) {
+      this.setButtonClickEvent(
+        "Options/DeleteBtn",
+        0,
+        "onOpenDeleteConfirm",
+        this.getClassName(),
+      );
+    } else {
+      this._optionsNode.active = false;
+    }
 
     // 设置昵称
     this._nicknameLabel.string = data.nickname;
@@ -119,8 +119,8 @@ export class PartnerListItem_Component extends ComponentController {
    */
   private onOpenDeleteConfirm(event: Event) {
     CommonDailogHandler.showSmallDialogConfirm(
-      "删除合伙人",
-      this.onDeletePartner.bind(this),
+      "删除合伙人成员",
+      this.onDeletePartnerMember.bind(this),
       () => {},
     );
   }
@@ -129,32 +129,9 @@ export class PartnerListItem_Component extends ComponentController {
    * 删除合伙人事件
    * @param event
    */
-  private onDeletePartner(event: Event) {
+  private onDeletePartnerMember(event: Event) {
     const player_id = this._data.player_id;
     // 删除合伙人
-    ClubEvents.deletePartner({ player_id });
-  }
-
-  /**
-   * 详情按钮点击事件
-   * @param event
-   */
-  private onOpenDetails(event: Event) {
-    //  打开合伙人列表界面
-    const [node, component] =
-      ComponentManager.Instance.renderUiNode<PartnerMemberListUI_Component>(
-        "PartnerMemberListUI",
-        "Prefabs",
-        "Club/PartnerMemberListUI",
-        PartnerMemberListUI_Component,
-      );
-    component && component.setPartnerData(this._data);
-
-    // 获取合伙人成员列表
-    ClubEvents.getPartnerMemberList({
-      belong_partner_id: this._data.player_id,
-      current: 1,
-      pageSize: 1000,
-    });
+    ClubEvents.deletePartnerMember({ player_id });
   }
 }

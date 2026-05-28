@@ -97,3 +97,28 @@ export type AddPartnerParams = {
 export type DeletePartnerParams = {
   player_id: number;
 };
+
+/**
+ * 获取合伙人成员列表参数
+ */
+export type GetPartnerMemberListParams = {
+  belong_partner_id: number;
+  current: number;
+  pageSize: number;
+  nickname_or_id?: string;
+};
+
+/**
+ * 添加合伙人成员参数
+ */
+export type AddPartnerMemberParams = {
+  belong_partner_id: number;
+  player_id: number;
+};
+
+/**
+ * 删除合伙人成员参数
+ */
+export type DeletePartnerMemberParams = {
+  player_id: number;
+};

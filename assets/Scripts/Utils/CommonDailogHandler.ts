@@ -151,7 +151,8 @@ export default class CommonDailogHandler {
       | "JoinClubToggle"
       | "AddScoreToggle"
       | "SubScoreToggle"
-      | "AddPartnerToggle",
+      | "AddPartnerToggle"
+      | "AddPartnerMemberToggle",
     numDigits: 2 | 4 | 6,
     callback: Function,
     parentNode?: Node,

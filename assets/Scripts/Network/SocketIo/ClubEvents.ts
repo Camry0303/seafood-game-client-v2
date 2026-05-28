@@ -18,6 +18,7 @@ import { ApplicationUI_Component } from "../../UiScripts/Prefabs/Club/Applicatio
 import { MemberManagementUI_Component } from "../../UiScripts/Prefabs/Club/MemberManagementUI_Component";
 import { MemberListUI_Component } from "../../UiScripts/Prefabs/Club/MemberListUI_Component";
 import { PartnerListUI_Component } from "../../UiScripts/Prefabs/Club/PartnerListUI_Component";
+import { PartnerMemberListUI_Component } from "../../UiScripts/Prefabs/Club/PartnerMemberListUI_Component";
 
 /**
  * 俱乐部事件处理类
@@ -71,6 +72,13 @@ export default class ClubEvents {
     [CLUB_EVENT.GET_PARTNER_LIST_RESULT, this.onGetPartnerListResult],
     [CLUB_EVENT.ADD_PARTNER_RESULT, this.onAddPartnerResult],
     [CLUB_EVENT.DELETE_PARTNER_RESULT, this.onDeletePartnerResult],
+
+    [
+      CLUB_EVENT.GET_PARTNER_MEMBER_LIST_RESULT,
+      this.onGetPartnerMemberListResult,
+    ],
+    [CLUB_EVENT.ADD_PARTNER_MEMBER_RESULT, this.onAddPartnerMemberResult],
+    [CLUB_EVENT.DELETE_PARTNER_MEMBER_RESULT, this.onDeletePartnerMemberResult],
   ]);
 
   /**
@@ -952,7 +960,7 @@ export default class ClubEvents {
    * 添加合伙人
    * @param params
    */
-  public static addParter(params: Gateway.Requested.Club.AddPartnerParams) {
+  public static addPartner(params: Gateway.Requested.Club.AddPartnerParams) {
     const socket = SocketManager.Instance.SocketInstance;
     if (socket) {
       CommonDailogHandler.showCircleLoading(WAITING_TYPE.ADD_PARTNER);
@@ -973,7 +981,7 @@ export default class ClubEvents {
     console.log("<ClubEvent> onAddPartnerResult called --->", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
-      //  打开合伙人列表界面
+      //  获取合伙人列表界面
       const [node, component] = ComponentManager.Instance.getNodeComponent(
         "PartnerListUI",
         PartnerListUI_Component,
@@ -1013,7 +1021,7 @@ export default class ClubEvents {
     console.log("<ClubEvent> onDeletePartnerResult called --->", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
-      //  打开合伙人列表界面
+      //  获取合伙人列表界面
       const [node, component] = ComponentManager.Instance.getNodeComponent(
         "PartnerListUI",
         PartnerListUI_Component,
@@ -1024,5 +1032,139 @@ export default class ClubEvents {
       CommonDailogHandler.showBubbleMessage(`${msg}`);
     }
     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.DELETE_PARTNER);
+  }
+
+  /**
+   * 获取合伙人成员列表
+   * @param params
+   */
+  public static getPartnerMemberList(
+    params: Gateway.Requested.Club.GetPartnerMemberListParams,
+  ) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(
+        WAITING_TYPE.GET_PARTNER_MEMBER_LIST,
+      );
+      socket.emit(CLUB_EVENT.GET_PARTNER_MEMBER_LIST, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(
+        WAITING_TYPE.GET_PARTNER_MEMBER_LIST,
+      );
+    }
+  }
+
+  /**
+   * 处理获取合伙人成员列表结果事件
+   * @param returnData
+   */
+  public static onGetPartnerMemberListResult(
+    returnData: Gateway.Returned.Common.Result<
+      Gateway.Returned.Common.Pagenation<
+        Gateway.Returned.ClubPlayer.ClubPlayer[]
+      >
+    >,
+  ) {
+    console.log(
+      "<ClubEvent> onGetPartnerMemberListResult called --->",
+      returnData,
+    );
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      // 获取合伙人列表界面
+      const [node, component] = ComponentManager.Instance.getNodeComponent(
+        "PartnerMemberListUI",
+        PartnerMemberListUI_Component,
+      );
+      component && component.setData(data);
+    } else {
+      // 连接失败，弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.GET_PARTNER_MEMBER_LIST);
+  }
+
+  /**
+   * 添加合伙人成员
+   * @param params
+   */
+  public static addPartnerMember(
+    params: Gateway.Requested.Club.AddPartnerMemberParams,
+  ) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.ADD_PARTNER_MEMBER);
+      socket.emit(CLUB_EVENT.ADD_PARTNER_MEMBER, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.ADD_PARTNER_MEMBER);
+    }
+  }
+
+  /**
+   * 处理添加合伙人成员结果事件
+   * @param returnData
+   */
+  private static onAddPartnerMemberResult(
+    returnData: Gateway.Returned.Common.Result<boolean>,
+  ) {
+    console.log("<ClubEvent> onAddPartnerMemberResult called --->", returnData);
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      //  获取合伙人列表界面
+      const [node, component] = ComponentManager.Instance.getNodeComponent(
+        "PartnerMemberListUI",
+        PartnerMemberListUI_Component,
+      );
+      component && component.reloadData();
+    } else {
+      // 连接失败，弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.ADD_PARTNER_MEMBER);
+  }
+
+  /**
+   * 删除合伙人成员
+   * @param params
+   */
+  public static deletePartnerMember(
+    params: Gateway.Requested.Club.DeletePartnerMemberParams,
+  ) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.DELETE_PARTNER_MEMBER);
+      socket.emit(CLUB_EVENT.DELETE_PARTNER_MEMBER, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.DELETE_PARTNER_MEMBER);
+    }
+  }
+
+  /**
+   * 处理删除合伙人成员结果事件
+   * @param returnData
+   */
+  private static onDeletePartnerMemberResult(
+    returnData: Gateway.Returned.Common.Result<boolean>,
+  ) {
+    console.log(
+      "<ClubEvent> onDeletePartnerMemberResult called --->",
+      returnData,
+    );
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      // 获取合伙人成员列表界面
+      const [node, component] = ComponentManager.Instance.getNodeComponent(
+        "PartnerMemberListUI",
+        PartnerMemberListUI_Component,
+      );
+      component && component.reloadData();
+    } else {
+      // 连接失败，弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.DELETE_PARTNER_MEMBER);
   }
 }

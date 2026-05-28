@@ -58,4 +58,13 @@ export enum CLUB_EVENT {
 
   DELETE_PARTNER = "Club.DeletePartner",
   DELETE_PARTNER_RESULT = "Club.DeletePartner.Result",
+
+  GET_PARTNER_MEMBER_LIST = "Club.GetPartnerMemberList",
+  GET_PARTNER_MEMBER_LIST_RESULT = "Club.GetPartnerMemberList.Result",
+
+  ADD_PARTNER_MEMBER = "Club.AddPartnerMember",
+  ADD_PARTNER_MEMBER_RESULT = "Club.AddPartnerMember.Result",
+
+  DELETE_PARTNER_MEMBER = "Club.DeletePartnerMember",
+  DELETE_PARTNER_MEMBER_RESULT = "Club.DeletePartnerMember.Result",
 }

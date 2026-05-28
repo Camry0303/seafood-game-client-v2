@@ -108,7 +108,8 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
       | "JoinClubToggle"
       | "AddScoreToggle"
       | "SubScoreToggle"
-      | "AddPartnerToggle",
+      | "AddPartnerToggle"
+      | "AddPartnerMemberToggle",
     numDigits: 2 | 4 | 6,
     callback: Function,
   ) {
