@@ -1167,4 +1167,25 @@ export default class ClubEvents {
     }
     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.DELETE_PARTNER_MEMBER);
   }
+
+  /**
+   * 获取俱乐部玩家上下分日志列表
+   * @param params
+   */
+  public static getClubPlayerScoreLogList(
+    params: Gateway.Requested.Club.GetClubPlayerScoreLogListParams,
+  ) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(
+        WAITING_TYPE.GET_CLUB_PLAYER_SCORE_LOG_LIST,
+      );
+      socket.emit(CLUB_EVENT.GET_CLUB_PLAYER_SCORE_LOG_LIST, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(
+        WAITING_TYPE.GET_CLUB_PLAYER_SCORE_LOG_LIST,
+      );
+    }
+  }
 }

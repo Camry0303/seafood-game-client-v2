@@ -1,4 +1,12 @@
-import { _decorator, Node, EditBox, Event, Prefab, instantiate } from "cc";
+import {
+  _decorator,
+  Node,
+  EditBox,
+  Event,
+  Prefab,
+  instantiate,
+  Label,
+} from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import BubbleWindow from "../../../Common/BubbleWindow";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
@@ -17,6 +25,7 @@ export class PartnerMemberListUI_Component extends ComponentController {
 
   private _conditionEditbox: EditBox = null;
   private _tableContentNode: Node = null;
+  private _countLabel: Label = null;
 
   // 合伙人数据
   private _partnerData: Gateway.Returned.ClubPlayer.ClubPlayer = null;
@@ -74,6 +83,12 @@ export class PartnerMemberListUI_Component extends ComponentController {
       this.getClassName(),
     );
 
+    // 获取成员数量标签
+    [, this._countLabel] = this.getNodeComponent(
+      "MainView/Content/Count",
+      Label,
+    );
+
     // 设置关闭按钮点击事件
     this.setButtonClickEvent(
       "MainView/CloseBtn",
@@ -96,7 +111,7 @@ export class PartnerMemberListUI_Component extends ComponentController {
   }
 
   /**
-   * 设置合伙人数据
+   * 设置合伙人成员数据
    * @param data
    */
   public setPartnerData(data: Gateway.Returned.ClubPlayer.ClubPlayer) {
@@ -195,12 +210,13 @@ export class PartnerMemberListUI_Component extends ComponentController {
   ) {
     this._data = data;
     this._tableContentNode.removeAllChildren();
+    this._countLabel.string = `当前拥有成员：${data.total}`;
 
     const datalist = data.data;
     const nickname_or_id = this._conditionEditbox.string.trim();
 
     if (!nickname_or_id) {
-      datalist.unshift(); // 添加合伙人数据
+      datalist.unshift(this._partnerData); // 添加合伙人数据
     }
 
     const prefab: Prefab = ResourceManager.Instance.getAsset<Prefab>(
@@ -209,11 +225,15 @@ export class PartnerMemberListUI_Component extends ComponentController {
     );
 
     // 渲染玩家列表
-    datalist.forEach((item) => {
+    datalist.forEach((item, index) => {
       const node = instantiate(prefab);
       const component = node.addComponent(PartnerMemberListItem_Component);
       this._tableContentNode.addChild(node);
-      component.setData(item);
+      if (!nickname_or_id && index === 0) {
+        component.setData(item, false);
+      } else {
+        component.setData(item, true);
+      }
     });
   }
 

@@ -122,3 +122,13 @@ export type AddPartnerMemberParams = {
 export type DeletePartnerMemberParams = {
   player_id: number;
 };
+
+/**
+ * 获取俱乐部玩家上下分日志列表参数
+ */
+export type GetClubPlayerScoreLogListParams = {
+  current: number;
+  pageSize: number;
+  nickname_or_id?: string;
+  type?: number;
+};

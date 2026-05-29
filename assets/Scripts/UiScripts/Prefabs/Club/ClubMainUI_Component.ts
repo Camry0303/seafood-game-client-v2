@@ -401,8 +401,12 @@ export class ClubMainUI_Component extends ComponentController {
    * @param event
    */
   private onClubScoreOperateLogBtnClick(event: Event) {
-    // TODO - 俱乐部上下分记录日志
+    // 俱乐部上下分记录日志
     console.log(`onClubScoreOperateLogBtnClick--->`);
+    ClubEvents.getClubPlayerScoreLogList({
+      current: 1,
+      pageSize: 1000,
+    });
   }
 
   /**
