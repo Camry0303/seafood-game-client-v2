@@ -14,6 +14,7 @@ import { ClubMainUI_Component } from "../Club/ClubMainUI_Component";
 import HttpApiServices from "../../../Utils/HttpApiServices";
 import moment from "moment";
 import CryptoUtils from "../../../Utils/CryptoUtils";
+import { MemberScoreLogListUI_Component } from "../Club/MemberScoreLogListUI_Component";
 
 const { ccclass, menu } = _decorator;
 
@@ -56,7 +57,8 @@ export class MainUI_Component extends ComponentController {
    */
   private async onTestBtnClick(event: Event) {
     console.log(`onTestBtnClick`);
-    this.testDialogConfirm();
+    this.testMemberScoreLogList();
+    // this.testDialogConfirm();
     // this.testCSWRequest();
     // this.testCSWSaveAccount();
     // this.testDialogMessage();
@@ -177,6 +179,18 @@ export class MainUI_Component extends ComponentController {
         }
         CommonDailogHandler.showBubbleMessage("复制成功！");
       },
+    );
+  }
+
+  /**
+   * 测试打开上下分记录界面
+   */
+  private testMemberScoreLogList() {
+    ComponentManager.Instance.renderUiNode<MemberScoreLogListUI_Component>(
+      "MemberScoreLogListUI",
+      "Prefabs",
+      "Club/MemberScoreLogListUI",
+      MemberScoreLogListUI_Component,
     );
   }
 

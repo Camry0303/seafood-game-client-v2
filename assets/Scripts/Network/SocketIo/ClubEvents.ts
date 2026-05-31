@@ -19,6 +19,7 @@ import { MemberManagementUI_Component } from "../../UiScripts/Prefabs/Club/Membe
 import { MemberListUI_Component } from "../../UiScripts/Prefabs/Club/MemberListUI_Component";
 import { PartnerListUI_Component } from "../../UiScripts/Prefabs/Club/PartnerListUI_Component";
 import { PartnerMemberListUI_Component } from "../../UiScripts/Prefabs/Club/PartnerMemberListUI_Component";
+import { MemberScoreLogListUI_Component } from "../../UiScripts/Prefabs/Club/MemberScoreLogListUI_Component";
 
 /**
  * 俱乐部事件处理类
@@ -79,6 +80,11 @@ export default class ClubEvents {
     ],
     [CLUB_EVENT.ADD_PARTNER_MEMBER_RESULT, this.onAddPartnerMemberResult],
     [CLUB_EVENT.DELETE_PARTNER_MEMBER_RESULT, this.onDeletePartnerMemberResult],
+
+    [
+      CLUB_EVENT.GET_CLUB_PLAYER_SCORE_LOG_LIST_RESULT,
+      this.onGetClubPlayerScoreLogListResult,
+    ],
   ]);
 
   /**
@@ -1187,5 +1193,36 @@ export default class ClubEvents {
         WAITING_TYPE.GET_CLUB_PLAYER_SCORE_LOG_LIST,
       );
     }
+  }
+
+  private static onGetClubPlayerScoreLogListResult(
+    returnData: Gateway.Returned.Common.Result<
+      Gateway.Returned.Common.Pagenation<
+        Gateway.Returned.ClubPlayer.ClubPlayerScoreLog[]
+      >
+    >,
+  ) {
+    console.log(
+      "<ClubEvent> onGetClubPlayerScoreLogListResult called --->",
+      returnData,
+    );
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      // 打开俱乐部玩家上下分日志列表界面
+      const [node, component] =
+        ComponentManager.Instance.renderUiNode<MemberScoreLogListUI_Component>(
+          "MemberScoreLogListUI",
+          "Prefabs",
+          "Club/MemberScoreLogListUI",
+          MemberScoreLogListUI_Component,
+        );
+      component && component.setData(data);
+    } else {
+      // 连接失败，弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(
+      WAITING_TYPE.GET_CLUB_PLAYER_SCORE_LOG_LIST,
+    );
   }
 }

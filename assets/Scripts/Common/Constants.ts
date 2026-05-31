@@ -5,7 +5,7 @@ const API_KEY = "Us9wppPKKZH77R2UWSzM0J2EGboO4VTcx";
 // 加密密码密钥
 const PASSWORD_KEY = "s9wppPKKZH77R2UW";
 // 游戏限制分选项
-const SCORE_LIMIT_OPTIONS: Config.ScoreLimitOption[] = [
+const SCORE_LIMIT_OPTIONS: Config.ComboBoxOption[] = [
   {
     id: 0,
     label: "1千~连400~豹200",
@@ -57,5 +57,28 @@ const SCORE_LIMIT_OPTIONS: Config.ScoreLimitOption[] = [
     value: "500000,200000,100000",
   },
 ];
+// 上下分类型选项
+const SCORE_TYPE_OPTIONS: Config.ComboBoxOption[] = [
+  {
+    id: -1,
+    label: "全部",
+    value: -1,
+  },
+  {
+    id: 0,
+    label: "上分",
+    value: 1,
+  },
+  {
+    id: 1,
+    label: "下分",
+    value: 0,
+  },
+];
 
-export default { API_KEY, PASSWORD_KEY, SCORE_LIMIT_OPTIONS };
+export default {
+  API_KEY,
+  PASSWORD_KEY,
+  SCORE_LIMIT_OPTIONS,
+  SCORE_TYPE_OPTIONS,
+};

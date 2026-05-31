@@ -25,9 +25,9 @@ export namespace Config {
   /**
    * 分数限制配置
    */
-  export type ScoreLimitOption = {
+  export type ComboBoxOption = {
     id: number;
     label: string;
-    value: string;
+    value: any;
   };
 }

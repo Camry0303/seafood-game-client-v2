@@ -131,3 +131,58 @@ export type CurrentClubPlayer = {
    */
   invite_code: string;
 };
+
+/**
+ * 俱乐部玩家上下分日志
+ */
+export type ClubPlayerScoreLog = {
+  /**
+   * 俱乐部id
+   */
+  club_id: number;
+
+  /**
+   * 玩家id
+   */
+  player_id: number;
+
+  /**
+   * 玩家昵称
+   */
+  nickname: string;
+
+  /**
+   * 玩家头像
+   */
+  avatar: string;
+
+  /**
+   * 操作者id
+   */
+  modifier_id: number;
+
+  /**
+   * 操作者昵称
+   */
+  modifier_nickname: string;
+
+  /**
+   * 操作者头像
+   */
+  modifier_avatar: string;
+
+  /**
+   * 操作类型 0:下分 1:上分
+   */
+  type: number;
+
+  /**
+   * 分数
+   */
+  changed_score: number;
+
+  /**
+   * 操作时间
+   */
+  created_time: string;
+};
