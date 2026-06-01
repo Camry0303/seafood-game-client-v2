@@ -20,6 +20,7 @@ import { MemberListUI_Component } from "../../UiScripts/Prefabs/Club/MemberListU
 import { PartnerListUI_Component } from "../../UiScripts/Prefabs/Club/PartnerListUI_Component";
 import { PartnerMemberListUI_Component } from "../../UiScripts/Prefabs/Club/PartnerMemberListUI_Component";
 import { MemberScoreLogListUI_Component } from "../../UiScripts/Prefabs/Club/MemberScoreLogListUI_Component";
+import { MemberScoreRankListUI_Component } from "../../UiScripts/Prefabs/Club/MemberScoreRankListUI_Component";
 
 /**
  * 俱乐部事件处理类
@@ -84,6 +85,11 @@ export default class ClubEvents {
     [
       CLUB_EVENT.GET_CLUB_PLAYER_SCORE_LOG_LIST_RESULT,
       this.onGetClubPlayerScoreLogListResult,
+    ],
+
+    [
+      CLUB_EVENT.GET_CLUB_PLAYER_SCORE_RANK_LIST_RESULT,
+      this.onGetClubPlayerScoreRankListResult,
     ],
   ]);
 
@@ -704,7 +710,7 @@ export default class ClubEvents {
    * @param params
    */
   public static getMemberManagementList(
-    params: Gateway.Requested.Club.GetMemberManagementListParams,
+    params: Gateway.Requested.ClubPlayer.GetMemberManagementListParams,
   ) {
     const socket = SocketManager.Instance.SocketInstance;
     if (socket) {
@@ -819,7 +825,7 @@ export default class ClubEvents {
    * @param params
    */
   public static getMemberList(
-    params: Gateway.Requested.Club.GetMemberListParams,
+    params: Gateway.Requested.ClubPlayer.GetMemberListParams,
   ) {
     const socket = SocketManager.Instance.SocketInstance;
     if (socket) {
@@ -920,7 +926,7 @@ export default class ClubEvents {
    * @param params
    */
   public static getPartnerList(
-    params: Gateway.Requested.Club.GetPartnerListParams,
+    params: Gateway.Requested.ClubPlayer.GetPartnerListParams,
   ) {
     const socket = SocketManager.Instance.SocketInstance;
     if (socket) {
@@ -966,7 +972,9 @@ export default class ClubEvents {
    * 添加合伙人
    * @param params
    */
-  public static addPartner(params: Gateway.Requested.Club.AddPartnerParams) {
+  public static addPartner(
+    params: Gateway.Requested.ClubPlayer.AddPartnerParams,
+  ) {
     const socket = SocketManager.Instance.SocketInstance;
     if (socket) {
       CommonDailogHandler.showCircleLoading(WAITING_TYPE.ADD_PARTNER);
@@ -1005,7 +1013,7 @@ export default class ClubEvents {
    * @param params
    */
   public static deletePartner(
-    params: Gateway.Requested.Club.DeletePartnerParams,
+    params: Gateway.Requested.ClubPlayer.DeletePartnerParams,
   ) {
     const socket = SocketManager.Instance.SocketInstance;
     if (socket) {
@@ -1045,7 +1053,7 @@ export default class ClubEvents {
    * @param params
    */
   public static getPartnerMemberList(
-    params: Gateway.Requested.Club.GetPartnerMemberListParams,
+    params: Gateway.Requested.ClubPlayer.GetPartnerMemberListParams,
   ) {
     const socket = SocketManager.Instance.SocketInstance;
     if (socket) {
@@ -1096,7 +1104,7 @@ export default class ClubEvents {
    * @param params
    */
   public static addPartnerMember(
-    params: Gateway.Requested.Club.AddPartnerMemberParams,
+    params: Gateway.Requested.ClubPlayer.AddPartnerMemberParams,
   ) {
     const socket = SocketManager.Instance.SocketInstance;
     if (socket) {
@@ -1136,7 +1144,7 @@ export default class ClubEvents {
    * @param params
    */
   public static deletePartnerMember(
-    params: Gateway.Requested.Club.DeletePartnerMemberParams,
+    params: Gateway.Requested.ClubPlayer.DeletePartnerMemberParams,
   ) {
     const socket = SocketManager.Instance.SocketInstance;
     if (socket) {
@@ -1179,7 +1187,7 @@ export default class ClubEvents {
    * @param params
    */
   public static getClubPlayerScoreLogList(
-    params: Gateway.Requested.Club.GetClubPlayerScoreLogListParams,
+    params: Gateway.Requested.ClubPlayer.GetClubPlayerScoreLogListParams,
   ) {
     const socket = SocketManager.Instance.SocketInstance;
     if (socket) {
@@ -1195,6 +1203,10 @@ export default class ClubEvents {
     }
   }
 
+  /**
+   * 处理获取俱乐部玩家上下分日志列表结果事件
+   * @param returnData
+   */
   private static onGetClubPlayerScoreLogListResult(
     returnData: Gateway.Returned.Common.Result<
       Gateway.Returned.Common.Pagenation<
@@ -1223,6 +1235,62 @@ export default class ClubEvents {
     }
     CommonDailogHandler.hideCircleLoading(
       WAITING_TYPE.GET_CLUB_PLAYER_SCORE_LOG_LIST,
+    );
+  }
+
+  /**
+   * 获取俱乐部玩家积分排名列表
+   * @param params
+   */
+  public static getClubPlayerScoreRankList(
+    params: Gateway.Requested.ClubPlayer.GetClubPlayerScoreRankListParams,
+  ) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(
+        WAITING_TYPE.GET_CLUB_PLAYER_SCORE_RANK_LIST,
+      );
+      socket.emit(CLUB_EVENT.GET_CLUB_PLAYER_SCORE_RANK_LIST, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(
+        WAITING_TYPE.GET_CLUB_PLAYER_SCORE_RANK_LIST,
+      );
+    }
+  }
+
+  /**
+   * 处理获取俱乐部玩家积分排名列表结果事件
+   * @param returnData
+   */
+  private static onGetClubPlayerScoreRankListResult(
+    returnData: Gateway.Returned.Common.Result<
+      Gateway.Returned.Common.Pagenation<
+        Gateway.Returned.ClubPlayer.ClubPlayerScoreRank[]
+      >
+    >,
+  ) {
+    console.log(
+      "<ClubEvent> onGetClubPlayerScoreRankListResult called --->",
+      returnData,
+    );
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      // 打开俱乐部玩家积分排名列表界面
+      const [node, component] =
+        ComponentManager.Instance.renderUiNode<MemberScoreRankListUI_Component>(
+          "MemberScoreRankListUI",
+          "Prefabs",
+          "Club/MemberScoreRankListUI",
+          MemberScoreRankListUI_Component,
+        );
+      component && component.setData(data);
+    } else {
+      // 连接失败，弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(
+      WAITING_TYPE.GET_CLUB_PLAYER_SCORE_RANK_LIST,
     );
   }
 }

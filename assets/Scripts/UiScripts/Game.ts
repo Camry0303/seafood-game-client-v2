@@ -109,6 +109,7 @@ export class Game extends SingletonComponent {
             "Club/PartnerListUI",
             "Club/PartnerMemberListUI",
             "Club/MemberScoreLogListUI",
+            "Club/MemberScoreRankListUI",
           ],
         },
         // 俱乐部组件预设体资源
@@ -122,6 +123,7 @@ export class Game extends SingletonComponent {
             "Club/PartnerListItem",
             "Club/PartnerMemberListItem",
             "Club/MemberScoreLogListItem",
+            "Club/MemberScoreRankListItem",
           ],
         },
         // 游戏设置相关预设体资源

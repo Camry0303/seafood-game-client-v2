@@ -5,9 +5,9 @@ import { ComponentManager } from "../../../Runtime/ComponentManager";
 import { ResourceManager } from "../../../Runtime/ResourceManager";
 import { PartnerListItem_Component } from "./PartnerListItem_Component";
 import { Gateway } from "../../../Types/typing";
-import { GetPartnerListParams } from "../../../Types/gateway/requested/club";
 import ClubEvents from "../../../Network/SocketIo/ClubEvents";
 import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
+import { GetPartnerListParams } from "../../../Types/gateway/requested/clubPlayer";
 const { ccclass, menu } = _decorator;
 
 @ccclass("PartnerListUI_Component")

@@ -1,12 +1,4 @@
-import {
-  _decorator,
-  Node,
-  EditBox,
-  Event,
-  Prefab,
-  instantiate,
-  Label,
-} from "cc";
+import { _decorator, Node, EditBox, Event, Prefab, instantiate } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import BubbleWindow from "../../../Common/BubbleWindow";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
@@ -14,25 +6,22 @@ import { ResourceManager } from "../../../Runtime/ResourceManager";
 import { Gateway } from "../../../Types/typing";
 import ClubEvents from "../../../Network/SocketIo/ClubEvents";
 import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
-import { PartnerMemberListItem_Component } from "./PartnerMemberListItem_Component";
-import { GetPartnerMemberListParams } from "../../../Types/gateway/requested/clubPlayer";
+import { GetPartnerListParams } from "../../../Types/gateway/requested/clubPlayer";
+import { MemberScoreRankListItem_Component } from "./MemberScoreRankListItem_Component";
+import { GlobalData } from "../../../Runtime/GlobalData";
 const { ccclass, menu } = _decorator;
 
-@ccclass("PartnerMemberListUI_Component")
-@menu("Hidden/PartnerMemberListUI_Component")
-export class PartnerMemberListUI_Component extends ComponentController {
+@ccclass("MemberScoreRankListUI_Component")
+@menu("Hidden/MemberScoreRankListUI_Component")
+export class MemberScoreRankListUI_Component extends ComponentController {
   public _bubbleWindow: BubbleWindow = null;
 
   private _conditionEditbox: EditBox = null;
   private _tableContentNode: Node = null;
-  private _countLabel: Label = null;
-
-  // 合伙人数据
-  private _partnerData: Gateway.Returned.ClubPlayer.ClubPlayer = null;
 
   // 成员列表数据
   private _data: Gateway.Returned.Common.Pagenation<
-    Gateway.Returned.ClubPlayer.ClubPlayer[]
+    Gateway.Returned.ClubPlayer.ClubPlayerScoreRank[]
   > = null;
 
   start() {}
@@ -75,18 +64,12 @@ export class PartnerMemberListUI_Component extends ComponentController {
       this.getClassName(),
     );
 
-    // 设置添加合伙人成员按钮点击事件
+    // 设置添加合伙人按钮点击事件
     this.setButtonClickEvent(
-      "MainView/Content/AddPartnerMemberBtn",
+      "MainView/Content/AddPartnerBtn",
       0,
-      "onOpenAddPartnerMember",
+      "onOpenAddPartner",
       this.getClassName(),
-    );
-
-    // 获取成员数量标签
-    [, this._countLabel] = this.getNodeComponent(
-      "MainView/Content/Count",
-      Label,
     );
 
     // 设置关闭按钮点击事件
@@ -111,36 +94,11 @@ export class PartnerMemberListUI_Component extends ComponentController {
   }
 
   /**
-   * 设置合伙人成员数据
-   * @param data
-   */
-  public setPartnerData(data: Gateway.Returned.ClubPlayer.ClubPlayer) {
-    if (!data) {
-      return;
-    }
-    this._partnerData = data;
-    const prefab: Prefab = ResourceManager.Instance.getAsset<Prefab>(
-      "Prefabs",
-      "Club/PartnerMemberListItem",
-    );
-    const node = instantiate(prefab);
-    const component = node.addComponent(PartnerMemberListItem_Component);
-    this._tableContentNode.addChild(node);
-    component.setData(data, false);
-  }
-
-  /**
    * 搜索事件
    * @param event
    */
   private onSearch(event: Event) {
-    if (!this._partnerData) {
-      CommonDailogHandler.showBubbleMessage("合伙人数据丢失");
-      return;
-    }
-
-    let params: GetPartnerMemberListParams = {
-      belong_partner_id: this._partnerData.player_id,
+    let params: GetPartnerListParams = {
       current: 1,
       pageSize: 1000,
     };
@@ -153,7 +111,7 @@ export class PartnerMemberListUI_Component extends ComponentController {
       };
     }
 
-    ClubEvents.getPartnerMemberList(params);
+    ClubEvents.getPartnerList(params);
   }
 
   /**
@@ -161,40 +119,27 @@ export class PartnerMemberListUI_Component extends ComponentController {
    * @param event
    */
   private onGetAll(event: Event) {
-    if (!this._partnerData) {
-      CommonDailogHandler.showBubbleMessage("合伙人数据丢失");
-      return;
-    }
     this._conditionEditbox.string = "";
-    let params: GetPartnerMemberListParams = {
-      belong_partner_id: this._partnerData.player_id,
+    let params: GetPartnerListParams = {
       current: 1,
       pageSize: 1000,
     };
 
-    ClubEvents.getPartnerMemberList(params);
+    ClubEvents.getPartnerList(params);
   }
 
   /**
-   * 打开添加合伙人成员界面
+   * 打开添加合伙人界面
    * @param event
    */
-  private onOpenAddPartnerMember(event: Event) {
-    if (!this._partnerData) {
-      CommonDailogHandler.showBubbleMessage("合伙人数据丢失");
-      return;
-    }
-
+  private onOpenAddPartner(event: Event) {
     CommonDailogHandler.showDialogMiniKeyboard(
-      "AddPartnerMemberToggle",
+      "AddPartnerToggle",
       6,
       (value: string) => {
-        // 添加合伙人成员
+        // 添加合伙人
         const player_id = parseInt(value, 10);
-        ClubEvents.addPartnerMember({
-          belong_partner_id: this._partnerData.player_id,
-          player_id,
-        });
+        ClubEvents.addPartner({ player_id });
       },
     );
   }
@@ -205,35 +150,33 @@ export class PartnerMemberListUI_Component extends ComponentController {
    */
   public setData(
     data: Gateway.Returned.Common.Pagenation<
-      Gateway.Returned.ClubPlayer.ClubPlayer[]
+      Gateway.Returned.ClubPlayer.ClubPlayerScoreRank[]
     >,
   ) {
     this._data = data;
     this._tableContentNode.removeAllChildren();
-    this._countLabel.string = `当前拥有成员：${data.total}`;
 
-    const datalist = data.data;
-    const nickname_or_id = this._conditionEditbox.string.trim();
-
-    if (!nickname_or_id) {
-      datalist.unshift(this._partnerData); // 添加合伙人数据
+    const currentPlayer = data.data.find(
+      (item) =>
+        item.player_id ===
+        GlobalData.Instance.getCurrentClubPlayerInfo()?.player_id,
+    );
+    if (currentPlayer) {
+      data.data.unshift(currentPlayer);
     }
 
+    const datalist = data.data;
     const prefab: Prefab = ResourceManager.Instance.getAsset<Prefab>(
       "Prefabs",
-      "Club/PartnerMemberListItem",
+      "Club/MemberScoreRankListItem",
     );
 
     // 渲染玩家列表
-    datalist.forEach((item, index) => {
+    datalist.forEach((item) => {
       const node = instantiate(prefab);
-      const component = node.addComponent(PartnerMemberListItem_Component);
+      const component = node.addComponent(MemberScoreRankListItem_Component);
       this._tableContentNode.addChild(node);
-      if (!nickname_or_id && index === 0) {
-        component.setData(item, false);
-      } else {
-        component.setData(item, true);
-      }
+      component.setData(item);
     });
   }
 
@@ -241,18 +184,12 @@ export class PartnerMemberListUI_Component extends ComponentController {
    * 刷新数据
    */
   public reloadData() {
-    if (!this._partnerData) {
-      CommonDailogHandler.showBubbleMessage("合伙人数据丢失");
-      return;
-    }
-
     this._conditionEditbox.string = "";
-    let params: GetPartnerMemberListParams = {
-      belong_partner_id: this._partnerData.player_id,
+    let params: GetPartnerListParams = {
       current: 1,
       pageSize: 1000,
     };
 
-    ClubEvents.getPartnerMemberList(params);
+    ClubEvents.getPartnerList(params);
   }
 }

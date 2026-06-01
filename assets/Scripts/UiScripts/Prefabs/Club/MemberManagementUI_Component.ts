@@ -5,8 +5,8 @@ import { ComponentManager } from "../../../Runtime/ComponentManager";
 import { ResourceManager } from "../../../Runtime/ResourceManager";
 import { MemberManagementItem_Component } from "./MemberManagementItem_Component";
 import { Gateway } from "../../../Types/typing";
-import { GetMemberManagementListParams } from "../../../Types/gateway/requested/club";
 import ClubEvents from "../../../Network/SocketIo/ClubEvents";
+import { GetMemberManagementListParams } from "../../../Types/gateway/requested/clubPlayer";
 const { ccclass, menu } = _decorator;
 
 @ccclass("MemberManagementUI_Component")

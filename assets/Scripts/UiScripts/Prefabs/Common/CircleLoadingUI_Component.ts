@@ -50,6 +50,7 @@ export enum WAITING_TYPE {
   DELETE_PARTNER_MEMBER = "正在删除合伙人成员",
 
   GET_CLUB_PLAYER_SCORE_LOG_LIST = "正在获取玩家上下分日志列表",
+  GET_CLUB_PLAYER_SCORE_RANK_LIST = "正在获取玩家积分排行列表",
 
   GAME_RECONNECT = "正在重连游戏",
 }

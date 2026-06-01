@@ -13,12 +13,12 @@ import { ComponentController } from "../../../Common/ComponentController";
 import BubbleWindow from "../../../Common/BubbleWindow";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
 import ClubEvents from "../../../Network/SocketIo/ClubEvents";
-import { GetMemberListParams } from "../../../Types/gateway/requested/club";
 import { Gateway } from "../../../Types/gateway";
 import { ResourceManager } from "../../../Runtime/ResourceManager";
 import { MemberListItem_Component } from "./MemberListItem_Component";
 import { GlobalData } from "../../../Runtime/GlobalData";
 import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
+import { GetMemberListParams } from "../../../Types/gateway/requested/clubPlayer";
 const { ccclass, menu } = _decorator;
 
 @ccclass("MemberListUI_Component")

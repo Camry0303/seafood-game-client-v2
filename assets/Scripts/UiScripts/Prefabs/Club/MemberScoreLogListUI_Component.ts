@@ -14,7 +14,6 @@ import { ComponentManager } from "../../../Runtime/ComponentManager";
 import { ResourceManager } from "../../../Runtime/ResourceManager";
 import { MemberScoreLogListItem_Component } from "./MemberScoreLogListItem_Component";
 import { Gateway } from "../../../Types/typing";
-import { GetClubPlayerScoreLogListParams } from "../../../Types/gateway/requested/club";
 import ClubEvents from "../../../Network/SocketIo/ClubEvents";
 import Constants from "../../../Common/Constants";
 const { ccclass, menu } = _decorator;
@@ -177,7 +176,7 @@ export class MemberScoreLogListUI_Component extends ComponentController {
    * @param event
    */
   private onSearch(event: Event) {
-    let params: GetClubPlayerScoreLogListParams = {
+    let params: Gateway.Requested.ClubPlayer.GetClubPlayerScoreLogListParams = {
       current: 1,
       pageSize: 1000,
     };
@@ -206,7 +205,7 @@ export class MemberScoreLogListUI_Component extends ComponentController {
   private onGetAll(event: Event) {
     this._typeValue = -1;
     this._conditionEditbox.string = "";
-    let params: GetClubPlayerScoreLogListParams = {
+    let params: Gateway.Requested.ClubPlayer.GetClubPlayerScoreLogListParams = {
       current: 1,
       pageSize: 1000,
     };

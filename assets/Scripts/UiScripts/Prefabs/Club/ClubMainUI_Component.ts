@@ -23,12 +23,11 @@ import { Gateway } from "../../../Types/gateway";
 import { ResourceManager } from "../../../Runtime/ResourceManager";
 import { ClubToggle_Component } from "./ClubToggle_Component";
 import { CLUB_PLAYER_ROLE } from "../../../Enums";
-import { MemberManagementUI_Component } from "./MemberManagementUI_Component";
 import {
   GetMemberListParams,
   GetMemberManagementListParams,
-} from "../../../Types/gateway/requested/club";
-import { MemberListUI_Component } from "./MemberListUI_Component";
+} from "../../../Types/gateway/requested/clubPlayer";
+
 const { ccclass, menu } = _decorator;
 
 @ccclass("ClubMainUI_Component")
@@ -383,8 +382,12 @@ export class ClubMainUI_Component extends ComponentController {
    * @param event
    */
   private onClubScoreRankBtnClick(event: Event) {
-    // TODO - 俱乐部积分排行
+    // 俱乐部积分排行
     console.log(`onClubScoreRankBtnClick--->`);
+    ClubEvents.getClubPlayerScoreRankList({
+      current: 1,
+      pageSize: 1000,
+    });
   }
 
   /**

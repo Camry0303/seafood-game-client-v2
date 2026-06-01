@@ -186,3 +186,58 @@ export type ClubPlayerScoreLog = {
    */
   created_time: string;
 };
+
+/**
+ * 俱乐部玩家积分排名
+ */
+export type ClubPlayerScoreRank = {
+  /**
+   * 俱乐部id
+   */
+  club_id: number;
+
+  /**
+   * 玩家id
+   */
+  player_id: number;
+
+  /**
+   * 玩家昵称
+   */
+  nickname: string;
+
+  /**
+   * 玩家头像
+   */
+  avatar: string;
+
+  /**
+   * 玩家所在俱乐部积分
+   */
+  club_score: number;
+
+  /**
+   * 玩家所在俱乐部每日积分(每日清零)
+   */
+  daily_score: number;
+
+  /**
+   * 前天结算积分
+   */
+  tdby_settlement_score: number;
+
+  /**
+   * 昨天结算积分
+   */
+  yday_settlement_score: number;
+
+  /**
+   * 今天结算积分
+   */
+  tday_settlement_score: number;
+
+  /**
+   * 排名
+   */
+  rank: number;
+};
