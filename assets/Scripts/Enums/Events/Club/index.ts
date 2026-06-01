@@ -73,4 +73,7 @@ export enum CLUB_EVENT {
 
   GET_CLUB_PLAYER_SCORE_RANK_LIST = "Club.GetClubPlayerScoreRankList",
   GET_CLUB_PLAYER_SCORE_RANK_LIST_RESULT = "Club.GetClubPlayerScoreRankList.Result",
+
+  GET_MY_MEMBER_LIST = "Club.GetMyMemberList",
+  GET_MY_MEMBER_LIST_RESULT = "Club.GetMyMemberList.Result",
 }

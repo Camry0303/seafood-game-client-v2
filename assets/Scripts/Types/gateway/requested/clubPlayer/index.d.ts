@@ -142,3 +142,12 @@ export type GetClubPlayerScoreRankListParams = {
   current: number;
   pageSize: number;
 };
+
+/**
+ * 获取我的成员列表参数
+ */
+export type GetMyMemberListParams = {
+  current: number;
+  pageSize: number;
+  nickname_or_id?: string;
+};

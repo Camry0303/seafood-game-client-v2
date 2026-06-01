@@ -26,6 +26,7 @@ import { CLUB_PLAYER_ROLE } from "../../../Enums";
 import {
   GetMemberListParams,
   GetMemberManagementListParams,
+  GetMyMemberListParams,
 } from "../../../Types/gateway/requested/clubPlayer";
 
 const { ccclass, menu } = _decorator;
@@ -373,8 +374,13 @@ export class ClubMainUI_Component extends ComponentController {
    * @param event
    */
   private onClubMyMemberBtnClick(event: Event) {
-    // TODO - 俱乐部我的成员
+    // 俱乐部我的成员
     console.log(`onClubMyMemberBtnClick--->`);
+    const params: GetMyMemberListParams = {
+      current: 1,
+      pageSize: 1000,
+    };
+    ClubEvents.getMyMemberList(params);
   }
 
   /**

@@ -52,6 +52,8 @@ export enum WAITING_TYPE {
   GET_CLUB_PLAYER_SCORE_LOG_LIST = "正在获取玩家上下分日志列表",
   GET_CLUB_PLAYER_SCORE_RANK_LIST = "正在获取玩家积分排行列表",
 
+  GET_MY_MEMBER_LIST = "正在获取我的成员列表",
+
   GAME_RECONNECT = "正在重连游戏",
 }
 

@@ -1,14 +1,15 @@
 import { _decorator, Label, Node } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import { Gateway } from "../../../Types/gateway";
-
+import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
+import ClubEvents from "../../../Network/SocketIo/ClubEvents";
+import { ComponentManager } from "../../../Runtime/ComponentManager";
+import { PartnerMemberListUI_Component } from "./PartnerMemberListUI_Component";
 const { ccclass, menu } = _decorator;
 
-@ccclass("MemberScoreRankListItem_Component")
-@menu("Hidden/MemberScoreRankListItem_Component")
-export class MemberScoreRankListItem_Component extends ComponentController {
-  private _rankLabel: Label = null;
-
+@ccclass("MyMemberListItem_Component")
+@menu("Hidden/MyMemberListItem_Component")
+export class MyMemberListItem_Component extends ComponentController {
   private _nicknameLabel: Label = null;
 
   private _idLabel: Label = null;
@@ -21,7 +22,9 @@ export class MemberScoreRankListItem_Component extends ComponentController {
 
   private _totalScoreLabel: Label = null; // 总分数标签
 
-  private _data: Gateway.Returned.ClubPlayer.ClubPlayerScoreRank = null; // 数据
+  private _optionsNode: Node = null;
+
+  private _data: Gateway.Returned.ClubPlayer.ClubPlayer = null; // 数据
 
   start() {}
 
@@ -30,9 +33,6 @@ export class MemberScoreRankListItem_Component extends ComponentController {
   protected onLoad(): void {
     super.onLoad();
     this.printNodeMap();
-
-    // 排行
-    [, this._rankLabel] = this.getNodeComponent("Rank", Label);
 
     // 获取昵称标签
     [, this._nicknameLabel] = this.getNodeComponent("Nickname", Label);
@@ -51,17 +51,24 @@ export class MemberScoreRankListItem_Component extends ComponentController {
 
     // 获取总分数标签
     [, this._totalScoreLabel] = this.getNodeComponent("TotalScore", Label);
+
+    // 获取操作节点
+    this._optionsNode = this.getNode("Options");
   }
 
   /**
    * 设置数据
    * @param data
    */
-  public async setData(data: Gateway.Returned.ClubPlayer.ClubPlayerScoreRank) {
+  public async setData(data: Gateway.Returned.ClubPlayer.ClubPlayer) {
     this._data = data;
 
-    // 设置排名
-    this._rankLabel.string = data.rank.toString();
+    this.setButtonClickEvent(
+      "Options/DeleteBtn",
+      0,
+      "onOpenDeleteConfirm",
+      this.getClassName(),
+    );
 
     // 设置昵称
     this._nicknameLabel.string = data.nickname;
@@ -88,5 +95,27 @@ export class MemberScoreRankListItem_Component extends ComponentController {
    */
   public getData() {
     return this._data;
+  }
+
+  /**
+   * 打开删除确认弹窗
+   * @param event
+   */
+  private onOpenDeleteConfirm(event: Event) {
+    CommonDailogHandler.showSmallDialogConfirm(
+      "删除合伙人成员",
+      this.onDeletePartner.bind(this),
+      () => {},
+    );
+  }
+
+  /**
+   * 删除合伙人成员事件
+   * @param event
+   */
+  private onDeletePartner(event: Event) {
+    const player_id = this._data.player_id;
+    // 删除合伙人
+    ClubEvents.deletePartnerMember({ player_id });
   }
 }

@@ -6,7 +6,7 @@ import { ResourceManager } from "../../../Runtime/ResourceManager";
 import { Gateway } from "../../../Types/typing";
 import ClubEvents from "../../../Network/SocketIo/ClubEvents";
 import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
-import { GetPartnerListParams } from "../../../Types/gateway/requested/clubPlayer";
+import { GetClubPlayerScoreRankListParams } from "../../../Types/gateway/requested/clubPlayer";
 import { MemberScoreRankListItem_Component } from "./MemberScoreRankListItem_Component";
 import { GlobalData } from "../../../Runtime/GlobalData";
 const { ccclass, menu } = _decorator;
@@ -16,7 +16,6 @@ const { ccclass, menu } = _decorator;
 export class MemberScoreRankListUI_Component extends ComponentController {
   public _bubbleWindow: BubbleWindow = null;
 
-  private _conditionEditbox: EditBox = null;
   private _tableContentNode: Node = null;
 
   // 成员列表数据
@@ -37,39 +36,9 @@ export class MemberScoreRankListUI_Component extends ComponentController {
       .getChildByName("MainView")
       .addComponent(BubbleWindow);
 
-    // 获取条件输入框
-    [, this._conditionEditbox] = this.getNodeComponent(
-      "MainView/Content/SearchBar/Options/Condition",
-      EditBox,
-    );
-
     // 获取表格内容节点
     this._tableContentNode = this.getNode(
       "MainView/Content/TableScrollView/view/content",
-    );
-
-    // 设置搜索按钮点击事件
-    this.setButtonClickEvent(
-      "MainView/Content/SearchBar/Options/SearchBtn",
-      0,
-      "onSearch",
-      this.getClassName(),
-    );
-
-    // 设置获取全部按钮点击事件
-    this.setButtonClickEvent(
-      "MainView/Content/SearchBar/Options/GetAllBtn",
-      0,
-      "onGetAll",
-      this.getClassName(),
-    );
-
-    // 设置添加合伙人按钮点击事件
-    this.setButtonClickEvent(
-      "MainView/Content/AddPartnerBtn",
-      0,
-      "onOpenAddPartner",
-      this.getClassName(),
     );
 
     // 设置关闭按钮点击事件
@@ -91,41 +60,6 @@ export class MemberScoreRankListUI_Component extends ComponentController {
     this._bubbleWindow.close(() => {
       ComponentManager.Instance.destroyNode(this.node);
     });
-  }
-
-  /**
-   * 搜索事件
-   * @param event
-   */
-  private onSearch(event: Event) {
-    let params: GetPartnerListParams = {
-      current: 1,
-      pageSize: 1000,
-    };
-
-    const nickname_or_id = this._conditionEditbox.string.trim();
-    if (nickname_or_id) {
-      params = {
-        ...params,
-        nickname_or_id,
-      };
-    }
-
-    ClubEvents.getPartnerList(params);
-  }
-
-  /**
-   * 获取全部事件
-   * @param event
-   */
-  private onGetAll(event: Event) {
-    this._conditionEditbox.string = "";
-    let params: GetPartnerListParams = {
-      current: 1,
-      pageSize: 1000,
-    };
-
-    ClubEvents.getPartnerList(params);
   }
 
   /**
@@ -184,12 +118,11 @@ export class MemberScoreRankListUI_Component extends ComponentController {
    * 刷新数据
    */
   public reloadData() {
-    this._conditionEditbox.string = "";
-    let params: GetPartnerListParams = {
+    let params: GetClubPlayerScoreRankListParams = {
       current: 1,
       pageSize: 1000,
     };
 
-    ClubEvents.getPartnerList(params);
+    ClubEvents.getClubPlayerScoreRankList(params);
   }
 }
