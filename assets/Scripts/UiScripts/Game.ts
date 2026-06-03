@@ -133,10 +133,10 @@ export class Game extends SingletonComponent {
           assetType: Prefab,
           urls: ["GameSetting/GameSettingUI"],
         },
-        // 潮汕麻将游戏房间相关预设体资源
+        // 骰子游戏房间相关预设体资源
         {
           assetType: Prefab,
-          urls: [],
+          urls: ["DicesGame/DicesGameMainUI"],
         },
         // 组件相关预设体资源
         {
@@ -249,21 +249,21 @@ export class Game extends SingletonComponent {
     ComponentManager.Instance.destroyNodeByName("HotUpdateUI");
     console.log("热更新界面销毁成功！");
 
-    // 正式：挂载登录注册界面
-    ComponentManager.Instance.renderUiNode<LoginRegisterMainUI_Component>(
-      "LoginRegisterMainUI",
-      "Prefabs",
-      "LoginRegister/LoginRegisterMainUI",
-      LoginRegisterMainUI_Component,
-    );
-
-    // // NOTE - 测试：挂载主界面
-    // ComponentManager.Instance.renderUiNode<MainUI_Component>(
-    //   "MainUI",
+    // // 正式：挂载登录注册界面
+    // ComponentManager.Instance.renderUiNode<LoginRegisterMainUI_Component>(
+    //   "LoginRegisterMainUI",
     //   "Prefabs",
-    //   "Entrance/MainUI",
-    //   MainUI_Component,
+    //   "LoginRegister/LoginRegisterMainUI",
+    //   LoginRegisterMainUI_Component,
     // );
+
+    // NOTE - 测试：挂载主界面
+    ComponentManager.Instance.renderUiNode<MainUI_Component>(
+      "MainUI",
+      "Prefabs",
+      "Entrance/MainUI",
+      MainUI_Component,
+    );
 
     console.log("挂载登陆界面成功！");
   }

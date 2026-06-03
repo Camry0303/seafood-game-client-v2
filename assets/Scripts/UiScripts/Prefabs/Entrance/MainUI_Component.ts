@@ -15,6 +15,7 @@ import HttpApiServices from "../../../Utils/HttpApiServices";
 import moment from "moment";
 import CryptoUtils from "../../../Utils/CryptoUtils";
 import { MemberScoreLogListUI_Component } from "../Club/MemberScoreLogListUI_Component";
+import { DicesGameMainUI_Component } from "../DicesGame/DicesGameMainUI_Component";
 
 const { ccclass, menu } = _decorator;
 
@@ -57,7 +58,8 @@ export class MainUI_Component extends ComponentController {
    */
   private async onTestBtnClick(event: Event) {
     console.log(`onTestBtnClick`);
-    this.testMemberScoreLogList();
+    this.testDiceGameMain();
+    // this.testMemberScoreLogList();
     // this.testDialogConfirm();
     // this.testCSWRequest();
     // this.testCSWSaveAccount();
@@ -183,18 +185,6 @@ export class MainUI_Component extends ComponentController {
   }
 
   /**
-   * 测试打开上下分记录界面
-   */
-  private testMemberScoreLogList() {
-    ComponentManager.Instance.renderUiNode<MemberScoreLogListUI_Component>(
-      "MemberScoreLogListUI",
-      "Prefabs",
-      "Club/MemberScoreLogListUI",
-      MemberScoreLogListUI_Component,
-    );
-  }
-
-  /**
    * 测试询问确认弹窗
    */
   private testDialogConfirm() {
@@ -244,6 +234,30 @@ export class MainUI_Component extends ComponentController {
       "Prefabs",
       "Club/ClubMainUI",
       ClubMainUI_Component,
+    );
+  }
+
+  /**
+   * 测试打开上下分记录界面
+   */
+  private testMemberScoreLogList() {
+    ComponentManager.Instance.renderUiNode<MemberScoreLogListUI_Component>(
+      "MemberScoreLogListUI",
+      "Prefabs",
+      "Club/MemberScoreLogListUI",
+      MemberScoreLogListUI_Component,
+    );
+  }
+
+  /**
+   * 测试打开骰子游戏界面
+   */
+  private testDiceGameMain() {
+    ComponentManager.Instance.renderUiNode<DicesGameMainUI_Component>(
+      "DicesGameMainUI",
+      "Prefabs",
+      "DicesGame/DicesGameMainUI",
+      DicesGameMainUI_Component,
     );
   }
 
