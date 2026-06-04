@@ -211,15 +211,15 @@ export class SoundsManager extends SingletonComponent {
         Button.prototype["_onTouchEnded"];
       Button.prototype["_onTouchEnded"] = function (event: EventTouch) {
         if (this.interactable && this.enabledInHierarchy) {
-          let isPlayer = true;
+          let isPlay = true;
           for (let index = 0; index < exceptNodeNames.length; index++) {
             const element = exceptNodeNames[index];
             if ((event.currentTarget.name as string).includes(element)) {
-              isPlayer = false;
+              isPlay = false;
               break;
             }
           }
-          if (isPlayer) {
+          if (isPlay) {
             SoundsManager.Instance.playEffect(effectName);
           }
         }
