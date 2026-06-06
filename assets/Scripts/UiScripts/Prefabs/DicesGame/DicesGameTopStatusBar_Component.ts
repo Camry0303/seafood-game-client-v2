@@ -4,6 +4,8 @@ import { DicesGameMainUI_Component } from "./DicesGameMainUI_Component";
 import { GlobalData } from "../../../Runtime/GlobalData";
 import { CLUB_PLAYER_ROLE } from "../../../Enums";
 import moment from "moment";
+import { ComponentManager } from "../../../Runtime/ComponentManager";
+import { DicesGameHelpUI_Component } from "./DicesGameHelpUI_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameTopStatusBar_Component")
@@ -33,7 +35,7 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
   private _roomIdLabel: Label = null;
 
   // 分数类型标签
-  private _scoreTypeLabel: Label = null;
+  private _scoreModeLabel: Label = null;
 
   // 总局数
   private _totalRoundsLabel: Label = null;
@@ -48,11 +50,14 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
     }, 1);
 
     if (sys.isNative) {
-      // TODO: 设置电池电量获取任务
+      // TODO - 设置电池电量获取任务
 
       // 设置获取信号类型任务
       if (sys.os === sys.OS.IOS) {
-        // TODO: 获取信号类型
+        // IOS不显示信号类型
+        this._signalTypeNode.active = false;
+      } else if (sys.os === sys.OS.ANDROID) {
+        // TODO - 获取安卓信号类型
       }
     }
 
@@ -150,8 +155,8 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
     );
 
     // 获取分数类型标签
-    [, this._scoreTypeLabel] = this.getNodeComponent(
-      "StatusBar/Content/ScoreType",
+    [, this._scoreModeLabel] = this.getNodeComponent(
+      "StatusBar/Content/ScoreMode",
       Label,
     );
 
@@ -199,6 +204,12 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
    */
   private onHelpBtnClick(event: Event) {
     console.log(`onHelpBtnClick--->`);
+    ComponentManager.Instance.renderUiNode<DicesGameHelpUI_Component>(
+      "DicesGameHelpUI",
+      "Prefabs",
+      "DicesGame/DicesGameHelpUI",
+      DicesGameHelpUI_Component,
+    );
   }
 
   /**
@@ -239,5 +250,16 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
    */
   private onResultHistoryBtnClick(event: Event) {
     console.log(`onResultHistoryBtnClick--->`);
+  }
+
+  /**
+   * 设置状态栏数据
+   * @param roomStatus
+   */
+  public setStatusBarData(roomStatus: any) {
+    this._roomIdLabel.string = `房间：${roomStatus.room_id}`;
+    this._scoreModeLabel.string = `${roomStatus.score_mode === 0 ? "不可负分" : "可负分"}`;
+    this._totalRoundsLabel.string = `共${roomStatus.total_rounds}局`;
+    this._currentRoundLabel.string = `第${roomStatus.current_round}局`;
   }
 }
