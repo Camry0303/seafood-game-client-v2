@@ -6,6 +6,7 @@ import { CLUB_PLAYER_ROLE } from "../../../Enums";
 import moment from "moment";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
 import { DicesGameHelpUI_Component } from "./DicesGameHelpUI_Component";
+import { DicesGameSoundSettingUI_Component } from "./DicesGameSoundSettingUI_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameTopStatusBar_Component")
@@ -218,6 +219,12 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
    */
   private onSoundSettingBtnClick(event: Event) {
     console.log(`onSoundSettingBtnClick--->`);
+    ComponentManager.Instance.renderUiNode<DicesGameSoundSettingUI_Component>(
+      "DicesGameSoundSettingUI",
+      "Prefabs",
+      "DicesGame/DicesGameSoundSettingUI",
+      DicesGameSoundSettingUI_Component,
+    );
   }
 
   /**

@@ -136,7 +136,11 @@ export class Game extends SingletonComponent {
         // 骰子游戏房间相关预设体资源
         {
           assetType: Prefab,
-          urls: ["DicesGame/DicesGameMainUI", "DicesGame/DicesGameHelpUI"],
+          urls: [
+            "DicesGame/DicesGameMainUI",
+            "DicesGame/DicesGameHelpUI",
+            "DicesGame/DicesGameSoundSettingUI",
+          ],
         },
         // 组件相关预设体资源
         {
