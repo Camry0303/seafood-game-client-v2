@@ -8,6 +8,7 @@ import { ComponentManager } from "../../../Runtime/ComponentManager";
 import { DicesGameHelpUI_Component } from "./DicesGameHelpUI_Component";
 import { DicesGameSoundSettingUI_Component } from "./DicesGameSoundSettingUI_Component";
 import { DicesGameDialogConfirmSmallUI_Component } from "./DicesGameDialogConfirmSmallUI_Component";
+import { DicesGameOrderDetailsUI_Component } from "./DicesGameOrderDetailsUI_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameTopStatusBar_Component")
@@ -178,7 +179,7 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
     this.setButtonClickEvent(
       "MenuPanel/GameOrderBtn",
       0,
-      "onOrderDetailBtnClick",
+      "onOrderDetailsBtnClick",
       this.getClassName(),
     );
 
@@ -280,8 +281,14 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
    * 下单详情按钮点击事件
    * @param event
    */
-  private onOrderDetailBtnClick(event: Event) {
-    console.log(`onOrderDetailBtnClick--->`);
+  private onOrderDetailsBtnClick(event: Event) {
+    console.log(`onOrderDetailsBtnClick--->`);
+    ComponentManager.Instance.renderUiNode<DicesGameOrderDetailsUI_Component>(
+      "DicesGameOrderDetailsUI",
+      "Prefabs",
+      "DicesGame/DicesGameOrderDetailsUI",
+      DicesGameOrderDetailsUI_Component,
+    );
   }
 
   /**

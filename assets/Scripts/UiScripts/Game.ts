@@ -141,6 +141,7 @@ export class Game extends SingletonComponent {
             "DicesGame/DicesGameHelpUI",
             "DicesGame/DicesGameSoundSettingUI",
             "DicesGame/DicesGameDialogConfirmSmallUI",
+            "DicesGame/DicesGameOrderDetailsUI",
           ],
         },
         // 组件相关预设体资源
