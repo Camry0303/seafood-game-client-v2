@@ -7,6 +7,7 @@ import moment from "moment";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
 import { DicesGameHelpUI_Component } from "./DicesGameHelpUI_Component";
 import { DicesGameSoundSettingUI_Component } from "./DicesGameSoundSettingUI_Component";
+import { DicesGameDialogConfirmSmallUI_Component } from "./DicesGameDialogConfirmSmallUI_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameTopStatusBar_Component")
@@ -233,6 +234,22 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
    */
   private onExitBtnClick(event: Event) {
     console.log(`onExitBtnClick--->`);
+    const [node, component] =
+      ComponentManager.Instance.renderUiNode<DicesGameDialogConfirmSmallUI_Component>(
+        "DicesGameDialogConfirmSmallUI",
+        "Prefabs",
+        "DicesGame/DicesGameDialogConfirmSmallUI",
+        DicesGameDialogConfirmSmallUI_Component,
+      );
+    component.setDialogConfirm(
+      "ExitToggle",
+      "确认退出房间",
+      () => {
+        // TODO - 退出房间逻辑
+        console.log(`退出房间逻辑`);
+      },
+      () => {},
+    );
   }
 
   /**
@@ -241,6 +258,22 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
    */
   private onDissolveBtnClick(event: Event) {
     console.log(`onDissolveBtnClick--->`);
+    const [node, component] =
+      ComponentManager.Instance.renderUiNode<DicesGameDialogConfirmSmallUI_Component>(
+        "DicesGameDialogConfirmSmallUI",
+        "Prefabs",
+        "DicesGame/DicesGameDialogConfirmSmallUI",
+        DicesGameDialogConfirmSmallUI_Component,
+      );
+    component.setDialogConfirm(
+      "DissolveToggle",
+      "确认解散房间",
+      () => {
+        // TODO - 解散房间逻辑
+        console.log(`解散房间逻辑`);
+      },
+      () => {},
+    );
   }
 
   /**
