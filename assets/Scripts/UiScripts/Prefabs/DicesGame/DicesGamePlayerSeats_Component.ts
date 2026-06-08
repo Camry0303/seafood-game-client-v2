@@ -3,9 +3,9 @@ import { ComponentController } from "../../../Common/ComponentController";
 import { DicesGameMainUI_Component } from "./DicesGameMainUI_Component";
 const { ccclass, menu } = _decorator;
 
-@ccclass("DicesGamePlayerSeats_Component")
-@menu("Hidden/DicesGamePlayerSeats_Component")
-export class DicesGamePlayerSeats_Component extends ComponentController {
+@ccclass("DicesGamePlayerSeatsContainer_Component")
+@menu("Hidden/DicesGamePlayerSeatsContainer_Component")
+export class DicesGamePlayerSeatsContainer_Component extends ComponentController {
   // 骰子游戏主界面组件
   private _mainComponent: DicesGameMainUI_Component = null;
   start() {}
@@ -21,7 +21,7 @@ export class DicesGamePlayerSeats_Component extends ComponentController {
     );
 
     console.log(
-      `DicesGamePlayerSeats_Component _mainComponent--->`,
+      `DicesGamePlayerSeatsContainer_Component _mainComponent--->`,
       this._mainComponent,
     );
   }
