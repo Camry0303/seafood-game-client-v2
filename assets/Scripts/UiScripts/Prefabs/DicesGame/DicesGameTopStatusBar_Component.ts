@@ -9,6 +9,7 @@ import { DicesGameHelpUI_Component } from "./DicesGameHelpUI_Component";
 import { DicesGameSoundSettingUI_Component } from "./DicesGameSoundSettingUI_Component";
 import { DicesGameDialogConfirmSmallUI_Component } from "./DicesGameDialogConfirmSmallUI_Component";
 import { DicesGameOrderDetailsUI_Component } from "./DicesGameOrderDetailsUI_Component";
+import { DicesGameHistoryUI_Component } from "./DicesGameHistoryUI_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameTopStatusBar_Component")
@@ -297,6 +298,12 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
    */
   private onResultHistoryBtnClick(event: Event) {
     console.log(`onResultHistoryBtnClick--->`);
+    ComponentManager.Instance.renderUiNode<DicesGameHistoryUI_Component>(
+      "DicesGameHistoryUI_Component",
+      "Prefabs",
+      "DicesGame/DicesGameHistoryUI",
+      DicesGameHistoryUI_Component,
+    );
   }
 
   /**
