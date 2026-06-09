@@ -66,7 +66,10 @@ export async function getAvatarSpriteFrame(
       );
     }
   } else {
-    return null;
+    return ResourceManager.Instance.getSpriteFrame(
+      "Images",
+      `Common/default_avatar_01`,
+    );
   }
 }
 

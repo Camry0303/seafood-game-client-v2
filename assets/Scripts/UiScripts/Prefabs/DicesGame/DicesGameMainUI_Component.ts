@@ -4,7 +4,7 @@ import { ComponentManager } from "../../../Runtime/ComponentManager";
 import { DicesGameTopStatusBar_Component } from "./DicesGameTopStatusBar_Component";
 import { DicesGameBottomStatusBar_Component } from "./DicesGameBottomStatusBar_Component";
 import { DicesGameGameTable_Component } from "./DicesGameGameTable_Component";
-import { DicesGamePlayerSeatsContainer_Component } from "./DicesGamePlayerSeats_Component";
+import { DicesGamePlayerSeatsContainer_Component } from "./DicesGamePlayerSeatsContainer_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameMainUI_Component")

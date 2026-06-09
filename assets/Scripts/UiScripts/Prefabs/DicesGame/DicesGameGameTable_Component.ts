@@ -269,9 +269,7 @@ export class DicesGameGameTable_Component extends ComponentController {
     status: "preparation" | "ordering" | "open",
     remainingTime: number,
   ) {
-    console.log(`setTimeCounter status--->`, status);
-    console.log(`setTimeCounter remainingTime--->`, remainingTime);
-
+    this._timeCounterPanelNode.active = true;
     this._preparationNode.active = status === "preparation";
     this._orderingNode.active = status === "ordering";
     this._openNode.active = status === "open";

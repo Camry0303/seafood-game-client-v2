@@ -151,8 +151,7 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
   }
 
   /**
-   * 设置玩家UI数据
-   * TODO
+   * TODO 设置玩家UI数据
    * @param data
    */
   public setPlayerUIData(data: any) {}
@@ -359,10 +358,6 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    * @param event
    */
   private onScoreSliderChange(event: Event) {
-    // // 将progress值四舍五入到最近的0.1的倍数
-    // const steppedProgress = Math.round(this._scoreSlider.progress * 10) / 10;
-    // this._scoreSlider.progress = steppedProgress;
-
     this._scoreSliderMaskUi.width =
       this._originWidth * this._scoreSlider.progress;
     // TODO - 计算下单分数
