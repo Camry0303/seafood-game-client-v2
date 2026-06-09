@@ -31,7 +31,10 @@ export class DicesGameMainUI_Component extends ComponentController {
     null;
   //#endregion
 
-  start() {}
+  start() {
+    // FIXME: 暂时使用
+    this._gameTableComponent.setTimeCounter("ordering", 30);
+  }
 
   update(deltaTime: number) {}
 
@@ -66,5 +69,37 @@ export class DicesGameMainUI_Component extends ComponentController {
     this._playerSeatsComponents = this._playerSeats.addComponent(
       DicesGamePlayerSeatsContainer_Component,
     );
+  }
+
+  /**
+   * 获取顶部状态栏组件
+   * @returns
+   */
+  public getTopStatusBarComponent(): DicesGameTopStatusBar_Component {
+    return this._topStatusBarComponent;
+  }
+
+  /**
+   * 获取底部状态栏组件
+   * @returns
+   */
+  public getBottomStatusBarComponent(): DicesGameBottomStatusBar_Component {
+    return this._bottomStatusBarComponent;
+  }
+
+  /**
+   * 获取游戏桌面组件
+   * @returns
+   */
+  public getGameTableComponent(): DicesGameGameTable_Component {
+    return this._gameTableComponent;
+  }
+
+  /**
+   * 获取玩家座位组件
+   * @returns
+   */
+  public getPlayerSeatsComponent(): DicesGamePlayerSeatsContainer_Component {
+    return this._playerSeatsComponents;
   }
 }
