@@ -34,6 +34,10 @@ export class DicesGameMainUI_Component extends ComponentController {
   start() {
     // FIXME: 暂时使用
     this._gameTableComponent.setTimeCounter("ordering", 30);
+    // FIXME: 暂时使用
+    setTimeout(() => {
+      this._gameTableComponent.placeChipAnimation(2, 50, "0", 12);
+    }, 3000);
   }
 
   update(deltaTime: number) {}
