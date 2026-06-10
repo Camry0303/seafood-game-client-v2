@@ -147,7 +147,6 @@ export class DicesGamePlayerSeatsContainer_Component extends ComponentController
 
     // 2. 确定最终要获取位置的节点
     const targetNode = seatNode || this._morePlayersNode;
-    console.log(`targetNode--->`, targetNode);
 
     // 3. 安全获取位置
     if (!targetNode) {

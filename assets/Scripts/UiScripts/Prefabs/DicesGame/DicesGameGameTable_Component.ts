@@ -121,10 +121,6 @@ export class DicesGameGameTable_Component extends ComponentController {
     seat_code: string,
     player_id: number,
   ) {
-    // TODO - 筹码放置动画
-    console.log(`placeChipAnimation result--->`, result);
-    console.log(`placeChipAnimation value--->`, value);
-    console.log(`placeChipAnimation seat--->`, seat_code);
     // 1. 获取起始位置（世界坐标）
     const startWorldPos = this._mainComponent
       .getPlayerSeatsComponent()
@@ -173,6 +169,48 @@ export class DicesGameGameTable_Component extends ComponentController {
     const component = chipNode.addComponent(DicesGameChip_Component);
     component.setChipValue(value, player_id);
     component.runTween(startLocalPos, targetLocalPos);
+  }
+
+  public placeChip(result: number, value: number, player_id: number) {
+    // 2. 获取目标容器节点
+    const chipsContainerNode =
+      this._chipsContainerPanelNode.children[result - 1];
+
+    if (!chipsContainerNode) {
+      console.error(`未找到筹码容器节点，索引: ${result - 1}`);
+      return;
+    }
+
+    // 3. 在容器范围内随机生成一个局部坐标
+    // 获取 UITransform 组件以获取节点的宽高
+    const transform = chipsContainerNode.getComponent(UITransform);
+
+    if (!transform) {
+      console.error("目标节点缺少 UITransform 组件");
+      return;
+    }
+
+    const width = transform.width;
+    const height = transform.height;
+
+    // 生成随机坐标 (相对于节点的中心点)
+    // Math.random() 生成 [0, 1)，乘以宽高后得到 [0, width)，减去一半得到 [-width/2, width/2)
+    const randomLocalX = Math.random() * width - width / 2;
+    const randomLocalY = Math.random() * height - height / 2;
+
+    // 创建目标位置的局部坐标向量
+    const targetLocalPos = new Vec3(randomLocalX, randomLocalY, 0);
+
+    // 获取预制体
+    const prefab: Prefab = ResourceManager.Instance.getAsset<Prefab>(
+      "Prefabs",
+      "DicesGame/DicesGameChip",
+    );
+    const chipNode = instantiate(prefab);
+    chipsContainerNode.addChild(chipNode);
+    const component = chipNode.addComponent(DicesGameChip_Component);
+    component.setChipValue(value, player_id);
+    chipNode.setPosition(targetLocalPos);
   }
   //#endregion
 
