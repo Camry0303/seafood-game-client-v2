@@ -142,6 +142,8 @@ export class Game extends SingletonComponent {
             "DicesGame/DicesGameSoundSettingUI",
             "DicesGame/DicesGameDialogConfirmSmallUI",
             "DicesGame/DicesGameOrderDetailsUI",
+            "DicesGame/DicesGameOrderDetailsItem",
+            "DicesGame/DicesGameOrderItem",
             "DicesGame/DicesGameHistoryUI",
             "DicesGame/DicesGameHistoryItem",
             "DicesGame/DicesGameChip",
@@ -165,6 +167,7 @@ export class Game extends SingletonComponent {
           assetType: SpriteAtlas,
           urls: [
             "DicesGame/chips/chips_atlas",
+            "DicesGame/icons/icons0_atlas",
             "DicesGame/icons/small_icon0_atlas",
           ],
         },

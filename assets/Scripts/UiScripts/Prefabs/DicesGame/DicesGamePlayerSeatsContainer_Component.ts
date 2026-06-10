@@ -133,6 +133,14 @@ export class DicesGamePlayerSeatsContainer_Component extends ComponentController
   }
 
   /**
+   * 获取座位数据
+   * @returns
+   */
+  public getSeatsData() {
+    return this._seatsData;
+  }
+
+  /**
    * 获取座位的世界坐标
    * @param seat_code 座位编码
    */

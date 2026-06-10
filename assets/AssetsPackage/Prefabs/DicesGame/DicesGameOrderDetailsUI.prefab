@@ -1218,7 +1218,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 172,
+      "y": 157,
       "z": 0
     },
     "_lrot": {
@@ -1319,7 +1319,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 818,
-      "height": 344
+      "height": 314
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1416,8 +1416,8 @@
     "_target": null,
     "_left": 0,
     "_right": 0,
-    "_top": 0,
-    "_bottom": 0,
+    "_top": 15,
+    "_bottom": 15,
     "_horizontalCenter": 0,
     "_verticalCenter": 0,
     "_isAbsLeft": true,
@@ -1463,8 +1463,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 738,
-      "height": 10
+      "width": 778,
+      "height": 5
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1491,8 +1491,8 @@
     },
     "_alignFlags": 41,
     "_target": null,
-    "_left": 40,
-    "_right": 40,
+    "_left": 20,
+    "_right": 20,
     "_top": 0,
     "_bottom": -48,
     "_horizontalCenter": 0,
@@ -1535,10 +1535,10 @@
     "_startAxis": 0,
     "_paddingLeft": 0,
     "_paddingRight": 0,
-    "_paddingTop": 10,
-    "_paddingBottom": 10,
+    "_paddingTop": 5,
+    "_paddingBottom": 5,
     "_spacingX": 0,
-    "_spacingY": 10,
+    "_spacingY": 5,
     "_verticalDirection": 1,
     "_horizontalDirection": 0,
     "_constraint": 0,
