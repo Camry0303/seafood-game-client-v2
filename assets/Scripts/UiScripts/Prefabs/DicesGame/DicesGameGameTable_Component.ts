@@ -9,6 +9,8 @@ import {
   Vec3,
   Prefab,
   instantiate,
+  Tween,
+  tween,
 } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import { DicesGameMainUI_Component } from "./DicesGameMainUI_Component";
@@ -47,6 +49,18 @@ export class DicesGameGameTable_Component extends ComponentController {
   //#region 骰盅相关属性
   // 骰盅面板
   private _diceCupPanelNode: Node = null;
+  // 骰盅节点
+  private _diceCupNode: Node = null;
+  // 骰盅底盘节点
+  private _diceCupBottomNode: Node = null;
+  // 骰盅骰子容器节点
+  private _dicesContainerNode: Node = null;
+  // 骰盅顶部节点
+  private _diceCupTopNode: Node = null;
+  // 上局结果容器节点
+  private _lastResultContainerNode: Node = null;
+  // 摇动骰盅动画
+  private _shakeDiceCupTween: Tween = null;
   //#endregion
 
   //#region 计时器相关属性
@@ -92,7 +106,6 @@ export class DicesGameGameTable_Component extends ComponentController {
    */
   private initTablePanel() {
     this._tablePanelNode = this.getNode("Content/TablePanel");
-    console.log(`this._tablePanelNode--->`, this._tablePanelNode);
   }
   //#endregion
 
@@ -102,10 +115,6 @@ export class DicesGameGameTable_Component extends ComponentController {
    */
   private initChipsContainerPanel() {
     this._chipsContainerPanelNode = this.getNode("Content/ChipsContainerPanel");
-    console.log(
-      `this._chipsContainerPanelNode--->`,
-      this._chipsContainerPanelNode,
-    );
   }
 
   /**
@@ -337,8 +346,83 @@ export class DicesGameGameTable_Component extends ComponentController {
    */
   private initDiceCupPanel() {
     this._diceCupPanelNode = this.getNode("Content/DiceCupPanel");
-    console.log(`this._diceCupPanelNode--->`, this._diceCupPanelNode);
+    this._diceCupNode = this.getNode("Content/DiceCupPanel/DiceCup");
+    this._diceCupBottomNode = this.getNode(
+      "Content/DiceCupPanel/DiceCup/DiceCupBottom",
+    );
+    this._dicesContainerNode = this.getNode(
+      "Content/DiceCupPanel/DiceCup/DiceCupBottom/DicesContainer",
+    );
+    this._diceCupTopNode = this.getNode(
+      "Content/DiceCupPanel/DiceCup/DiceCupTop",
+    );
+    this._lastResultContainerNode = this.getNode(
+      "Content/DiceCupPanel/LastResult",
+    );
   }
+
+  /**
+   * 播放骰盅摇动动画
+   */
+  public playShakeDiceCupAnimation() {
+    // 中心位置
+    const centerPos = this._diceCupPanelNode
+      .getComponent(UITransform)
+      .convertToNodeSpaceAR(
+        new Vec3(
+          this._tablePanelNode.getWorldPosition().x,
+          this._tablePanelNode.getWorldPosition().y + 50,
+          this._tablePanelNode.getWorldPosition().z,
+        ),
+      );
+    // 原始位置
+    const originalPos = new Vec3(108, 0, 0);
+    // 摇动高度
+    const shakeHeight = 50;
+
+    if (this._shakeDiceCupTween) {
+      this._shakeDiceCupTween.stop();
+    } else {
+      this._shakeDiceCupTween = tween(this._diceCupNode)
+        // 1. 移动到屏幕中心并放大
+        .parallel(
+          tween().to(0.5, { position: centerPos }, { easing: "sineOut" }),
+          tween().to(
+            0.5,
+            { scale: new Vec3(1.5, 1.5, 1.5) },
+            { easing: "sineOut" },
+          ),
+        )
+        // 2. 上下摇动
+        .to(0.2, {
+          position: new Vec3(
+            centerPos.x,
+            centerPos.y + shakeHeight,
+            centerPos.z,
+          ),
+        })
+        .to(0.2, {
+          position: new Vec3(centerPos.x, centerPos.y, centerPos.z),
+        })
+        .delay(0.1)
+        // 3. 回到原位置并缩小
+        .parallel(
+          tween().to(0.5, { position: originalPos }, { easing: "sineIn" }),
+          tween().to(0.5, { scale: new Vec3(1, 1, 1) }, { easing: "sineIn" }),
+        )
+        .call(() => {
+          // 停止当前动画
+          this._shakeDiceCupTween.stop();
+        });
+    }
+
+    // 复原状态
+    this._diceCupNode.setPosition(originalPos.x, originalPos.y, originalPos.z);
+    this._diceCupNode.setScale(1, 1, 1);
+
+    this._shakeDiceCupTween.start();
+  }
+
   //#endregion
 
   //#region 计时器面板相关方法

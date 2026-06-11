@@ -1,12 +1,9 @@
 import { _decorator, Node } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
-import { ComponentManager } from "../../../Runtime/ComponentManager";
 import { DicesGameTopStatusBar_Component } from "./DicesGameTopStatusBar_Component";
 import { DicesGameBottomStatusBar_Component } from "./DicesGameBottomStatusBar_Component";
 import { DicesGameGameTable_Component } from "./DicesGameGameTable_Component";
 import { DicesGamePlayerSeatsContainer_Component } from "./DicesGamePlayerSeatsContainer_Component";
-import sleep from "../../../Utils/Sleep";
-import CryptoUtils from "../../../Utils/CryptoUtils";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameMainUI_Component")
@@ -33,23 +30,7 @@ export class DicesGameMainUI_Component extends ComponentController {
     null;
   //#endregion
 
-  start() {
-    // // FIXME: 暂时使用
-    // this._gameTableComponent.setTimeCounter("ordering", 30);
-    // // FIXME: 暂时使用
-    // setTimeout(async () => {
-    //   const times = 20;
-    //   for (let i = 0; i < times; i++) {
-    //     this._gameTableComponent.placeChipAnimation(
-    //       CryptoUtils.genRandomIntegerBetween(1, 6),
-    //       [5, 25, 50, 100, 500][CryptoUtils.genRandomIntegerBetween(0, 4)],
-    //       "0",
-    //       12,
-    //     );
-    //     await sleep(500);
-    //   }
-    // }, 3000);
-  }
+  start() {}
 
   update(deltaTime: number) {}
 

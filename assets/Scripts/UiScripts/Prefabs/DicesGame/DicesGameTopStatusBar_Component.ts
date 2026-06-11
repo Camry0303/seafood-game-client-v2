@@ -1,4 +1,4 @@
-import { _decorator, Event, Label, Node, Slider, sys, UITransform } from "cc";
+import { _decorator, Event, Label, Node, sys, UITransform } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import { DicesGameMainUI_Component } from "./DicesGameMainUI_Component";
 import { GlobalData } from "../../../Runtime/GlobalData";
@@ -10,6 +10,8 @@ import { DicesGameSoundSettingUI_Component } from "./DicesGameSoundSettingUI_Com
 import { DicesGameDialogConfirmSmallUI_Component } from "./DicesGameDialogConfirmSmallUI_Component";
 import { DicesGameOrderDetailsUI_Component } from "./DicesGameOrderDetailsUI_Component";
 import { DicesGameHistoryUI_Component } from "./DicesGameHistoryUI_Component";
+import sleep from "../../../Utils/Sleep";
+import CryptoUtils from "../../../Utils/CryptoUtils";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameTopStatusBar_Component")
@@ -249,6 +251,30 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
       () => {
         // TODO - 退出房间逻辑
         console.log(`退出房间逻辑`);
+        // // FIXME: 暂时使用 测试倒计时
+        // this._mainComponent
+        //   .getGameTableComponent()
+        //   .setTimeCounter("ordering", 30);
+        // // FIXME: 暂时使用 测试下单动画
+        // setTimeout(async () => {
+        //   const times = 20;
+        //   for (let i = 0; i < times; i++) {
+        //     this._mainComponent
+        //       .getGameTableComponent()
+        //       .placeChipAnimation(
+        //         CryptoUtils.genRandomIntegerBetween(1, 6),
+        //         [5, 25, 50, 100, 500][
+        //           CryptoUtils.genRandomIntegerBetween(0, 4)
+        //         ],
+        //         "0",
+        //         12,
+        //       );
+        //     await sleep(500);
+        //   }
+        // }, 3000);
+
+        // FIXME: 暂时使用 测试摇骰子动画
+        this._mainComponent.getGameTableComponent().playShakeDiceCupAnimation();
       },
       () => {},
     );
