@@ -11,6 +11,7 @@ import {
   instantiate,
   Tween,
   tween,
+  UIOpacity,
 } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import { DicesGameMainUI_Component } from "./DicesGameMainUI_Component";
@@ -18,6 +19,7 @@ import { NewEventHandler } from "../../../Utils/AddEventHandler";
 import moment from "moment";
 import { ResourceManager } from "../../../Runtime/ResourceManager";
 import { DicesGameChip_Component } from "./DicesGameChip_Component";
+import { DicesGameResults_Component } from "./DicesGameResults_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameGameTable_Component")
@@ -61,6 +63,8 @@ export class DicesGameGameTable_Component extends ComponentController {
   private _lastResultContainerNode: Node = null;
   // 摇动骰盅动画
   private _shakeDiceCupTween: Tween = null;
+  // 打开骰盅动画
+  private _openDiceCupTween: Tween = null;
   //#endregion
 
   //#region 计时器相关属性
@@ -371,7 +375,7 @@ export class DicesGameGameTable_Component extends ComponentController {
       .convertToNodeSpaceAR(
         new Vec3(
           this._tablePanelNode.getWorldPosition().x,
-          this._tablePanelNode.getWorldPosition().y + 50,
+          this._tablePanelNode.getWorldPosition().y + 100,
           this._tablePanelNode.getWorldPosition().z,
         ),
       );
@@ -389,7 +393,7 @@ export class DicesGameGameTable_Component extends ComponentController {
           tween().to(0.5, { position: centerPos }, { easing: "sineOut" }),
           tween().to(
             0.5,
-            { scale: new Vec3(1.5, 1.5, 1.5) },
+            { scale: new Vec3(2.0, 2.0, 2.0) },
             { easing: "sineOut" },
           ),
         )
@@ -423,6 +427,133 @@ export class DicesGameGameTable_Component extends ComponentController {
     this._shakeDiceCupTween.start();
   }
 
+  /**
+   * 播放骰盅打开动画
+   * @param results
+   */
+  public playerOpenDiceCupAnimation(results: number[]) {
+    // 骰盅中心位置
+    const centerPos = this._diceCupPanelNode
+      .getComponent(UITransform)
+      .convertToNodeSpaceAR(
+        new Vec3(
+          this._tablePanelNode.getWorldPosition().x,
+          this._tablePanelNode.getWorldPosition().y + 100,
+          this._tablePanelNode.getWorldPosition().z,
+        ),
+      );
+    // 骰盅原始位置
+    const originalPos = new Vec3(108, 0, 0);
+    // 骰盅顶部原始位置
+    const topOriginalPos = new Vec3(0, 8, 0);
+
+    this._dicesContainerNode.removeAllChildren();
+    // 生成结果骰子节点
+    const prefab: Prefab = ResourceManager.Instance.getAsset<Prefab>(
+      "Prefabs",
+      "DicesGame/DicesGameResults",
+    );
+    const node = instantiate(prefab);
+    const component = node.addComponent(DicesGameResults_Component);
+    this._dicesContainerNode.addChild(node);
+    component.setData(results);
+    node.setPosition(0, 0, 0);
+
+    if (this._openDiceCupTween) {
+      this._openDiceCupTween.stop();
+    } else {
+      this._openDiceCupTween = tween(this._diceCupNode)
+        // 1. 移动到屏幕中心并放大
+        .parallel(
+          tween().to(0.5, { position: centerPos }, { easing: "sineOut" }),
+          tween().to(
+            0.5,
+            { scale: new Vec3(2.0, 2.0, 2.0) },
+            { easing: "sineOut" },
+          ),
+        )
+        .delay(0.2)
+        .parallel(
+          tween(this._diceCupTopNode).to(
+            0.5,
+            {
+              position: new Vec3(
+                this._diceCupTopNode.getPosition().x,
+                this._diceCupTopNode.getPosition().y + 50,
+                this._diceCupTopNode.getPosition().z,
+              ),
+            },
+            { easing: "sineOut" },
+          ),
+          tween(this._diceCupTopNode.getComponent(UIOpacity)).to(0.5, {
+            opacity: 0,
+          }),
+        )
+        .delay(0.2)
+        .call(() => {
+          // 必须重新获取节点
+          const resultsNode = this._dicesContainerNode.children[0];
+          console.log(`callback--->`, resultsNode);
+
+          // 1. 获取当前世界位置
+          const worldPos = new Vec3();
+          resultsNode.getWorldPosition(worldPos);
+
+          // 2. 设置新父节点
+          resultsNode.setParent(this._lastResultContainerNode);
+
+          // 3. 将世界位置转换为新父节点坐标系下的局部位置
+          const localPos = new Vec3();
+          this._lastResultContainerNode.inverseTransformPoint(
+            localPos,
+            worldPos,
+          );
+          resultsNode.setPosition(localPos);
+          resultsNode.setScale(2.0, 2.0, 2.0);
+          resultsNode.getComponent(DicesGameResults_Component).runTween();
+        })
+        .parallel(
+          tween(this._diceCupBottomNode.getComponent(UIOpacity)).to(0.5, {
+            opacity: 0,
+          }),
+        )
+        .delay(1.5)
+        .call(() => {
+          this._openDiceCupTween.stop();
+          // 复原骰盅顶部位置
+          this._diceCupTopNode.setPosition(
+            topOriginalPos.x,
+            topOriginalPos.y,
+            topOriginalPos.z,
+          );
+          this._diceCupTopNode.getComponent(UIOpacity).opacity = 255;
+          this._diceCupBottomNode.getComponent(UIOpacity).opacity = 255;
+          // 复原骰盅位置
+          this._diceCupNode.setPosition(
+            originalPos.x,
+            originalPos.y,
+            originalPos.z,
+          );
+          // 复原骰盅大小
+          this._diceCupNode.setScale(1, 1, 1);
+        });
+    }
+
+    // 复原骰盅顶部位置
+    this._diceCupTopNode.setPosition(
+      topOriginalPos.x,
+      topOriginalPos.y,
+      topOriginalPos.z,
+    );
+    this._diceCupTopNode.getComponent(UIOpacity).opacity = 255;
+    this._diceCupBottomNode.getComponent(UIOpacity).opacity = 255;
+    // 复原骰盅位置
+    this._diceCupNode.setPosition(originalPos.x, originalPos.y, originalPos.z);
+    // 复原骰盅大小
+    this._diceCupNode.setScale(1, 1, 1);
+
+    this._openDiceCupTween.start();
+  }
   //#endregion
 
   //#region 计时器面板相关方法

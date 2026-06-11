@@ -147,6 +147,7 @@ export class Game extends SingletonComponent {
             "DicesGame/DicesGameHistoryUI",
             "DicesGame/DicesGameHistoryItem",
             "DicesGame/DicesGameChip",
+            "DicesGame/DicesGameResults",
           ],
         },
         // 组件相关预设体资源
@@ -166,6 +167,7 @@ export class Game extends SingletonComponent {
         {
           assetType: SpriteAtlas,
           urls: [
+            "DicesGame/dices/dices0_atlas",
             "DicesGame/chips/chips_atlas",
             "DicesGame/icons/icons0_atlas",
             "DicesGame/icons/small_icon0_atlas",

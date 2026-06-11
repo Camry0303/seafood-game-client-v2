@@ -40,7 +40,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": -8,
+      "y": 0,
       "z": 0
     },
     "_lrot": {
@@ -412,6 +412,8 @@
     "asset": {
       "__id__": 0
     },
-    "fileId": "d8/BVEud9MWL1d4CF8TGp5"
+    "fileId": "d8/BVEud9MWL1d4CF8TGp5",
+    "instance": null,
+    "targetOverrides": null
   }
 ]

@@ -133,6 +133,14 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
       this._dissolveBtnNode.active = true;
     }
 
+    // 设置测试按钮点击事件
+    this.setButtonClickEvent(
+      "MoreOptionsBtn/MoreOptions/TestBtn",
+      0,
+      "onTestBtnClick",
+      this.getClassName(),
+    );
+
     // 获取信号类型节点
     this._signalTypeNode = this.getNode("StatusBar/Content/SignalType");
 
@@ -251,30 +259,6 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
       () => {
         // TODO - 退出房间逻辑
         console.log(`退出房间逻辑`);
-        // // FIXME: 暂时使用 测试倒计时
-        // this._mainComponent
-        //   .getGameTableComponent()
-        //   .setTimeCounter("ordering", 30);
-        // // FIXME: 暂时使用 测试下单动画
-        // setTimeout(async () => {
-        //   const times = 20;
-        //   for (let i = 0; i < times; i++) {
-        //     this._mainComponent
-        //       .getGameTableComponent()
-        //       .placeChipAnimation(
-        //         CryptoUtils.genRandomIntegerBetween(1, 6),
-        //         [5, 25, 50, 100, 500][
-        //           CryptoUtils.genRandomIntegerBetween(0, 4)
-        //         ],
-        //         "0",
-        //         12,
-        //       );
-        //     await sleep(500);
-        //   }
-        // }, 3000);
-
-        // FIXME: 暂时使用 测试摇骰子动画
-        this._mainComponent.getGameTableComponent().playShakeDiceCupAnimation();
       },
       () => {},
     );
@@ -302,6 +286,42 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
       },
       () => {},
     );
+  }
+
+  /**
+   * 测试按钮点击事件
+   * @param event
+   */
+  private onTestBtnClick(event: Event) {
+    console.log(`onTestBtnClick--->`);
+    // // FIXME: 暂时使用 测试倒计时
+    // this._mainComponent
+    //   .getGameTableComponent()
+    //   .setTimeCounter("ordering", 30);
+    // // FIXME: 暂时使用 测试下单动画
+    // setTimeout(async () => {
+    //   const times = 20;
+    //   for (let i = 0; i < times; i++) {
+    //     this._mainComponent
+    //       .getGameTableComponent()
+    //       .placeChipAnimation(
+    //         CryptoUtils.genRandomIntegerBetween(1, 6),
+    //         [5, 25, 50, 100, 500][
+    //           CryptoUtils.genRandomIntegerBetween(0, 4)
+    //         ],
+    //         "0",
+    //         12,
+    //       );
+    //     await sleep(500);
+    //   }
+    // }, 3000);
+
+    // // FIXME: 暂时使用 测试摇骰盅动画
+    // this._mainComponent.getGameTableComponent().playShakeDiceCupAnimation();
+    // FIXME: 暂时使用 测试打开骰盅
+    this._mainComponent
+      .getGameTableComponent()
+      .playerOpenDiceCupAnimation([2, 4]);
   }
 
   /**
