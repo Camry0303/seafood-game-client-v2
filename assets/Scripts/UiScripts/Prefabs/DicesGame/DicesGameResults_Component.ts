@@ -72,16 +72,9 @@ export class DicesGameResults_Component extends ComponentController {
     // 执行动画
     tween(this.node)
       .to(0.5, { scale: new Vec3(4, 4, 4) })
-      .to(0.5, { scale: new Vec3(2.0, 2.0, 2.0) })
       .delay(0.5)
       .parallel(
-        tween().to(
-          0.5,
-          { position: new Vec3(0, 10, 0) },
-          {
-            easing: "sineOut",
-          },
-        ),
+        tween().to(0.5, { position: new Vec3(0, 10, 0) }),
         tween().to(0.5, { scale: new Vec3(1, 1, 1) }),
       )
       .call(() => {

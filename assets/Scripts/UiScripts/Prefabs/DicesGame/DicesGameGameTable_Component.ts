@@ -517,7 +517,7 @@ export class DicesGameGameTable_Component extends ComponentController {
             opacity: 0,
           }),
         )
-        .delay(1.5)
+        .delay(1)
         .call(() => {
           this._openDiceCupTween.stop();
           // 复原骰盅顶部位置
