@@ -93,6 +93,11 @@ export default class ClubEvents {
       this.onGetClubPlayerScoreRankListResult,
     ],
     [CLUB_EVENT.GET_MY_MEMBER_LIST_RESULT, this.onGetMyMemberListResult],
+
+    [
+      CLUB_EVENT.GET_CLUB_GAME_ROOM_LIST_RESULT,
+      this.onGetClubGameRoomListResult,
+    ],
   ]);
 
   /**
@@ -335,7 +340,8 @@ export default class ClubEvents {
       const currentPlayer = GlobalData.Instance.getCurrentPlayerInfo();
       // 判断是否需要重连俱乐部游戏
       if (currentPlayer.in_game_type.includes("club_")) {
-        PlazaEvents.gameReconnect();
+        // TODO - 游戏重连
+        // PlazaEvents.gameReconnect();
       }
     } else {
       // 连接失败，弹出提示框
@@ -1348,4 +1354,69 @@ export default class ClubEvents {
     }
     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.GET_MY_MEMBER_LIST);
   }
+
+  /**
+   * 获取俱乐部游戏房间列表
+   */
+  public static onGetClubGameRoomList() {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(
+        WAITING_TYPE.GET_CLUB_GAME_ROOM_LIST,
+      );
+      socket.emit(CLUB_EVENT.GET_CLUB_GAME_ROOM_LIST);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(
+        WAITING_TYPE.GET_CLUB_GAME_ROOM_LIST,
+      );
+    }
+  }
+
+  /**
+   *  处理获取俱乐部游戏房间列表结果事件
+   * @param returnData
+   */
+  private static onGetClubGameRoomListResult(
+    returnData: Gateway.Returned.Common.Result<
+      Gateway.Returned.Games.DicesGame.DicesGameRoomTableUiData[]
+    >,
+  ) {
+    console.log(
+      "<DicesGameEvent> onGetClubGameRoomListResult called --->",
+      returnData,
+    );
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      const [node, component] = ComponentManager.Instance.getNodeComponent(
+        "ClubMainUI",
+        ClubMainUI_Component,
+      );
+      component && component.renderClubGameTableList(data);
+    } else {
+      // 连接失败，弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.GET_CLUB_GAME_ROOM_LIST);
+  }
+
+  // /**
+  //  * 创建房间
+  //  */
+  // public static createRoom() {
+  //   const socket = SocketManager.Instance.SocketInstance;
+  //   if (socket) {
+  //     CommonDailogHandler.showCircleLoading(WAITING_TYPE.CREATE_ROOM);
+  //     socket.emit(CLUB_EVENT.CREATE_ROOM);
+  //   } else {
+  //     CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+  //     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.CREATE_ROOM);
+  //   }
+  // }
+
+  // public static onCreateRoomResult(
+  //   returnData: Gateway.Returned.Common.Result<Gateway.Returned.Club.CreateRoomResult>,
+  // ) {
+
+  // }
 }

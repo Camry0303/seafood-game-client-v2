@@ -309,14 +309,15 @@ export class GlobalData extends Singleton {
   /**
    * 默认骰子游戏配置
    */
-  private _defaultDicesConfig: Gateway.Returned.Games.Dices.DicesGameConfig = {
-    dice_num: 2,
-    score_mode: 1,
-    total_game_rounds: 5,
-    max_players: 10,
-    score_limit: "20000,8000,4000",
-    move_limit: 0,
-  };
+  private _defaultDicesConfig: Gateway.Returned.Games.DicesGame.DicesGameConfig =
+    {
+      dice_num: 2,
+      score_mode: 1,
+      total_game_rounds: 5,
+      max_players: 10,
+      score_limit: "20000,8000,4000",
+      move_limit: 0,
+    };
   /**
    * 默认骰子游戏配置
    */
@@ -326,7 +327,7 @@ export class GlobalData extends Singleton {
     if (localDataString) {
       this._defaultDicesConfig = JSON.parse(
         localDataString,
-      ) as Gateway.Returned.Games.Dices.DicesGameConfig;
+      ) as Gateway.Returned.Games.DicesGame.DicesGameConfig;
     }
     return this._defaultDicesConfig;
   }
@@ -334,7 +335,7 @@ export class GlobalData extends Singleton {
    * 默认骰子游戏配置
    */
   public set defaultDicesConfig(
-    value: Gateway.Returned.Games.Dices.DicesGameConfig,
+    value: Gateway.Returned.Games.DicesGame.DicesGameConfig,
   ) {
     this._defaultDicesConfig = value;
     // 保存到本地存储
@@ -344,7 +345,7 @@ export class GlobalData extends Singleton {
   /**
    * 默认俱乐部骰子游戏配置
    */
-  private _defaultClubDicesConfig: Gateway.Returned.Games.Dices.DicesGameConfig =
+  private _defaultClubDicesConfig: Gateway.Returned.Games.DicesGame.DicesGameConfig =
     {
       dice_num: 2,
       score_mode: 1,
@@ -362,7 +363,7 @@ export class GlobalData extends Singleton {
     if (localDataString) {
       this._defaultClubDicesConfig = JSON.parse(
         localDataString,
-      ) as Gateway.Returned.Games.Dices.DicesGameConfig;
+      ) as Gateway.Returned.Games.DicesGame.DicesGameConfig;
     }
     return this._defaultClubDicesConfig;
   }
@@ -370,7 +371,7 @@ export class GlobalData extends Singleton {
    * 默认俱乐部骰子游戏配置
    */
   public set defaultClubDicesConfig(
-    value: Gateway.Returned.Games.Dices.DicesGameConfig,
+    value: Gateway.Returned.Games.DicesGame.DicesGameConfig,
   ) {
     this._defaultClubDicesConfig = value;
     // 保存到本地存储

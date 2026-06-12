@@ -28,6 +28,7 @@ import {
   GetMemberManagementListParams,
   GetMyMemberListParams,
 } from "../../../Types/gateway/requested/clubPlayer";
+import { GameTable_Component } from "./GameTable_Component";
 
 const { ccclass, menu } = _decorator;
 
@@ -541,17 +542,30 @@ export class ClubMainUI_Component extends ComponentController {
       this._marqueeComponent.setMessages([]);
     }
 
-    // TODO - 获取游戏桌子列表
-    console.log(`获取游戏桌子列表请求`);
+    // 获取游戏桌子列表
+    ClubEvents.onGetClubGameRoomList();
   }
 
   /**
    * 渲染俱乐部游戏桌子列表
    * @param tableList
    */
-  public renderClubGameTableList(tableList: any[]) {
+  public renderClubGameTableList(
+    tableList: Gateway.Returned.Games.DicesGame.DicesGameRoomTableUiData[],
+  ) {
     // TODO - 渲染俱乐部游戏桌子列表
     console.log(`渲染游戏桌子列表--->`, tableList);
+    this._tableContentNode.removeAllChildren();
+    const prefab: Prefab = ResourceManager.Instance.getAsset<Prefab>(
+      "Prefabs",
+      "Club/GameTable",
+    );
+    for (const table of tableList) {
+      const node = instantiate(prefab);
+      const component = node.addComponent(GameTable_Component);
+      this._tableContentNode.addChild(node);
+      component.setData(table);
+    }
   }
 
   /**

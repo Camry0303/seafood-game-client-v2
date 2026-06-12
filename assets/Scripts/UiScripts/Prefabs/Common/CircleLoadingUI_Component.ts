@@ -54,6 +54,12 @@ export enum WAITING_TYPE {
 
   GET_MY_MEMBER_LIST = "正在获取我的成员列表",
 
+  GET_CLUB_GAME_ROOM_LIST = "正在获取俱乐部游戏房间列表",
+
+  CREATE_ROOM = "正在创建房间",
+  JOIN_ROOM = "正在加入房间",
+  LEAVE_ROOM = "正在离开房间",
+
   GAME_RECONNECT = "正在重连游戏",
 }
 

@@ -1,3 +1,5 @@
+import { GAME_ROOM_STATUS } from "db://assets/Scripts/Enums";
+
 /**
  * 骰子游戏配置
  */
@@ -32,3 +34,57 @@ export type DicesGameConfig = {
    */
   move_limit: number;
 };
+
+/**
+ * 游戏玩家桌面UI数据
+ */
+export interface GamePlayerTableUiData {
+  /**
+   * 玩家id
+   */
+  player_id: number;
+  /**
+   * 玩家头像
+   */
+  avatar: string;
+}
+
+/**
+ * 骰子游戏桌面UI数据
+ */
+export interface DicesGameRoomTableUiData {
+  /**
+   * 俱乐部id
+   */
+  club_id?: number;
+
+  /**
+   * 房间id
+   */
+  room_id: number;
+
+  /**
+   * 创建者id
+   */
+  creator_id: number;
+
+  /**
+   * 群主id
+   */
+  club_owner_id: number;
+
+  /**
+   * 房间状态
+   */
+  status: GAME_ROOM_STATUS;
+
+  /**
+   * 骰子游戏配置
+   */
+  game_config: DicesGameConfig;
+
+  /**
+   * 玩家列表
+   */
+  players_list: GamePlayerTableUiData[];
+}

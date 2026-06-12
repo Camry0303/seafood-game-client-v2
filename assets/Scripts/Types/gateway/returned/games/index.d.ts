@@ -1,3 +1,3 @@
-import * as ReturnedDicesModule from "./dices";
+import * as ReturnedDicesGameModule from "./dices";
 
-export import Dices = ReturnedDicesModule;
+export import DicesGame = ReturnedDicesGameModule;

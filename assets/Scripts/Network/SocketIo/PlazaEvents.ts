@@ -90,13 +90,6 @@ export default class PlazaEvents {
       // 销毁登录注册界面
       ComponentManager.Instance.destroyNodeByName("LoginRegisterUI");
 
-      // 判断登陆前是否已经在俱乐部中
-      const currentClub = GlobalData.Instance.getCurrentClubInfoDetail();
-      if (currentClub) {
-        // // TODO - 处理进入俱乐部
-        // ClubEvents.enterClub(currentClub.club_id);
-      }
-
       // 判断玩家是否存在游戏状态
       if (
         data.playerInfo.in_game_type &&
@@ -105,14 +98,22 @@ export default class PlazaEvents {
         if (data.playerInfo.in_game_type.includes("club_")) {
           // // TODO - 俱乐部游戏，先进入俱乐部
           // ClubEvents.enterClub(data.playerInfo.in_club_id);
+          console.log(`当前在俱乐部游戏，处理进入俱乐部`);
         } else {
-          // 大厅游戏，直接发送玩家重新连接进入游戏验证请求
+          //  大厅游戏，直接发送玩家重新连接进入游戏验证请求
           PlazaEvents.gameReconnect();
         }
       } else {
-        // 隐藏加载动画
-        CommonDailogHandler.hideCircleLoading(WAITING_TYPE.LOGIN);
+        // 判断登陆前是否已经在俱乐部中
+        const currentClub = GlobalData.Instance.getCurrentClubInfoDetail();
+        if (currentClub) {
+          // // TODO - 处理进入俱乐部
+          // ClubEvents.enterClub(currentClub.club_id);
+          console.log(`当前俱乐部记录存在，处理进入俱乐部`);
+        }
       }
+      // 隐藏加载动画
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.LOGIN);
     } else {
       // 连接失败，弹出提示框
       CommonDailogHandler.showBubbleMessage(`${msg}`);

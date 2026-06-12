@@ -11,6 +11,7 @@ import CommonDailogHandler from "../../Utils/CommonDailogHandler";
 import { WAITING_TYPE } from "../../UiScripts/Prefabs/Common/CircleLoadingUI_Component";
 import PlazaEvents from "./PlazaEvents";
 import ClubEvents from "./ClubEvents";
+import DicesGameEvents from "./DicesGameEvents";
 const { ccclass, property } = _decorator;
 
 /**
@@ -71,6 +72,8 @@ export default class SocketManager extends SingletonComponent {
     this.setPlazaEventsOn();
     // 监听俱乐部事件
     this.setClubEventsOn();
+    // 监听俱乐部骰子游戏事件
+    this.setDicesGameEventsOn();
     // // 监听俱乐部玩家操作事件
     // this.setClubPlayerEventsOn();
   }
@@ -115,6 +118,20 @@ export default class SocketManager extends SingletonComponent {
    */
   public setClubEventsOff() {
     ClubEvents.setClubEventsOff(this.SocketInstance);
+  }
+
+  /**
+   * 监听俱乐部骰子游戏事件
+   */
+  public setDicesGameEventsOn() {
+    DicesGameEvents.setDicesGameEventsOn(this.SocketInstance);
+  }
+
+  /**
+   * 取消监听俱乐部骰子游戏事件
+   */
+  public setDicesGameEventsOff() {
+    DicesGameEvents.setDicesGameEventsOff(this.SocketInstance);
   }
 
   // /**

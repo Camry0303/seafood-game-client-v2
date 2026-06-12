@@ -5,6 +5,7 @@ import { ComponentManager } from "../../../Runtime/ComponentManager";
 import { GlobalData } from "../../../Runtime/GlobalData";
 import { Gateway } from "../../../Types/gateway";
 import Constants from "../../../Common/Constants";
+import DicesGameEvents from "../../../Network/SocketIo/DicesGameEvents";
 const { ccclass, menu } = _decorator;
 
 @ccclass("GameSettingUI_Component")
@@ -316,6 +317,10 @@ export class GameSettingUI_Component extends ComponentController {
    * @param event
    */
   private onCreateBtnClick(event: Event) {
-    console.log(`onCreateBtnClick--->`, this._gameSettingParams);
+    console.log(`onCreateBtnClick--->`, this._gameSettingParams, this._type);
+    if (this._type === "CLUB") {
+      DicesGameEvents.createClubDicesGameRoom(this._gameSettingParams);
+    } else if (this._type === "PUBLIC") {
+    }
   }
 }

@@ -76,4 +76,7 @@ export enum CLUB_EVENT {
 
   GET_MY_MEMBER_LIST = "Club.GetMyMemberList",
   GET_MY_MEMBER_LIST_RESULT = "Club.GetMyMemberList.Result",
+
+  GET_CLUB_GAME_ROOM_LIST = "Club.GetClubGameRoomList",
+  GET_CLUB_GAME_ROOM_LIST_RESULT = "Club.GetClubGameRoomList.Result",
 }

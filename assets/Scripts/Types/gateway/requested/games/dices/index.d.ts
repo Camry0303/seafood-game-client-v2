@@ -36,12 +36,7 @@ export type DicesGameConfig = {
 /**
  * 创建俱乐部骰子游戏房间
  */
-export type CreateClubDicesGameRoom = {
-  /**
-   * 俱乐部id
-   */
-  club_id: number;
-} & DicesGameConfig;
+export type CreateClubDicesGameRoom = DicesGameConfig;
 
 /**
  * 创建公开骰子游戏房间
