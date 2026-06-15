@@ -36,9 +36,9 @@ export type DicesGameConfig = {
 /**
  * 创建俱乐部骰子游戏房间
  */
-export type CreateClubDicesGameRoom = DicesGameConfig;
+export type CreateClubDicesGameRoomParams = DicesGameConfig;
 
 /**
  * 创建公开骰子游戏房间
  */
-export type CreatePublicDicesGameRoom = DicesGameConfig;
+export type CreatePublicDicesGameRoomParmas = DicesGameConfig;

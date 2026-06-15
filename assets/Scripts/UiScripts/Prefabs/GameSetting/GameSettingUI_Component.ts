@@ -26,9 +26,9 @@ export class GameSettingUI_Component extends ComponentController {
   private _moveLimitToggleContainer: ToggleContainer = null;
 
   // 游戏设置
-  private _gameSetting: Gateway.Returned.Games.Dices.DicesGameConfig = null;
+  private _gameSetting: Gateway.Returned.Games.DicesGame.DicesGameConfig = null;
   // 游戏设置参数
-  private _gameSettingParams: Gateway.Requested.Games.Dices.DicesGameConfig =
+  private _gameSettingParams: Gateway.Requested.Games.DicesGame.DicesGameConfig =
     null;
 
   // 显示类型
@@ -128,7 +128,7 @@ export class GameSettingUI_Component extends ComponentController {
    */
   public setData(
     type: "PUBLIC" | "CLUB",
-    setting: Gateway.Returned.Games.Dices.DicesGameConfig,
+    setting: Gateway.Returned.Games.DicesGame.DicesGameConfig,
   ) {
     this._type = type;
     this._gameSetting = setting;

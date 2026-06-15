@@ -11,6 +11,7 @@ import { PLAZA_EVENT } from "../../Enums/Events/Plaza";
 import { ClubMainUI_Component } from "../../UiScripts/Prefabs/Club/ClubMainUI_Component";
 import { InviteUI_Component } from "../../UiScripts/Prefabs/Plaza/InviteUI_Component";
 import ClubEvents from "./ClubEvents";
+import { DicesGameMainUI_Component } from "../../UiScripts/Prefabs/DicesGame/DicesGameMainUI_Component";
 
 /**
  * 大厅事件处理类
@@ -95,20 +96,22 @@ export default class PlazaEvents {
         data.playerInfo.in_game_type &&
         data.playerInfo.in_game_type !== IN_GAME_TYPE.NONE
       ) {
-        if (data.playerInfo.in_game_type.includes("club_")) {
-          // // TODO - 俱乐部游戏，先进入俱乐部
-          // ClubEvents.enterClub(data.playerInfo.in_club_id);
-          console.log(`当前在俱乐部游戏，处理进入俱乐部`);
-        } else {
-          //  大厅游戏，直接发送玩家重新连接进入游戏验证请求
-          PlazaEvents.gameReconnect();
-        }
+        // 游戏重连
+        PlazaEvents.gameReconnect();
+        // if (data.playerInfo.in_game_type.includes("club_")) {
+        //   // 俱乐部游戏，先进入俱乐部
+        //   ClubEvents.enterClub(data.playerInfo.in_club_id);
+        //   console.log(`当前在俱乐部游戏，处理进入俱乐部`);
+        // } else {
+        //   //  大厅游戏，直接发送玩家重新连接进入游戏验证请求
+        //   PlazaEvents.gameReconnect();
+        // }
       } else {
         // 判断登陆前是否已经在俱乐部中
         const currentClub = GlobalData.Instance.getCurrentClubInfoDetail();
         if (currentClub) {
-          // // TODO - 处理进入俱乐部
-          // ClubEvents.enterClub(currentClub.club_id);
+          // 处理进入俱乐部
+          ClubEvents.enterClub(currentClub.club_id);
           console.log(`当前俱乐部记录存在，处理进入俱乐部`);
         }
       }
@@ -448,7 +451,7 @@ export default class PlazaEvents {
   public static onGameReconnectResult(
     // TODO - 根据游戏类型返回不同的数据
     returnData: Gateway.Returned.Common.Result<
-      Gateway.Returned.Common.GameReconnectResultData<any>
+      Gateway.Returned.Common.GameReconnectResultData<Gateway.Returned.Games.DicesGame.ClubDicesGameRoomData>
     >,
   ) {
     console.log("<PlazaEvent> onGameReconnectResult called!");
@@ -462,21 +465,22 @@ export default class PlazaEvents {
       // TODO - 根据游戏类型进入不同的游戏界面（需要判断一下是不是已经在游戏场景中）
       switch (data.in_game_type) {
         case IN_GAME_TYPE.PUBLIC_DICES_GAME:
+          console.log(`处理重连进入大厅骰子游戏`);
           break;
         case IN_GAME_TYPE.CLUB_DICES_GAME:
-          // TODO - 根据游戏类型进入不同的游戏界面
-          // let [dicesGameRoomUi, dicesGameRoomUiComponent, created] =
-          //   ComponentManager.Instance.renderUiNode<DicesGameRoomUI_Component>(
-          //     "ChaoShanMahjongGameRoomUI",
-          //     "Prefabs",
-          //     "DicesGame/DicesGameRoomUI",
-          //     DicesGameRoomUI_Component,
-          //   );
-          // if (!created) {
-          //   console.log(`已在游戏界面，手动获取游戏状态！`);
-          //   // 已在游戏界面，手动获取游戏状态！
-          //   dicesGameRoomUiComponent.getGamingStatus();
-          // }
+          // 根据游戏类型进入不同的游戏界面
+          let [dicesGameRoomUi, dicesGameRoomUiComponent, created] =
+            ComponentManager.Instance.renderUiNode<DicesGameMainUI_Component>(
+              "DicesGameMainUI",
+              "Prefabs",
+              "DicesGame/DicesGameMainUI",
+              DicesGameMainUI_Component,
+            );
+          if (!created) {
+            console.log(`已在游戏界面，手动获取游戏状态！`);
+            // 已在游戏界面，手动获取游戏状态！
+            // dicesGameRoomUiComponent.getGamingStatus();
+          }
           break;
         default:
           break;

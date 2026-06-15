@@ -17,6 +17,23 @@ export enum CLUB_DICES_GAME_EVENT {
   JOIN_ROOM = "ClubDicesGame.JoinRoom",
   JOIN_ROOM_RESULT = "ClubDicesGame.JoinRoom.Result",
 
+  SPECTATE_ROOM = "ClubDicesGame.SpectateRoom",
+  SPECTATE_ROOM_RESULT = "ClubDicesGame.SpectateRoom.Result",
+
   LEAVE_ROOM = "ClubDicesGame.LeaveRoom",
   LEAVE_ROOM_RESULT = "ClubDicesGame.LeaveRoom.Result",
+}
+
+/**
+ * 骰子游戏座位状态
+ */
+export enum DICES_GAME_SEAT_STATUS {
+  /**空闲 */
+  EMPTY = "empty",
+  /**准备 */
+  READY = "ready",
+  /**等待 */
+  WAITING = "waiting",
+  /**游戏中 */
+  PLAYING = "playing",
 }

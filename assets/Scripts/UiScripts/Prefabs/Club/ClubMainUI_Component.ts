@@ -270,7 +270,12 @@ export class ClubMainUI_Component extends ComponentController {
     const toggle: Toggle = event.target.getComponent(Toggle);
     const clubToggle = toggle.getComponent(ClubToggle_Component);
     if (clubToggle.getData()) {
-      ClubEvents.enterClub(clubToggle.getData().club_id);
+      if (
+        GlobalData.Instance.getCurrentClubInfoDetail().club_id !==
+        clubToggle.getData().club_id
+      ) {
+        ClubEvents.enterClub(clubToggle.getData().club_id);
+      }
     }
   }
 
@@ -553,8 +558,8 @@ export class ClubMainUI_Component extends ComponentController {
   public renderClubGameTableList(
     tableList: Gateway.Returned.Games.DicesGame.DicesGameRoomTableUiData[],
   ) {
-    // TODO - 渲染俱乐部游戏桌子列表
-    console.log(`渲染游戏桌子列表--->`, tableList);
+    // 渲染俱乐部游戏桌子列表
+    // console.log(`渲染游戏桌子列表--->`, tableList);
     this._tableContentNode.removeAllChildren();
     const prefab: Prefab = ResourceManager.Instance.getAsset<Prefab>(
       "Prefabs",

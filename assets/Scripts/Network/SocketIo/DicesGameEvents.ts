@@ -4,7 +4,11 @@ import { Gateway } from "../../Types/gateway";
 import SocketManager from "./SocketManager";
 import { WAITING_TYPE } from "../../UiScripts/Prefabs/Common/CircleLoadingUI_Component";
 import CommonDailogHandler from "../../Utils/CommonDailogHandler";
-import { RESPONE_RESULT } from "../../Enums";
+import { IN_GAME_TYPE, RESPONE_RESULT } from "../../Enums";
+import { ComponentManager } from "../../Runtime/ComponentManager";
+import { GameSettingUI_Component } from "../../UiScripts/Prefabs/GameSetting/GameSettingUI_Component";
+import { GlobalData } from "../../Runtime/GlobalData";
+import { DicesGameMainUI_Component } from "../../UiScripts/Prefabs/DicesGame/DicesGameMainUI_Component";
 
 /**
  * 骰子游戏事件
@@ -53,7 +57,7 @@ export default class DicesGameEvents {
    * @param params
    */
   public static createClubDicesGameRoom(
-    params: Gateway.Requested.Games.Dices.CreateClubDicesGameRoom,
+    params: Gateway.Requested.Games.DicesGame.CreateClubDicesGameRoomParams,
   ) {
     const socket = SocketManager.Instance.SocketInstance;
     if (socket) {
@@ -70,7 +74,7 @@ export default class DicesGameEvents {
    * @param returnData
    */
   private static onCreateClubDicesGameRoomResult(
-    returnData: Gateway.Returned.Common.Result<any>,
+    returnData: Gateway.Returned.Common.Result<Gateway.Returned.Games.DicesGame.ClubDicesGameRoomData>,
   ) {
     console.log(
       "<DicesGameEvent> onCreateClubDicesGameRoomResult called --->",
@@ -78,6 +82,29 @@ export default class DicesGameEvents {
     );
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
+      // 关闭游戏配置界面
+      const [, settingComponent] = ComponentManager.Instance.getNodeComponent(
+        "GameSettnigUI",
+        GameSettingUI_Component,
+      );
+      settingComponent && settingComponent.close();
+
+      // 保存游戏信息
+      GlobalData.Instance.setCurrentGameInfo<Gateway.Returned.Games.DicesGame.ClubDicesGameRoomData>(
+        {
+          in_game_type: IN_GAME_TYPE.CLUB_DICES_GAME,
+          game_room_data: data,
+        },
+      );
+
+      // 挂载游戏界面
+      const [, dicesGameMainUIComponent] =
+        ComponentManager.Instance.renderUiNode<DicesGameMainUI_Component>(
+          "DicesGameMainUI",
+          "Prefabs",
+          "DicesGame/DicesGameMainUI",
+          DicesGameMainUI_Component,
+        );
     } else {
       // 连接失败，弹出提示框
       CommonDailogHandler.showBubbleMessage(`${msg}`);

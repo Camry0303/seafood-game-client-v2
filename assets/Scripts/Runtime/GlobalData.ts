@@ -274,18 +274,16 @@ export class GlobalData extends Singleton {
   //#region 游戏相关
 
   /**
-   * TODO - 申明游戏信息类型
    * 当前游戏相关
    */
-  private _currentGameInfo: Gateway.Returned.Common.CurrentGameInfo<any>;
+  private _currentGameInfo: Gateway.Returned.Common.CurrentGameInfo<Gateway.Returned.Games.DicesGame.ClubDicesGameRoomData>;
 
   /**
-   * TODO - 申明游戏信息类型
    * 设置当前游戏信息
    * @param currentGameInfo
    */
   public setCurrentGameInfo<T>(
-    currentGameInfo: Gateway.Returned.Common.CurrentGameInfo<any> | null,
+    currentGameInfo: Gateway.Returned.Common.CurrentGameInfo<Gateway.Returned.Games.DicesGame.ClubDicesGameRoomData> | null,
   ) {
     this._currentGameInfo = currentGameInfo;
   }

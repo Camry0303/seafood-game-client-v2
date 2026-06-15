@@ -1,3 +1,3 @@
 import * as DicesModule from "./dices";
 
-export import Dices = DicesModule;
+export import DicesGame = DicesModule;

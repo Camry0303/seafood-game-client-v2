@@ -150,14 +150,13 @@ export default class ClubEvents {
     );
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
-      // 渲染俱乐部列表菜单
-      const [node, component, created] =
-        ComponentManager.Instance.renderUiNode<ClubMainUI_Component>(
+      // 获取俱乐部界面
+      const [node, component] =
+        ComponentManager.Instance.getNodeComponent<ClubMainUI_Component>(
           "ClubMainUI",
-          "Prefabs",
-          "Club/ClubMainUI",
           ClubMainUI_Component,
         );
+      // 渲染俱乐部列表菜单
       component.renderClubList(data);
     } else {
       // 连接失败，弹出提示框
@@ -320,8 +319,8 @@ export default class ClubEvents {
   ) {
     console.log("<ClubEvent> onEnterClubResult called --->", returnData);
     const { code, data, msg } = returnData;
-    const { clubInfoDetail, clubPlayerInfo } = data;
     if (code === RESPONE_RESULT.SUCCESS) {
+      const { clubInfoDetail, clubPlayerInfo } = data;
       GlobalData.Instance.setCurrentClubInfoDetail(clubInfoDetail);
       GlobalData.Instance.setCurrentClubPlayerInfo(clubPlayerInfo);
 
@@ -338,11 +337,11 @@ export default class ClubEvents {
       component.renderClubDetailContent();
 
       const currentPlayer = GlobalData.Instance.getCurrentPlayerInfo();
-      // 判断是否需要重连俱乐部游戏
-      if (currentPlayer.in_game_type.includes("club_")) {
-        // TODO - 游戏重连
-        // PlazaEvents.gameReconnect();
-      }
+      // // FIXME: 判断是否需要重连俱乐部游戏 考虑废弃
+      // if (currentPlayer.in_game_type.includes("club_")) {
+      //   // 游戏重连
+      //   PlazaEvents.gameReconnect();
+      // }
     } else {
       // 连接失败，弹出提示框
       CommonDailogHandler.showBubbleMessage(`${msg}`);
@@ -1399,24 +1398,4 @@ export default class ClubEvents {
     }
     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.GET_CLUB_GAME_ROOM_LIST);
   }
-
-  // /**
-  //  * 创建房间
-  //  */
-  // public static createRoom() {
-  //   const socket = SocketManager.Instance.SocketInstance;
-  //   if (socket) {
-  //     CommonDailogHandler.showCircleLoading(WAITING_TYPE.CREATE_ROOM);
-  //     socket.emit(CLUB_EVENT.CREATE_ROOM);
-  //   } else {
-  //     CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
-  //     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.CREATE_ROOM);
-  //   }
-  // }
-
-  // public static onCreateRoomResult(
-  //   returnData: Gateway.Returned.Common.Result<Gateway.Returned.Club.CreateRoomResult>,
-  // ) {
-
-  // }
 }
