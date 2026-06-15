@@ -4,6 +4,7 @@ import { DicesGameTopStatusBar_Component } from "./DicesGameTopStatusBar_Compone
 import { DicesGameBottomStatusBar_Component } from "./DicesGameBottomStatusBar_Component";
 import { DicesGameGameTable_Component } from "./DicesGameGameTable_Component";
 import { DicesGamePlayerSeatsContainer_Component } from "./DicesGamePlayerSeatsContainer_Component";
+import { ComponentManager } from "../../../Runtime/ComponentManager";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameMainUI_Component")
@@ -65,6 +66,14 @@ export class DicesGameMainUI_Component extends ComponentController {
     this._playerSeatsComponents = this._playerSeats.addComponent(
       DicesGamePlayerSeatsContainer_Component,
     );
+  }
+
+  /**
+   * 关闭弹窗
+   */
+  public close() {
+    // 销毁节点
+    ComponentManager.Instance.destroyNode(this.node);
   }
 
   /**

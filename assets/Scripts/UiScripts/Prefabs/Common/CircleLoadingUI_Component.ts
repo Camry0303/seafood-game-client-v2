@@ -58,7 +58,9 @@ export enum WAITING_TYPE {
 
   CREATE_ROOM = "正在创建房间",
   JOIN_ROOM = "正在加入房间",
+  SPECTATE_ROOM = "正在进入观战房间",
   LEAVE_ROOM = "正在离开房间",
+  DISSOLVE_ROOM = "正在解散房间",
 
   GAME_RECONNECT = "正在重连游戏",
 }

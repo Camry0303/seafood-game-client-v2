@@ -12,6 +12,7 @@ import { DicesGameOrderDetailsUI_Component } from "./DicesGameOrderDetailsUI_Com
 import { DicesGameHistoryUI_Component } from "./DicesGameHistoryUI_Component";
 import sleep from "../../../Utils/Sleep";
 import CryptoUtils from "../../../Utils/CryptoUtils";
+import DicesGameEvents from "../../../Network/SocketIo/DicesGameEvents";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameTopStatusBar_Component")
@@ -257,8 +258,8 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
       "ExitToggle",
       "确认退出房间",
       () => {
-        // TODO - 退出房间逻辑
-        console.log(`退出房间逻辑`);
+        // 退出房间逻辑
+        DicesGameEvents.leaveClubDicesGameRoom();
       },
       () => {},
     );
@@ -281,8 +282,8 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
       "DissolveToggle",
       "确认解散房间",
       () => {
-        // TODO - 解散房间逻辑
-        console.log(`解散房间逻辑`);
+        // 解散房间逻辑
+        DicesGameEvents.adminDissolveClubDicesGameRoom();
       },
       () => {},
     );

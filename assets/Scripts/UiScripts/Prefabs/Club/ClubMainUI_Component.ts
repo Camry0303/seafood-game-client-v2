@@ -271,7 +271,7 @@ export class ClubMainUI_Component extends ComponentController {
     const clubToggle = toggle.getComponent(ClubToggle_Component);
     if (clubToggle.getData()) {
       if (
-        GlobalData.Instance.getCurrentClubInfoDetail().club_id !==
+        GlobalData.Instance.getCurrentClubInfoDetail()?.club_id !==
         clubToggle.getData().club_id
       ) {
         ClubEvents.enterClub(clubToggle.getData().club_id);

@@ -42,3 +42,23 @@ export type CreateClubDicesGameRoomParams = DicesGameConfig;
  * 创建公开骰子游戏房间
  */
 export type CreatePublicDicesGameRoomParmas = DicesGameConfig;
+
+/**
+ * 加入房间参数
+ */
+export type JoinClubDicesGameRoomParams = {
+  /**
+   * 房间ID
+   */
+  room_id: number;
+};
+
+/**
+ * 观战房间参数
+ */
+export type SpectateClubDicesGameRoomParams = {
+  /**
+   * 房间ID
+   */
+  room_id: number;
+};

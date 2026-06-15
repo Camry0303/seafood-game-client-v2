@@ -3,6 +3,9 @@ import { ComponentController } from "../../../Common/ComponentController";
 import { getAvatarSpriteFrame } from "../../../Utils/RemoteSpriteFrameLoader";
 import { Gateway } from "../../../Types/gateway";
 import ClubEvents from "../../../Network/SocketIo/ClubEvents";
+import DicesGameEvents from "../../../Network/SocketIo/DicesGameEvents";
+import { GlobalData } from "../../../Runtime/GlobalData";
+import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
 const { ccclass, menu } = _decorator;
 
 @ccclass("GameTable_Component")
@@ -51,8 +54,20 @@ export class GameTable_Component extends ComponentController {
    * @param customEventData
    */
   private onButtonClick(event: Event, customEventData: string) {
-    console.log(`roomid`, this._data.room_id);
-
-    // ClubEvents.joinGameTable(this._data.room_id);
+    const clubPlayer = GlobalData.Instance.getCurrentClubPlayerInfo();
+    if (!clubPlayer) {
+      CommonDailogHandler.showBubbleMessage("请重新进入俱乐部");
+      return;
+    }
+    // 管理员只能观战
+    if (clubPlayer.role <= 1) {
+      DicesGameEvents.spectateClubDicesGameRoom({
+        room_id: this._data.room_id,
+      });
+    } else {
+      DicesGameEvents.joinClubDicesGameRoom({
+        room_id: this._data.room_id,
+      });
+    }
   }
 }

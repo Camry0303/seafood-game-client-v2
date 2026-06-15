@@ -98,14 +98,6 @@ export default class PlazaEvents {
       ) {
         // 游戏重连
         PlazaEvents.gameReconnect();
-        // if (data.playerInfo.in_game_type.includes("club_")) {
-        //   // 俱乐部游戏，先进入俱乐部
-        //   ClubEvents.enterClub(data.playerInfo.in_club_id);
-        //   console.log(`当前在俱乐部游戏，处理进入俱乐部`);
-        // } else {
-        //   //  大厅游戏，直接发送玩家重新连接进入游戏验证请求
-        //   PlazaEvents.gameReconnect();
-        // }
       } else {
         // 判断登陆前是否已经在俱乐部中
         const currentClub = GlobalData.Instance.getCurrentClubInfoDetail();
