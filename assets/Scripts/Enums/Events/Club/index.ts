@@ -79,4 +79,7 @@ export enum CLUB_EVENT {
 
   GET_CLUB_GAME_ROOM_LIST = "Club.GetClubGameRoomList",
   GET_CLUB_GAME_ROOM_LIST_RESULT = "Club.GetClubGameRoomList.Result",
+
+  ROOM_DISSOLVED_RESULT = "Club.RoomDissolved.Result",
+  ROOM_CREATED_RESULT = "Club.RoomCreated.Result",
 }

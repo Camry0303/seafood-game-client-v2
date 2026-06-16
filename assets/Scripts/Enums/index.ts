@@ -171,5 +171,5 @@ export enum IN_GAME_TYPE {
  * 游戏类型枚举
  */
 export enum GAME_TYPE {
-  JK_HOLDEM = "dices_game",
+  DICES_GAME = "dices_game",
 }

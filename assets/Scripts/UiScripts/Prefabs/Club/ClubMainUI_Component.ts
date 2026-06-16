@@ -559,7 +559,6 @@ export class ClubMainUI_Component extends ComponentController {
     tableList: Gateway.Returned.Games.DicesGame.DicesGameRoomTableUiData[],
   ) {
     // 渲染俱乐部游戏桌子列表
-    // console.log(`渲染游戏桌子列表--->`, tableList);
     this._tableContentNode.removeAllChildren();
     const prefab: Prefab = ResourceManager.Instance.getAsset<Prefab>(
       "Prefabs",
@@ -570,6 +569,34 @@ export class ClubMainUI_Component extends ComponentController {
       const component = node.addComponent(GameTable_Component);
       this._tableContentNode.addChild(node);
       component.setData(table);
+    }
+  }
+
+  /**
+   * 更新俱乐部游戏桌子列表
+   * @param table
+   * @param type
+   */
+  public updateClubGameTableList(
+    table: Gateway.Returned.Games.DicesGame.DicesGameRoomTableUiData,
+    type: "ADD" | "DEL",
+  ) {
+    this._tableContentNode;
+    if (type === "ADD") {
+      const prefab: Prefab = ResourceManager.Instance.getAsset<Prefab>(
+        "Prefabs",
+        "Club/GameTable",
+      );
+      const node = instantiate(prefab);
+      const component = node.addComponent(GameTable_Component);
+      this._tableContentNode.addChild(node);
+      component.setData(table);
+    } else if (type === "DEL") {
+      const tableNode = this._tableContentNode.children.find((node) => {
+        const component = node.getComponent(GameTable_Component);
+        return component.getData()?.room_id === table.room_id;
+      });
+      tableNode && tableNode.destroy();
     }
   }
 

@@ -4,7 +4,7 @@ import { Gateway } from "../../Types/gateway";
 import SocketManager from "./SocketManager";
 import { WAITING_TYPE } from "../../UiScripts/Prefabs/Common/CircleLoadingUI_Component";
 import CommonDailogHandler from "../../Utils/CommonDailogHandler";
-import { IN_GAME_TYPE, RESPONE_RESULT } from "../../Enums";
+import { GAME_ROOM_STATUS, IN_GAME_TYPE, RESPONE_RESULT } from "../../Enums";
 import { ComponentManager } from "../../Runtime/ComponentManager";
 import { GameSettingUI_Component } from "../../UiScripts/Prefabs/GameSetting/GameSettingUI_Component";
 import { GlobalData } from "../../Runtime/GlobalData";
@@ -41,6 +41,10 @@ export default class DicesGameEvents {
     [
       CLUB_DICES_GAME_EVENT.ADMIN_DISSOLVE_ROOM_RESULT,
       this.onAdminDissolveClubDicesGameRoomResult,
+    ],
+    [
+      CLUB_DICES_GAME_EVENT.ROOM_DISSOLVED_RESULT,
+      this.onClubDicesGameRoomDissolvedResult,
     ],
   ]);
 
@@ -312,6 +316,27 @@ export default class DicesGameEvents {
       CommonDailogHandler.showBubbleMessage(`${msg}`);
     }
     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.DISSOLVE_ROOM);
+  }
+  //#endregion
+
+  //#region 俱乐部骰子游戏房间解散通知
+  /**
+   * 俱乐部骰子游戏房间解散通知
+   * @param returnData
+   */
+  private static onClubDicesGameRoomDissolvedResult(
+    returnData: Gateway.Returned.Common.Result<boolean>,
+  ) {
+    console.log(
+      "<DicesGameEvent> onClubDicesGameRoomDissolvedResult called --->",
+    );
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      const room = GlobalData.Instance.getCurrentGameInfo();
+      if (room) {
+        room.game_room_data.status = GAME_ROOM_STATUS.DISMISS;
+      }
+    }
   }
   //#endregion
 }

@@ -13,6 +13,7 @@ export enum CLUB_DICES_GAME_EVENT {
 
   DISSOLVE_ROOM = "ClubDicesGame.DissolveRoom",
   DISSOLVE_ROOM_RESULT = "ClubDicesGame.DissolveRoom.Result",
+  ROOM_DISSOLVED_RESULT = "ClubDicesGame.RoomDissolved.Result",
 
   JOIN_ROOM = "ClubDicesGame.JoinRoom",
   JOIN_ROOM_RESULT = "ClubDicesGame.JoinRoom.Result",

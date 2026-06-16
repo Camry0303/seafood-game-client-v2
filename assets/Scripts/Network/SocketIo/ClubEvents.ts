@@ -9,6 +9,7 @@ import PlazaEvents from "./PlazaEvents";
 import { CLUB_EVENT } from "../../Enums/Events/Club";
 import {
   CLUB_APPLICATION_TYPE,
+  GAME_TYPE,
   JOIN_CLUB_RESULT,
   QUIT_CLUB_RESULT,
   RESPONE_RESULT,
@@ -98,6 +99,8 @@ export default class ClubEvents {
       CLUB_EVENT.GET_CLUB_GAME_ROOM_LIST_RESULT,
       this.onGetClubGameRoomListResult,
     ],
+    [CLUB_EVENT.ROOM_DISSOLVED_RESULT, this.onRoomDissolvedResult],
+    [CLUB_EVENT.ROOM_CREATED_RESULT, this.onRoomCreatedResult],
   ]);
 
   /**
@@ -1397,5 +1400,47 @@ export default class ClubEvents {
       CommonDailogHandler.showBubbleMessage(`${msg}`);
     }
     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.GET_CLUB_GAME_ROOM_LIST);
+  }
+
+  /**
+   * 处理俱乐部游戏房间解散通知结果
+   * @param returnData
+   */
+  private static onRoomDissolvedResult(
+    returnData: Gateway.Returned.Common.Result<{
+      data: Gateway.Returned.Games.DicesGame.DicesGameRoomTableUiData;
+      type: GAME_TYPE;
+    }>,
+  ) {
+    console.log("<ClubEvent> onRoomDissolvedResult called --->", returnData);
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      const [node, component] = ComponentManager.Instance.getNodeComponent(
+        "ClubMainUI",
+        ClubMainUI_Component,
+      );
+      component && component.updateClubGameTableList(data.data, "DEL");
+    }
+  }
+
+  /**
+   * 处理俱乐部游戏房间创建通知结果
+   * @param returnData
+   */
+  private static onRoomCreatedResult(
+    returnData: Gateway.Returned.Common.Result<{
+      data: Gateway.Returned.Games.DicesGame.DicesGameRoomTableUiData;
+      type: GAME_TYPE;
+    }>,
+  ) {
+    console.log("<ClubEvent> onRoomCreatedResult called --->", returnData);
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      const [node, component] = ComponentManager.Instance.getNodeComponent(
+        "ClubMainUI",
+        ClubMainUI_Component,
+      );
+      component && component.updateClubGameTableList(data.data, "ADD");
+    }
   }
 }

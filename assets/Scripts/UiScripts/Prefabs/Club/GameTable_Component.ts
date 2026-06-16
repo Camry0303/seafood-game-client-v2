@@ -49,6 +49,14 @@ export class GameTable_Component extends ComponentController {
   }
 
   /**
+   * 获取数据
+   * @returns
+   */
+  public getData() {
+    return this._data;
+  }
+
+  /**
    * 点击事件
    * @param event
    * @param customEventData
