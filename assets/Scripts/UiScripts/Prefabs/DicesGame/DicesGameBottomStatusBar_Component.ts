@@ -13,6 +13,9 @@ import {
 import { ComponentController } from "../../../Common/ComponentController";
 import { DicesGameMainUI_Component } from "./DicesGameMainUI_Component";
 import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
+import { GlobalData } from "../../../Runtime/GlobalData";
+import { getAvatarSpriteFrame } from "../../../Utils/RemoteSpriteFrameLoader";
+import { Gateway } from "../../../Types/typing";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameBottomStatusBar_Component")
@@ -29,7 +32,7 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
   // 玩家ID标签
   private _playerIdLabel: Label = null;
   // 是否庄家标志节点
-  private _bankerMarkNode: Node = null;
+  private _dealerMarkNode: Node = null;
   //#endregion
 
   //#region 普通下单面板相关属性
@@ -127,11 +130,11 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
     );
     // 获取玩家ID标签
     [, this._playerIdLabel] = this.getNodeComponent(
-      "PlayerUI/BaseInfo/PlayerIdLabel",
+      "PlayerUI/BaseInfo/IdLabel",
       Label,
     );
     // 获取是否庄家标志节点
-    this._bankerMarkNode = this.getNode("PlayerUI/IsBanker");
+    this._dealerMarkNode = this.getNode("PlayerUI/IsDealer");
 
     // 点击头像按钮点击事件
     this.setButtonClickEvent(
@@ -151,10 +154,18 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
   }
 
   /**
-   * TODO 设置玩家UI数据
-   * @param data
+   *  更新玩家信息UI
    */
-  public setPlayerUIData(data: any) {}
+  public async updatePlayerUI(dealer_id: number | null) {
+    const playerData = GlobalData.Instance.getCurrentPlayerInfo();
+    this._nicknameLabel.string = playerData.nickname;
+    this._playerIdLabel.string = `ID：${playerData.id}`;
+    this._dealerMarkNode.active = playerData.id === dealer_id;
+
+    this._avatarSprite.spriteFrame = await getAvatarSpriteFrame(
+      playerData.avatar,
+    );
+  }
   //#endregion
 
   //#region 下单面板相关方法

@@ -17,12 +17,14 @@ export enum CLUB_DICES_GAME_EVENT {
 
   JOIN_ROOM = "ClubDicesGame.JoinRoom",
   JOIN_ROOM_RESULT = "ClubDicesGame.JoinRoom.Result",
+  PLAYER_JOINED_ROOM_RESULT = "ClubDicesGame.PlayerJoinedRoom.Result",
 
   SPECTATE_ROOM = "ClubDicesGame.SpectateRoom",
   SPECTATE_ROOM_RESULT = "ClubDicesGame.SpectateRoom.Result",
 
   LEAVE_ROOM = "ClubDicesGame.LeaveRoom",
   LEAVE_ROOM_RESULT = "ClubDicesGame.LeaveRoom.Result",
+  PLAYER_LEFT_ROOM_RESULT = "ClubDicesGame.PlayerLeftRoom.Result",
 }
 
 /**

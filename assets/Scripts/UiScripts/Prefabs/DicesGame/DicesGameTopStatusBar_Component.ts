@@ -2,7 +2,7 @@ import { _decorator, Event, Label, Node, sys, UITransform } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import { DicesGameMainUI_Component } from "./DicesGameMainUI_Component";
 import { GlobalData } from "../../../Runtime/GlobalData";
-import { CLUB_PLAYER_ROLE } from "../../../Enums";
+import { CLUB_PLAYER_ROLE, DICES_GAMING_STATUS } from "../../../Enums";
 import moment from "moment";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
 import { DicesGameHelpUI_Component } from "./DicesGameHelpUI_Component";
@@ -13,6 +13,7 @@ import { DicesGameHistoryUI_Component } from "./DicesGameHistoryUI_Component";
 import sleep from "../../../Utils/Sleep";
 import CryptoUtils from "../../../Utils/CryptoUtils";
 import DicesGameEvents from "../../../Network/SocketIo/DicesGameEvents";
+import { Gateway } from "../../../Types/typing";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameTopStatusBar_Component")
@@ -354,13 +355,17 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
   }
 
   /**
-   * 设置状态栏数据
-   * @param roomStatus
+   * 更新状态栏
+   * @param current_round
    */
-  public setStatusBarData(roomStatus: any) {
-    this._roomIdLabel.string = `房间：${roomStatus.room_id}`;
-    this._scoreModeLabel.string = `${roomStatus.score_mode === 0 ? "不可负分" : "可负分"}`;
-    this._totalRoundsLabel.string = `共${roomStatus.total_rounds}局`;
-    this._currentRoundLabel.string = `第${roomStatus.current_round}局`;
+  public updateTopStatusBarUI(current_round: number) {
+    const roomData =
+      GlobalData.Instance.getCurrentGameInfo<Gateway.Returned.Games.DicesGame.ClubDicesGameRoomData>()
+        ?.game_room_data;
+
+    this._roomIdLabel.string = `房间：${roomData.room_id}`;
+    this._scoreModeLabel.string = `${roomData?.game_config?.score_mode === 0 ? "不可负分" : "可负分"}`;
+    this._totalRoundsLabel.string = `共${roomData?.game_config?.total_game_rounds}局`;
+    this._currentRoundLabel.string = `第${current_round}局`;
   }
 }

@@ -2,6 +2,10 @@ import { _decorator, Node, Vec3 } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import { DicesGameMainUI_Component } from "./DicesGameMainUI_Component";
 import { DicesGamePlayerSeat_Component } from "./DicesGamePlayerSeat_Component";
+import { Gateway } from "../../../Types/gateway";
+import _ from "lodash";
+import { GlobalData } from "../../../Runtime/GlobalData";
+import { DICES_GAME_SEAT_STATUS } from "../../../Enums/Events/DicesGame";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGamePlayerSeatsContainer_Component")
@@ -12,8 +16,8 @@ export class DicesGamePlayerSeatsContainer_Component extends ComponentController
 
   //#region 座位容器相关
   // 庄家座位
-  private _bankerSeatNode: Node = null;
-  private _bankerSeat: DicesGamePlayerSeat_Component = null;
+  private _dealerSeatNode: Node = null;
+  private _dealerSeat: DicesGamePlayerSeat_Component = null;
 
   // 玩家座位
   private _playerSeat1Node: Node = null;
@@ -49,10 +53,16 @@ export class DicesGamePlayerSeatsContainer_Component extends ComponentController
 
   // 其他玩家座位标记
   private _morePlayersNode: Node = null;
+
+  // 座位组件数组
+  private _seats: DicesGamePlayerSeat_Component[] = [];
   //#endregion
 
   // 座位数据数组
-  private _seatsData: any[] = [];
+  private _seatsData: Record<
+    string,
+    Gateway.Returned.Games.DicesGame.GameSeatData
+  > = null;
 
   start() {}
 
@@ -66,70 +76,70 @@ export class DicesGamePlayerSeatsContainer_Component extends ComponentController
       DicesGameMainUI_Component,
     );
 
-    [this._bankerSeatNode, this._bankerSeat] =
+    [this._dealerSeatNode, this._dealerSeat] =
       this.addNodeComponent<DicesGamePlayerSeat_Component>(
         "Seat0/PlayerSeat",
         DicesGamePlayerSeat_Component,
       );
+    this._seats.push(this._dealerSeat);
 
     [this._playerSeat1Node, this._playerSeat1] =
       this.addNodeComponent<DicesGamePlayerSeat_Component>(
         "Seat1/PlayerSeat",
         DicesGamePlayerSeat_Component,
       );
+    this._seats.push(this._playerSeat1);
 
     [this._playerSeat2Node, this._playerSeat2] =
       this.addNodeComponent<DicesGamePlayerSeat_Component>(
         "Seat2/PlayerSeat",
         DicesGamePlayerSeat_Component,
       );
+    this._seats.push(this._playerSeat2);
 
     [this._playerSeat3Node, this._playerSeat3] =
       this.addNodeComponent<DicesGamePlayerSeat_Component>(
         "Seat3/PlayerSeat",
         DicesGamePlayerSeat_Component,
       );
+    this._seats.push(this._playerSeat3);
 
     [this._playerSeat4Node, this._playerSeat4] =
       this.addNodeComponent<DicesGamePlayerSeat_Component>(
         "Seat4/PlayerSeat",
         DicesGamePlayerSeat_Component,
       );
+    this._seats.push(this._playerSeat4);
 
     [this._playerSeat5Node, this._playerSeat5] =
       this.addNodeComponent<DicesGamePlayerSeat_Component>(
         "Seat5/PlayerSeat",
         DicesGamePlayerSeat_Component,
       );
+    this._seats.push(this._playerSeat5);
 
     [this._playerSeat6Node, this._playerSeat6] =
       this.addNodeComponent<DicesGamePlayerSeat_Component>(
         "Seat6/PlayerSeat",
         DicesGamePlayerSeat_Component,
       );
+    this._seats.push(this._playerSeat6);
 
     [this._playerSeat7Node, this._playerSeat7] =
       this.addNodeComponent<DicesGamePlayerSeat_Component>(
         "Seat7/PlayerSeat",
         DicesGamePlayerSeat_Component,
       );
+    this._seats.push(this._playerSeat7);
 
     [this._playerSeat8Node, this._playerSeat8] =
       this.addNodeComponent<DicesGamePlayerSeat_Component>(
         "Seat8/PlayerSeat",
         DicesGamePlayerSeat_Component,
       );
+    this._seats.push(this._playerSeat8);
 
     this._morePlayersNode = this.getNode("MorePlayers");
-  }
-
-  /**
-   * 设置座位数据
-   * @param data
-   */
-  public setData(data: any[]) {
-    this._seatsData = data;
-    this._morePlayersNode.active = data.length > 9;
   }
 
   /**
@@ -165,5 +175,65 @@ export class DicesGamePlayerSeatsContainer_Component extends ComponentController
     }
 
     return targetNode.getWorldPosition();
+  }
+
+  /**
+   * 更新座位UI
+   * @param data
+   */
+  public updatePlayerSeatsUI(
+    data: Record<string, Gateway.Returned.Games.DicesGame.GameSeatData>,
+  ) {
+    this._seatsData = data;
+
+    const player = GlobalData.Instance.getCurrentPlayerInfo();
+
+    // 获取庄家座位数据
+    const dealerSeatData = data["0"];
+
+    // 整理座位数据
+    const seatsData = Object.values(data);
+    seatsData.shift(); // 移除庄家座位数据
+
+    // 根据玩家排序，不含庄家座位
+    const seatsDataSorted = _.sortBy(seatsData, (seat) => seat.player);
+
+    // 尝试找出本玩家的座位索引
+    const index = seatsDataSorted.findIndex(
+      (seat) => seat.player?.player_id === player.id,
+    );
+    // 如果找到了本玩家的座位索引，则将其移动到第一个位置
+    if (index !== -1) {
+      const playerSeatData = seatsDataSorted.splice(index, 1);
+      seatsDataSorted.unshift(playerSeatData[0]);
+    }
+
+    // 取前八个非庄家座位
+    const seatsDataToRender = seatsDataSorted.slice(0, 8);
+    // 加入庄家座位数据
+    seatsDataToRender.unshift(dealerSeatData);
+
+    // 渲染座位UI
+    this._seats.forEach((seat, index) => {
+      seat.setData(seatsDataToRender[index]);
+    });
+
+    console.log(`updatePlayerSeatsUI seatsDataToRender--->`, seatsDataToRender);
+
+    // 计算玩家人数
+    const playernum = seatsDataSorted.reduce((acc, seat) => {
+      return seat.status !== DICES_GAME_SEAT_STATUS.EMPTY ? acc + 1 : acc;
+    }, 0);
+
+    this._morePlayersNode.active = playernum > 8;
+  }
+
+  /**
+   * 更新玩家座位
+   * @param seat
+   */
+  public updatePlayerSeat(seat: Gateway.Returned.Games.DicesGame.GameSeatData) {
+    this._seatsData[seat.seat_code] = seat;
+    this.updatePlayerSeatsUI(this._seatsData);
   }
 }

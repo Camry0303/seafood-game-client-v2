@@ -62,6 +62,8 @@ export enum WAITING_TYPE {
   LEAVE_ROOM = "正在离开房间",
   DISSOLVE_ROOM = "正在解散房间",
 
+  GET_GAME_STATUS = "正在获取游戏状态",
+
   GAME_RECONNECT = "正在重连游戏",
 }
 

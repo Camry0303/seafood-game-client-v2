@@ -1,5 +1,6 @@
 import {
   CLUB_PLAYER_ROLE,
+  DICES_GAMING_STATUS,
   GAME_ROOM_STATUS,
   IN_GAME_TYPE,
 } from "db://assets/Scripts/Enums";
@@ -159,17 +160,13 @@ export interface GamePlayerData {
    */
   avatar: string;
   /**
-   * 俱乐部分数
+   * 当前分数
    */
-  club_score: number;
-  /**
-   * 每日分数
-   */
-  daily_score: number;
+  score: number;
   /**
    * 角色
    */
-  role: CLUB_PLAYER_ROLE;
+  role: CLUB_PLAYER_ROLE | null;
   /**
    * 备注
    */
@@ -271,9 +268,17 @@ export interface GamingStatusgData {
    */
   current_round: number;
   /**
-   * 游戏状态
+   * 庄家id
+   */
+  dealer_id: number | null;
+  /**
+   * 房间状态
    */
   status: GAME_ROOM_STATUS;
+  /**
+   * 游戏状态
+   */
+  gaming_status: DICES_GAMING_STATUS;
   /**
    * 剩余时间
    */

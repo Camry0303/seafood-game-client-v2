@@ -20,6 +20,7 @@ import moment from "moment";
 import { ResourceManager } from "../../../Runtime/ResourceManager";
 import { DicesGameChip_Component } from "./DicesGameChip_Component";
 import { DicesGameResults_Component } from "./DicesGameResults_Component";
+import { DICES_GAMING_STATUS } from "../../../Enums";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameGameTable_Component")
@@ -84,6 +85,7 @@ export class DicesGameGameTable_Component extends ComponentController {
   private _clockStatus: "Preparation" | "Order" | "Open" = "Preparation";
 
   //#endregion
+
   start() {}
 
   update(deltaTime: number) {}
@@ -579,18 +581,25 @@ export class DicesGameGameTable_Component extends ComponentController {
   }
 
   /**
-   * 设置计时器面板
+   * 更新计时器UI
    * @param status
    * @param remainingTime
    */
-  public setTimeCounter(
-    status: "preparation" | "ordering" | "open",
+  public updateTimeCounterUI(
+    status: DICES_GAMING_STATUS,
     remainingTime: number,
   ) {
+    if (status === DICES_GAMING_STATUS.NONE) {
+      this._timeCounterPanelNode.active = false;
+      // 取消计时器标签调度所有已调度的回调函数
+      this._clockLabel.unscheduleAllCallbacks();
+      return;
+    }
+
     this._timeCounterPanelNode.active = true;
-    this._preparationNode.active = status === "preparation";
-    this._orderingNode.active = status === "ordering";
-    this._openNode.active = status === "open";
+    this._preparationNode.active = status === DICES_GAMING_STATUS.PREPARATION;
+    this._orderingNode.active = status === DICES_GAMING_STATUS.ORDERING;
+    this._openNode.active = status === DICES_GAMING_STATUS.OPEN;
 
     this._remainingTime = remainingTime;
     // 取消计时器标签调度所有已调度的回调函数
@@ -612,5 +621,6 @@ export class DicesGameGameTable_Component extends ComponentController {
       0,
     );
   }
+
   //#endregion
 }

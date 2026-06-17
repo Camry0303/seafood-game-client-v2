@@ -1,6 +1,8 @@
 import { _decorator, Label, Node, Sprite } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import { getAvatarSpriteFrame } from "../../../Utils/RemoteSpriteFrameLoader";
+import { Gateway } from "../../../Types/typing";
+import { DICES_GAME_SEAT_STATUS } from "../../../Enums/Events/DicesGame";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGamePlayerSeat_Component")
@@ -13,10 +15,10 @@ export class DicesGamePlayerSeat_Component extends ComponentController {
   // 分数标签
   private _scoreLabel: Label = null;
   // 庄家标记
-  private _bankerTagNode: Node = null;
+  private _dealerTagNode: Node = null;
 
   // 座位数据
-  private _seatData: any = null;
+  private _seatData: Gateway.Returned.Games.DicesGame.GameSeatData = null;
 
   start() {}
 
@@ -36,30 +38,48 @@ export class DicesGamePlayerSeat_Component extends ComponentController {
     // 获取分数标签
     [, this._scoreLabel] = this.getNodeComponent("Score", Label);
     // 获取庄家标记
-    this._bankerTagNode = this.getNode("IsBanker");
+    this._dealerTagNode = this.getNode("IsDealer");
   }
 
   /**
    * 设置数据
-   * @param seatData
+   * @param data
    */
-  public async setData(seatData: any) {
-    if (seatData === null) {
+  public async setData(data: Gateway.Returned.Games.DicesGame.GameSeatData) {
+    this.node.active = true;
+
+    if (data === null) {
       this._seatData = null;
       this.node.active = false;
       return;
-    } else {
-      this._nicknameLabel.string = this._seatData?.player.nickname;
-      this._scoreLabel.string = `${this._seatData?.player.score}`;
-      // 是否庄家
-      this._bankerTagNode.active = this._seatData?.isBanker;
-      // 渲染头像
-      this._avatarSprite.spriteFrame = await getAvatarSpriteFrame(
-        this._seatData?.player.avatar,
-      );
+    } else if (data.status !== DICES_GAME_SEAT_STATUS.EMPTY) {
       this.node.active = true;
-      this._seatData = seatData;
+      this._nicknameLabel.string = data.player.nickname;
+      this._scoreLabel.string = `${data?.player.score}`;
+      // 是否庄家
+      this._dealerTagNode.active = data.is_dealer;
+      // 渲染头像
+      data.player.avatar !== this._seatData?.player?.avatar &&
+        (this._avatarSprite.spriteFrame = await getAvatarSpriteFrame(
+          data.player.avatar,
+        ));
+      return;
+    } else if (data.status === DICES_GAME_SEAT_STATUS.EMPTY && data.is_dealer) {
+      this._dealerTagNode.active = true;
+      this.node.active = true;
+    } else {
+      this._dealerTagNode.active = false;
+      this.node.active = false;
     }
+    // 清除昵称
+    this._nicknameLabel.string = "";
+    // 清除分数
+    this._scoreLabel.string = "";
+    // 清除渲染头像
+    this._avatarSprite.spriteFrame = null;
+
+    // 赋值
+    this._seatData = data;
   }
 
   /**
@@ -74,8 +94,8 @@ export class DicesGamePlayerSeat_Component extends ComponentController {
    * 更新分数
    * @param seatData
    */
-  public updataScore(seatData: any) {
-    this._scoreLabel.string = `${seatData?.player.score}`;
-    this._seatData = seatData;
+  public updataScore(data: Gateway.Returned.Games.DicesGame.GameSeatData) {
+    this._scoreLabel.string = `${data?.player.score}`;
+    this._seatData = data;
   }
 }

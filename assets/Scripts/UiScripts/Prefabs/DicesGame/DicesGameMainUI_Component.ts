@@ -5,6 +5,9 @@ import { DicesGameBottomStatusBar_Component } from "./DicesGameBottomStatusBar_C
 import { DicesGameGameTable_Component } from "./DicesGameGameTable_Component";
 import { DicesGamePlayerSeatsContainer_Component } from "./DicesGamePlayerSeatsContainer_Component";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
+import DicesGameEvents from "../../../Network/SocketIo/DicesGameEvents";
+import { Gateway } from "../../../Types/typing";
+import { DICES_GAMING_STATUS, GAME_ROOM_STATUS } from "../../../Enums";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameMainUI_Component")
@@ -31,7 +34,10 @@ export class DicesGameMainUI_Component extends ComponentController {
     null;
   //#endregion
 
-  start() {}
+  start() {
+    // 获取游戏状态
+    DicesGameEvents.getClubGamingStatus();
+  }
 
   update(deltaTime: number) {}
 
@@ -106,5 +112,31 @@ export class DicesGameMainUI_Component extends ComponentController {
    */
   public getPlayerSeatsComponent(): DicesGamePlayerSeatsContainer_Component {
     return this._playerSeatsComponents;
+  }
+
+  /**
+   * 更新游戏状态
+   * @param data
+   */
+  public updateGameStatus(
+    data: Gateway.Returned.Games.DicesGame.GamingStatusgData,
+  ) {
+    // 更新顶部状态栏UI
+    this._topStatusBarComponent.updateTopStatusBarUI(data.current_round);
+
+    // 更新底部状态栏玩家信息UI
+    this._bottomStatusBarComponent.updatePlayerUI(data.dealer_id);
+
+    // 更新桌面区域UI计时器UI
+    this._gameTableComponent.updateTimeCounterUI(
+      data.status === GAME_ROOM_STATUS.WAITING ||
+        data.status === GAME_ROOM_STATUS.DISMISS
+        ? DICES_GAMING_STATUS.NONE
+        : data.gaming_status,
+      data.remaining_time,
+    );
+
+    // 更新玩家座位UI
+    this._playerSeatsComponents.updatePlayerSeatsUI(data.seats);
   }
 }

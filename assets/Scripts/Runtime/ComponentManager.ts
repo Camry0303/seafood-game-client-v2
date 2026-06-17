@@ -11,14 +11,6 @@ import {
 import { SingletonComponent } from "../Common/SingletonComponent";
 import { ResourceManager } from "./ResourceManager";
 import { ComponentController } from "../Common/ComponentController";
-import { BubbleMessageUI_Component } from "../UiScripts/Prefabs/Common/BubbleMessageUI_Component";
-import { CircleLoadingUI_Component } from "../UiScripts/Prefabs/Common/CircleLoadingUI_Component";
-import { DialogMessageUI_Component } from "../UiScripts/Prefabs/Dialog/DialogMessageUI_Component";
-import { UI } from "../Types/typing";
-import { DialogMsgCallbackUI_Component } from "../UiScripts/Prefabs/Dialog/DialogMsgCallbackUI_Component";
-import { DialogInputUI_Component } from "../UiScripts/Prefabs/Dialog/DialogInputUI_Component";
-import { DialogConfirmSmallUI_Component } from "../UiScripts/Prefabs/Dialog/DialogConfirmSmallUI_Component";
-import { DialogMiniKeyboardUI_Component } from "../UiScripts/Prefabs/Dialog/DialogMiniKeyboardUI_Component";
 import _ from "lodash";
 import ClassNameGetter from "../Utils/ClassNameGetter";
 const { ccclass, property } = _decorator;

@@ -159,6 +159,16 @@ export enum GAME_ROOM_STATUS {
 }
 
 /**
+ * 骰子游戏状态
+ */
+export enum DICES_GAMING_STATUS {
+  NONE = 0,
+  PREPARATION = 1,
+  ORDERING = 2,
+  OPEN = 3,
+}
+
+/**
  * 正在游戏类型枚举
  */
 export enum IN_GAME_TYPE {

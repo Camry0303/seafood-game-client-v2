@@ -31,6 +31,10 @@ export default class DicesGameEvents {
       this.onJoinClubDicesGameRoomResult,
     ],
     [
+      CLUB_DICES_GAME_EVENT.PLAYER_JOINED_ROOM_RESULT,
+      this.onPlayerJoinedClubDicesGameRoomResult,
+    ],
+    [
       CLUB_DICES_GAME_EVENT.SPECTATE_ROOM_RESULT,
       this.onSpectateClubDicesGameRoomResult,
     ],
@@ -39,12 +43,20 @@ export default class DicesGameEvents {
       this.onLeaveClubDicesGameRoomResult,
     ],
     [
+      CLUB_DICES_GAME_EVENT.PLAYER_LEFT_ROOM_RESULT,
+      this.onPlayerLeftClubDicesGameRoomResult,
+    ],
+    [
       CLUB_DICES_GAME_EVENT.ADMIN_DISSOLVE_ROOM_RESULT,
       this.onAdminDissolveClubDicesGameRoomResult,
     ],
     [
       CLUB_DICES_GAME_EVENT.ROOM_DISSOLVED_RESULT,
       this.onClubDicesGameRoomDissolvedResult,
+    ],
+    [
+      CLUB_DICES_GAME_EVENT.GET_GAMING_STATUS_RESULT,
+      this.onGetClubGamingStatusResult,
     ],
   ]);
 
@@ -143,11 +155,11 @@ export default class DicesGameEvents {
   ) {
     const socket = SocketManager.Instance.SocketInstance;
     if (socket) {
-      CommonDailogHandler.showCircleLoading(WAITING_TYPE.CREATE_ROOM);
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.JOIN_ROOM);
       socket.emit(CLUB_DICES_GAME_EVENT.JOIN_ROOM, params);
     } else {
       CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
-      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.CREATE_ROOM);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.JOIN_ROOM);
     }
   }
 
@@ -185,6 +197,27 @@ export default class DicesGameEvents {
       CommonDailogHandler.showBubbleMessage(`${msg}`);
     }
     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.JOIN_ROOM);
+  }
+
+  /**
+   * 处理玩家加入俱乐部骰子游戏房间结果
+   * @param returnData
+   */
+  private static onPlayerJoinedClubDicesGameRoomResult(
+    returnData: Gateway.Returned.Common.Result<Gateway.Returned.Games.DicesGame.GameSeatData>,
+  ) {
+    console.log(
+      "<DicesGameEvent> onPlayerJoinedClubDicesGameRoomResult called --->",
+      returnData,
+    );
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      const [node, component] = ComponentManager.Instance.getNodeComponent(
+        "DicesGameMainUI",
+        DicesGameMainUI_Component,
+      );
+      component && component.getPlayerSeatsComponent()?.updatePlayerSeat(data);
+    }
   }
   //#endregion
 
@@ -265,7 +298,10 @@ export default class DicesGameEvents {
   private static onLeaveClubDicesGameRoomResult(
     returnData: Gateway.Returned.Common.Result<boolean>,
   ) {
-    console.log("<DicesGameEvent> onLeaveClubDicesGameRoomResult called --->");
+    console.log(
+      "<DicesGameEvent> onLeaveClubDicesGameRoomResult called --->",
+      returnData,
+    );
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       // 关闭游戏界面
@@ -279,6 +315,27 @@ export default class DicesGameEvents {
       CommonDailogHandler.showBubbleMessage(`${msg}`);
     }
     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.LEAVE_ROOM);
+  }
+
+  /**
+   * 处理玩家离开俱乐部骰子游戏房间结果
+   * @param returnData
+   */
+  private static onPlayerLeftClubDicesGameRoomResult(
+    returnData: Gateway.Returned.Common.Result<Gateway.Returned.Games.DicesGame.GameSeatData>,
+  ) {
+    console.log(
+      "<DicesGameEvent> onPlayerLeftClubDicesGameRoomResult called --->",
+      returnData,
+    );
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      const [node, component] = ComponentManager.Instance.getNodeComponent(
+        "DicesGameMainUI",
+        DicesGameMainUI_Component,
+      );
+      component && component.getPlayerSeatsComponent()?.updatePlayerSeat(data);
+    }
   }
   //#endregion
 
@@ -306,6 +363,7 @@ export default class DicesGameEvents {
   ) {
     console.log(
       "<DicesGameEvent> onAdminDissolveClubDicesGameRoomResult called --->",
+      returnData,
     );
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
@@ -329,6 +387,7 @@ export default class DicesGameEvents {
   ) {
     console.log(
       "<DicesGameEvent> onClubDicesGameRoomDissolvedResult called --->",
+      returnData,
     );
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
@@ -337,6 +396,54 @@ export default class DicesGameEvents {
         room.game_room_data.status = GAME_ROOM_STATUS.DISMISS;
       }
     }
+  }
+  //#endregion
+
+  //#region 俱乐部游戏房间状态
+  /**
+   * 获取俱乐部游戏房间状态
+   */
+  public static getClubGamingStatus() {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.GET_GAME_STATUS);
+      socket.emit(CLUB_DICES_GAME_EVENT.GET_GAMING_STATUS);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.GET_GAME_STATUS);
+    }
+  }
+
+  /**
+   * 处理获取俱乐部游戏房间状态结果
+   * @param returnData
+   */
+  private static onGetClubGamingStatusResult(
+    returnData: Gateway.Returned.Common.Result<Gateway.Returned.Games.DicesGame.GamingStatusgData>,
+  ) {
+    console.log(
+      "<DicesGameEvent> onGetClubGamingStatusResult called --->",
+      returnData,
+    );
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      const room = GlobalData.Instance.getCurrentGameInfo();
+      if (room) {
+        room.game_room_data.status = data.status;
+      }
+
+      // 更新游戏状态
+      const [node, component] = ComponentManager.Instance.getNodeComponent(
+        "DicesGameMainUI",
+        DicesGameMainUI_Component,
+      );
+
+      component.updateGameStatus(data);
+    } else {
+      // 弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.GET_GAME_STATUS);
   }
   //#endregion
 }
