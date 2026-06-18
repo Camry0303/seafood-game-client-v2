@@ -62,3 +62,13 @@ export type SpectateClubDicesGameRoomParams = {
    */
   room_id: number;
 };
+
+/**
+ * 设置庄家参数
+ */
+export type SetDealerParams = {
+  /**
+   * 玩家ID
+   */
+  player_id: number;
+};

@@ -8,6 +8,7 @@ import { ComponentManager } from "../../../Runtime/ComponentManager";
 import DicesGameEvents from "../../../Network/SocketIo/DicesGameEvents";
 import { Gateway } from "../../../Types/typing";
 import { DICES_GAMING_STATUS, GAME_ROOM_STATUS } from "../../../Enums";
+import { DicesGameStatusContainer_Component } from "./DicesGameStatusContainer_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameMainUI_Component")
@@ -31,6 +32,12 @@ export class DicesGameMainUI_Component extends ComponentController {
   //#region 玩家座位区域属性
   private _playerSeats: Node = null;
   private _playerSeatsComponents: DicesGamePlayerSeatsContainer_Component =
+    null;
+  //#endregion
+
+  //#region 游戏状态面板相关属性
+  private _gameStatusContainer: Node = null;
+  private _gameStatusContainerComponent: DicesGameStatusContainer_Component =
     null;
   //#endregion
 
@@ -71,6 +78,13 @@ export class DicesGameMainUI_Component extends ComponentController {
     // 添加玩家座位组件
     this._playerSeatsComponents = this._playerSeats.addComponent(
       DicesGamePlayerSeatsContainer_Component,
+    );
+
+    // 获取游戏状态面板节点
+    this._gameStatusContainer = this.getNode("StatusContainer");
+    // 添加游戏状态面板组件
+    this._gameStatusContainerComponent = this._gameStatusContainer.addComponent(
+      DicesGameStatusContainer_Component,
     );
   }
 
@@ -115,12 +129,22 @@ export class DicesGameMainUI_Component extends ComponentController {
   }
 
   /**
+   * 获取游戏状态面板组件
+   * @returns
+   */
+  public getGameStatusContainerComponent(): DicesGameStatusContainer_Component {
+    return this._gameStatusContainerComponent;
+  }
+
+  /**
    * 更新游戏状态
    * @param data
    */
   public updateGameStatus(
     data: Gateway.Returned.Games.DicesGame.GamingStatusgData,
   ) {
+    console.log(`updateGameStatus--->`, data);
+
     // 更新顶部状态栏UI
     this._topStatusBarComponent.updateTopStatusBarUI(data.current_round);
 

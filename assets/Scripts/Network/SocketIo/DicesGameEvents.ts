@@ -58,6 +58,8 @@ export default class DicesGameEvents {
       CLUB_DICES_GAME_EVENT.GET_GAMING_STATUS_RESULT,
       this.onGetClubGamingStatusResult,
     ],
+    [CLUB_DICES_GAME_EVENT.SET_DEALER_RESULT, this.onSetDealerResult],
+    [CLUB_DICES_GAME_EVENT.DEALER_SETTED_RESULT, this.onDealerSettedResult],
   ]);
 
   /**
@@ -444,6 +446,58 @@ export default class DicesGameEvents {
       CommonDailogHandler.showBubbleMessage(`${msg}`);
     }
     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.GET_GAME_STATUS);
+  }
+  //#endregion
+
+  //#region 俱乐部上庄相关
+  /**
+   * 设置俱乐部上庄
+   * @param params
+   */
+  public static setClubGameDealer(
+    params: Gateway.Requested.Games.DicesGame.SetDealerParams,
+  ) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.SET_DEALER);
+      socket.emit(CLUB_DICES_GAME_EVENT.SET_DEALER, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.SET_DEALER);
+    }
+  }
+
+  /**
+   * 处理设置俱乐部上庄结果
+   * @param returnData
+   */
+  private static onSetDealerResult(
+    returnData: Gateway.Returned.Common.Result<boolean>,
+  ) {
+    console.log("<DicesGameEvent> onSetDealerResult called --->", returnData);
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+    } else {
+      // 弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.SET_DEALER);
+  }
+
+  /**
+   * 俱乐部上庄完成通知结果
+   * @param returnData
+   */
+  private static onDealerSettedResult(
+    returnData: Gateway.Returned.Common.Result<Gateway.Returned.Games.DicesGame.GameSeatData>,
+  ) {
+    console.log(
+      "<DicesGameEvent> onDealerSettedResult called --->",
+      returnData,
+    );
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+    }
   }
   //#endregion
 }
