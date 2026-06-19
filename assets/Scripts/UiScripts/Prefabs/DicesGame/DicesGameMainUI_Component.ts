@@ -162,5 +162,8 @@ export class DicesGameMainUI_Component extends ComponentController {
 
     // 更新玩家座位UI
     this._playerSeatsComponents.updatePlayerSeatsUI(data.seats);
+
+    // 更新游戏状态面板UI
+    this._gameStatusContainerComponent.updateRoomStatusUI(data);
   }
 }

@@ -300,6 +300,7 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
     // this._mainComponent
     //   .getGameTableComponent()
     //   .setTimeCounter("ordering", 30);
+
     // // FIXME: 暂时使用 测试下单动画
     // setTimeout(async () => {
     //   const times = 20;
@@ -320,10 +321,16 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
 
     // // FIXME: 暂时使用 测试摇骰盅动画
     // this._mainComponent.getGameTableComponent().playShakeDiceCupAnimation();
-    // FIXME: 暂时使用 测试打开骰盅
+
+    // // FIXME: 暂时使用 测试打开骰盅
+    // this._mainComponent
+    //   .getGameTableComponent()
+    //   .playerOpenDiceCupAnimation([2, 4]);
+
+    // FIXME: 暂时使用 测试游戏状态动画
     this._mainComponent
-      .getGameTableComponent()
-      .playerOpenDiceCupAnimation([2, 4]);
+      .getGameStatusContainerComponent()
+      .updateGamingStatusUI("START_ORDER");
   }
 
   /**
