@@ -29,6 +29,9 @@ export enum CLUB_DICES_GAME_EVENT {
   SET_DEALER = "ClubDicesGame.SetDealer",
   SET_DEALER_RESULT = "ClubDicesGame.SetDealer.Result",
   DEALER_SETTED_RESULT = "ClubDicesGame.DealerSetted.Result",
+
+  START_GAME = "ClubDicesGame.StartGame",
+  START_GAME_RESULT = "ClubDicesGame.StartGame.Result",
 }
 
 /**

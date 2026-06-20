@@ -120,6 +120,7 @@ export class DicesGameStatusContainer_Component extends ComponentController {
    */
   private onStartGameBtnClick(event: Event) {
     console.log("onStartGameBtnClick");
+    DicesGameEvents.startClubGame();
   }
 
   /**
@@ -131,8 +132,7 @@ export class DicesGameStatusContainer_Component extends ComponentController {
   ) {
     // 获取当前玩家角色
     const role: CLUB_PLAYER_ROLE =
-      GlobalData.Instance.getCurrentClubPlayerInfo()?.role ||
-      CLUB_PLAYER_ROLE.MEMBER;
+      GlobalData.Instance.getCurrentClubPlayerInfo()?.role;
 
     // 判断游戏是否已经开始
     if (data.status === GAME_ROOM_STATUS.WAITING) {

@@ -296,10 +296,10 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
    */
   private onTestBtnClick(event: Event) {
     console.log(`onTestBtnClick--->`);
-    // // FIXME: 暂时使用 测试倒计时
-    // this._mainComponent
-    //   .getGameTableComponent()
-    //   .setTimeCounter("ordering", 30);
+    // FIXME: 暂时使用 测试倒计时
+    this._mainComponent
+      .getGameTableComponent()
+      .updateTimeCounterUI(DICES_GAMING_STATUS.PREPARATION, 3);
 
     // // FIXME: 暂时使用 测试下单动画
     // setTimeout(async () => {
@@ -327,10 +327,10 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
     //   .getGameTableComponent()
     //   .playerOpenDiceCupAnimation([2, 4]);
 
-    // FIXME: 暂时使用 测试游戏状态动画
-    this._mainComponent
-      .getGameStatusContainerComponent()
-      .updateGamingStatusUI("START_ORDER");
+    // // FIXME: 暂时使用 测试游戏状态动画
+    // this._mainComponent
+    //   .getGameStatusContainerComponent()
+    //   .updateGamingStatusUI("START_ORDER");
   }
 
   /**

@@ -60,6 +60,7 @@ export default class DicesGameEvents {
     ],
     [CLUB_DICES_GAME_EVENT.SET_DEALER_RESULT, this.onSetDealerResult],
     [CLUB_DICES_GAME_EVENT.DEALER_SETTED_RESULT, this.onDealerSettedResult],
+    [CLUB_DICES_GAME_EVENT.START_GAME_RESULT, this.onStartGameResult],
   ]);
 
   /**
@@ -498,6 +499,39 @@ export default class DicesGameEvents {
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
     }
+  }
+  //#endregion
+
+  //#region 开始俱乐部游戏
+  /**
+   * 开始俱乐部游戏
+   */
+  public static startClubGame() {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.START_GAME);
+      socket.emit(CLUB_DICES_GAME_EVENT.START_GAME);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.START_GAME);
+    }
+  }
+
+  /**
+   * 处理开始俱乐部游戏结果
+   * @param returnData
+   */
+  public static onStartGameResult(
+    returnData: Gateway.Returned.Common.Result<boolean>,
+  ) {
+    console.log("<DicesGameEvent> onStartGameResult called --->", returnData);
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+    } else {
+      // 弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.START_GAME);
   }
   //#endregion
 }
