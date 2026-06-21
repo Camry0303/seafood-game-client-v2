@@ -39,6 +39,11 @@ export type DicesGameConfig = {
    * 移动次数限制
    */
   move_limit: number;
+
+  // /**
+  //  * 骰子皮肤
+  //  */
+  // dice_skin: number;
 };
 
 /**
