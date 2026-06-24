@@ -183,3 +183,10 @@ export enum IN_GAME_TYPE {
 export enum GAME_TYPE {
   DICES_GAME = "dices_game",
 }
+
+/**
+ * 骰子皮肤
+ */
+export enum DICE_SKIN {
+  "虎狮骰" = 0,
+}

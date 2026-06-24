@@ -6,6 +6,7 @@ import CommonDailogHandler from "../Utils/CommonDailogHandler";
 import { WAITING_TYPE } from "../UiScripts/Prefabs/Common/CircleLoadingUI_Component";
 import { ComponentManager } from "./ComponentManager";
 import { PlazaMainUI_Component } from "../UiScripts/Prefabs/Plaza/PlazaMainUI_Component";
+import { DICE_SKIN } from "../Enums";
 
 /**
  * 全局数据存储
@@ -309,6 +310,7 @@ export class GlobalData extends Singleton {
    */
   private _defaultDicesConfig: Gateway.Returned.Games.DicesGame.DicesGameConfig =
     {
+      dice_skin: DICE_SKIN.虎狮骰,
       dice_num: 2,
       score_mode: 1,
       total_game_rounds: 5,
@@ -345,6 +347,7 @@ export class GlobalData extends Singleton {
    */
   private _defaultClubDicesConfig: Gateway.Returned.Games.DicesGame.DicesGameConfig =
     {
+      dice_skin: DICE_SKIN.虎狮骰,
       dice_num: 2,
       score_mode: 1,
       total_game_rounds: 5,
