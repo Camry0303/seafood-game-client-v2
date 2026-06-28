@@ -32,6 +32,12 @@ export enum CLUB_DICES_GAME_EVENT {
 
   START_GAME = "ClubDicesGame.StartGame",
   START_GAME_RESULT = "ClubDicesGame.StartGame.Result",
+
+  GAME_STARTED_RESULT = "ClubDicesGame.GameStarted.Result",
+  START_ORDER_RESULT = "ClubDicesGame.StartOrder.Result",
+  STOP_ORDER_RESULT = "ClubDicesGame.StopOrder.Result",
+  SETTLEMENT_RESULT = "ClubDicesGame.Settlement.Result",
+  FINAL_SETTLEMENT_RESULT = "ClubDicesGame.FinalSettlement.Result",
 }
 
 /**

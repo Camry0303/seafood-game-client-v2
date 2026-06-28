@@ -218,57 +218,57 @@ export interface GameSeatData {
   available: boolean;
 }
 
+/**
+ * 订单数据
+ */
+export interface OrderData {
   /**
-   * 订单数据
+   * 座位编号
    */
-  export interface OrderData {
-    /**
-     * 座位编号
-     */
-    seat_code: string;
-    /**
-     * 玩家id
-     */
-    player_id: number;
-    /**
-     * 下单类型
-     */
-    order_type: number;
-    /**
-     * 下单分数
-     */
-    order_score: number;
-    /**
-     * 下单结果
-     */
-    order_results: string;
-  }
+  seat_code: string;
+  /**
+   * 玩家id
+   */
+  player_id: number;
+  /**
+   * 下单类型
+   */
+  order_type: number;
+  /**
+   * 下单分数
+   */
+  order_score: number;
+  /**
+   * 下单结果
+   */
+  order_results: string;
+}
 
+/**
+ * 下单返回数据
+ */
+export interface CreatedOrderResultData extends OrderData {
   /**
-   * 下单返回数据
+   * 当前可用分数
    */
-  export interface CreatedOrderResultData extends OrderData {
-    /**
-     * 当前可用分数
-     */
-    current_available_score: number;
-    /**
-     * 当前单压分数统计
-     */
-    current_single_order_stats: number[];
-    /**
-     * 当前连串下单分数统计
-     */
-    current_combo_order_stats: { [key: string]: number };
-    /**
-     * 当前豹子下单分数统计
-     */
-    current_leopard_order_stats: number[];
-    /**
-     * 当前挪单统计
-     */
-    current_move_order_stats: number;
-  }
+  current_available_score: number;
+  /**
+   * 当前单压分数统计
+   */
+  current_single_order_stats: number[];
+  /**
+   * 当前连串下单分数统计
+   */
+  current_combo_order_stats: { [key: string]: number };
+  /**
+   * 当前豹子下单分数统计
+   */
+  current_leopard_order_stats: number[];
+  /**
+   * 当前挪单统计
+   */
+  current_move_order_stats: number;
+}
 
 /**
  * 游戏状态数据 // TODO: 添加其他状态数据
@@ -330,4 +330,88 @@ export interface GamingStatusgData {
    * 座位列表
    */
   seats: Record<string, GameSeatData>;
+}
+
+/**
+ * 游戏房间内玩家结算信息返回封装数据
+ */
+export interface PlayerSettlementData {
+  /**
+   * 座位编号
+   */
+  seat_code: string;
+  /**
+   * 玩家id
+   */
+  player_id: number;
+  /**
+   * 昵称
+   */
+  nickname: string;
+  /**
+   * 头像
+   */
+  avatar: string;
+  /**
+   * 当前分数
+   */
+  score: number;
+  /**
+   * 结算分数
+   */
+  settlement_score: number;
+}
+
+/**
+ * 游戏房间内玩家最终结算信息返回封装数据
+ */
+export interface PlayerFinalSettlementData {
+  /**
+   * 座位编号
+   */
+  seat_code: string;
+  /**
+   * 玩家id
+   */
+  player_id: number;
+  /**
+   * 昵称
+   */
+  nickname: string;
+  /**
+   * 头像
+   */
+  avatar: string;
+  /**
+   * 是否庄家
+   */
+  is_dealer: boolean;
+  /**
+   * 是否大赢家
+   */
+  is_big_winner: boolean;
+  /**
+   * 是否土豪
+   */
+  is_rich: boolean;
+  /**
+   * 房间号
+   */
+  room_id: number;
+  /**
+   * 人数
+   */
+  player_count: number;
+  /**
+   * 局数
+   */
+  rounds: number;
+  /**
+   * 总分
+   */
+  total_score: number;
+  /**
+   * 每局分数
+   */
+  score_list: number[];
 }

@@ -61,6 +61,15 @@ export default class DicesGameEvents {
     [CLUB_DICES_GAME_EVENT.SET_DEALER_RESULT, this.onSetDealerResult],
     [CLUB_DICES_GAME_EVENT.DEALER_SETTED_RESULT, this.onDealerSettedResult],
     [CLUB_DICES_GAME_EVENT.START_GAME_RESULT, this.onStartGameResult],
+
+    [CLUB_DICES_GAME_EVENT.GAME_STARTED_RESULT, this.onGameStartedResult],
+    [CLUB_DICES_GAME_EVENT.START_ORDER_RESULT, this.onStartOrderResult],
+    [CLUB_DICES_GAME_EVENT.STOP_ORDER_RESULT, this.onStopOrderResult],
+    [CLUB_DICES_GAME_EVENT.SETTLEMENT_RESULT, this.onSettlementResult],
+    [
+      CLUB_DICES_GAME_EVENT.FINAL_SETTLEMENT_RESULT,
+      this.onFinalSettlementResult,
+    ],
   ]);
 
   /**
@@ -521,7 +530,7 @@ export default class DicesGameEvents {
    * 处理开始俱乐部游戏结果
    * @param returnData
    */
-  public static onStartGameResult(
+  private static onStartGameResult(
     returnData: Gateway.Returned.Common.Result<boolean>,
   ) {
     console.log("<DicesGameEvent> onStartGameResult called --->", returnData);
@@ -532,6 +541,72 @@ export default class DicesGameEvents {
       CommonDailogHandler.showBubbleMessage(`${msg}`);
     }
     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.START_GAME);
+  }
+  //#endregion
+
+  //#region 俱乐部游戏房间游戏过程通知
+  /**
+   * 处理游戏开始通知结果
+   * @param returnData
+   */
+  private static onGameStartedResult(
+    returnData: Gateway.Returned.Common.Result<{
+      remaining_time: number;
+      current_round: number;
+    }>,
+  ) {
+    console.log("<DicesGameEvent> onGameStartedResult called --->", returnData);
+  }
+
+  /**
+   * 处理开始下单通知结果
+   * @param returnData
+   */
+  private static onStartOrderResult(
+    returnData: Gateway.Returned.Common.Result<{ remaining_time: number }>,
+  ) {
+    console.log("<DicesGameEvent> onStartOrderResult called --->", returnData);
+  }
+
+  /**
+   * 处理结束下单通知结果
+   * @param returnData
+   */
+  private static onStopOrderResult(
+    returnData: Gateway.Returned.Common.Result<{
+      remaining_time: number;
+      results: number[];
+    }>,
+  ) {
+    console.log("<DicesGameEvent> onStopOrderResult called --->", returnData);
+  }
+
+  /**
+   * 处理结算结果
+   * @param returnData
+   */
+  private static onSettlementResult(
+    returnData: Gateway.Returned.Common.Result<{
+      results: number[];
+      settlements: Gateway.Returned.Games.DicesGame.PlayerSettlementData[];
+    }>,
+  ) {
+    console.log("<DicesGameEvent> onSettlementResult called --->", returnData);
+  }
+
+  /**
+   * 处理最终结算结果
+   * @param returnData
+   */
+  private static onFinalSettlementResult(
+    returnData: Gateway.Returned.Common.Result<
+      Gateway.Returned.Games.DicesGame.PlayerFinalSettlementData[]
+    >,
+  ) {
+    console.log(
+      "<DicesGameEvent> onFinalSettlementResult called --->",
+      returnData,
+    );
   }
   //#endregion
 }
