@@ -72,3 +72,23 @@ export type SetDealerParams = {
    */
   player_id: number;
 };
+
+/**
+ * 下单参数
+ */
+export type CreateOrderParams = {
+  /**
+   * 订单类型 1单 2连 3豹 4挪
+   */
+  order_type: number;
+
+  /**
+   * 下单结果（逗号隔开，如：2,2）
+   */
+  order_results: string;
+
+  /**
+   * 下单分数
+   */
+  order_score: number;
+};

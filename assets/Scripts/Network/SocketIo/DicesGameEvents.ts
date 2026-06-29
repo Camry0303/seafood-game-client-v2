@@ -62,6 +62,9 @@ export default class DicesGameEvents {
     [CLUB_DICES_GAME_EVENT.DEALER_SETTED_RESULT, this.onDealerSettedResult],
     [CLUB_DICES_GAME_EVENT.START_GAME_RESULT, this.onStartGameResult],
 
+    [CLUB_DICES_GAME_EVENT.CREATE_ORDER_RESULT, this.onCreateOrderResult],
+    [CLUB_DICES_GAME_EVENT.ORDER_CREATED_RESULT, this.onOrderCreatedResult],
+
     [CLUB_DICES_GAME_EVENT.GAME_STARTED_RESULT, this.onGameStartedResult],
     [CLUB_DICES_GAME_EVENT.START_ORDER_RESULT, this.onStartOrderResult],
     [CLUB_DICES_GAME_EVENT.STOP_ORDER_RESULT, this.onStopOrderResult],
@@ -542,6 +545,64 @@ export default class DicesGameEvents {
       CommonDailogHandler.showBubbleMessage(`${msg}`);
     }
     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.START_GAME);
+  }
+  //#endregion
+
+  //#region 订单创建
+  /**
+   * 创建订单
+   * @param params
+   */
+  public static createOrder(
+    params: Gateway.Requested.Games.DicesGame.CreateOrderParams,
+  ) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.CREATE_ORDER);
+      socket.emit(CLUB_DICES_GAME_EVENT.CREATE_ORDER, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.CREATE_ORDER);
+    }
+  }
+
+  /**
+   * 处理创建订单结果
+   * @param returnData
+   */
+  private static onCreateOrderResult(
+    returnData: Gateway.Returned.Common.Result<boolean>,
+  ) {
+    console.log("<DicesGameEvent> onCreateOrderResult called --->", returnData);
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+    } else {
+      // 弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.CREATE_ORDER);
+  }
+
+  /**
+   * 处理订单被创建结果
+   * @param returnData
+   */
+  private static onOrderCreatedResult(
+    returnData: Gateway.Returned.Common.Result<Gateway.Returned.Games.DicesGame.CreatedOrderResultData>,
+  ) {
+    console.log(
+      "<DicesGameEvent> onOrderCreatedResult called --->",
+      returnData,
+    );
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      const [node, component] = ComponentManager.Instance.getNodeComponent(
+        "DicesGameMainUI",
+        DicesGameMainUI_Component,
+      );
+
+      component && component.onOrderCreated(data);
+    }
   }
   //#endregion
 

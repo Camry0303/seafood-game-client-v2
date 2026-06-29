@@ -180,6 +180,16 @@ export class DicesGameMainUI_Component extends ComponentController {
   }
 
   /**
+   * 下单成功处理
+   * @param data
+   */
+  public onOrderCreated(
+    data: Gateway.Returned.Games.DicesGame.CreatedOrderResultData,
+  ) {
+    // TODO - 下单成功处理
+  }
+
+  /**
    * 设置游戏开始
    * @param remaining_time
    * @param current_round
