@@ -161,10 +161,18 @@ export class DicesGameStatusContainer_Component extends ComponentController {
    * 更新游戏状态UI
    * @param data
    */
-  public updateGamingStatusUI(data: "START_ORDER" | "STOP_ORDER") {
-    this._gamingStatusPanelNode.active = true;
+  public updateGamingStatusUI(
+    data: "PREPARATION" | "START_ORDER" | "STOP_ORDER" | "GAME_OVER",
+  ) {
+    if (data === "PREPARATION") {
+      this._roomStatusPanelNode.active = false;
 
-    if (data === "START_ORDER") {
+      this._gamingStatusPanelNode.active = false;
+      this._startOrderMaskNode.active = false;
+      this._stopOrderMaskNode.active = false;
+      this._buttonPanelNode.active = false;
+    } else if (data === "START_ORDER") {
+      this._gamingStatusPanelNode.active = true;
       this._startOrderNode.active = true;
       this._stopOrderNode.active = false;
       const startOrderWidth =
@@ -193,7 +201,8 @@ export class DicesGameStatusContainer_Component extends ComponentController {
       }
 
       this._startOrderTween.start();
-    } else {
+    } else if (data === "STOP_ORDER") {
+      this._gamingStatusPanelNode.active = true;
       this._startOrderNode.active = false;
       this._stopOrderNode.active = true;
       if (this._stopOrderTween) {
@@ -222,6 +231,11 @@ export class DicesGameStatusContainer_Component extends ComponentController {
       }
 
       this._stopOrderTween.start();
+    } else if (data === "GAME_OVER") {
+      this._roomStatusPanelNode.active = true;
+      this._notStartNode.active = false;
+      this._waitingNode.active = false;
+      this._gameOverNode.active = true;
     }
   }
 }

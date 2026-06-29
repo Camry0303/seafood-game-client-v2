@@ -558,13 +558,15 @@ export default class DicesGameEvents {
   ) {
     console.log("<DicesGameEvent> onGameStartedResult called --->", returnData);
     const { code, data, msg } = returnData;
-    const [node, component] = ComponentManager.Instance.getNodeComponent(
-      "DicesGameMainUI",
-      DicesGameMainUI_Component,
-    );
+    if (code === RESPONE_RESULT.SUCCESS) {
+      const [node, component] = ComponentManager.Instance.getNodeComponent(
+        "DicesGameMainUI",
+        DicesGameMainUI_Component,
+      );
 
-    component &&
-      component.setGameStart(data.remaining_time, data.current_round);
+      component &&
+        component.setGameStart(data.remaining_time, data.current_round);
+    }
   }
 
   /**
@@ -577,12 +579,14 @@ export default class DicesGameEvents {
     console.log("<DicesGameEvent> onStartOrderResult called --->", returnData);
 
     const { code, data, msg } = returnData;
-    const [node, component] = ComponentManager.Instance.getNodeComponent(
-      "DicesGameMainUI",
-      DicesGameMainUI_Component,
-    );
+    if (code === RESPONE_RESULT.SUCCESS) {
+      const [node, component] = ComponentManager.Instance.getNodeComponent(
+        "DicesGameMainUI",
+        DicesGameMainUI_Component,
+      );
 
-    component && component.setStartOrder(data.remaining_time);
+      component && component.setStartOrder(data.remaining_time);
+    }
   }
 
   /**
@@ -597,11 +601,13 @@ export default class DicesGameEvents {
     console.log("<DicesGameEvent> onStopOrderResult called --->", returnData);
 
     const { code, data, msg } = returnData;
-    const [node, component] = ComponentManager.Instance.getNodeComponent(
-      "DicesGameMainUI",
-      DicesGameMainUI_Component,
-    );
-    component && component.setStopOrder(data.remaining_time);
+    if (code === RESPONE_RESULT.SUCCESS) {
+      const [node, component] = ComponentManager.Instance.getNodeComponent(
+        "DicesGameMainUI",
+        DicesGameMainUI_Component,
+      );
+      component && component.setStopOrder(data.remaining_time);
+    }
   }
 
   /**
@@ -617,11 +623,13 @@ export default class DicesGameEvents {
     console.log("<DicesGameEvent> onOpenResultsResult called --->", returnData);
 
     const { code, data, msg } = returnData;
-    const [node, component] = ComponentManager.Instance.getNodeComponent(
-      "DicesGameMainUI",
-      DicesGameMainUI_Component,
-    );
-    component && component.setOpenResults(data.remaining_time, data.results);
+    if (code === RESPONE_RESULT.SUCCESS) {
+      const [node, component] = ComponentManager.Instance.getNodeComponent(
+        "DicesGameMainUI",
+        DicesGameMainUI_Component,
+      );
+      component && component.setOpenResults(data.remaining_time, data.results);
+    }
   }
 
   /**
@@ -635,6 +643,9 @@ export default class DicesGameEvents {
     }>,
   ) {
     console.log("<DicesGameEvent> onSettlementResult called --->", returnData);
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+    }
   }
 
   /**
@@ -650,6 +661,9 @@ export default class DicesGameEvents {
       "<DicesGameEvent> onFinalSettlementResult called --->",
       returnData,
     );
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+    }
   }
   //#endregion
 }

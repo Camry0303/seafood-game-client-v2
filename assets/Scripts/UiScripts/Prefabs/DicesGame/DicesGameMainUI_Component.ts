@@ -194,6 +194,8 @@ export class DicesGameMainUI_Component extends ComponentController {
     );
     // 播放骰盅摇动动画
     this._gameTableComponent.playShakeDiceCupAnimation();
+    // 设置游戏状态
+    this._gameStatusContainerComponent.updateGamingStatusUI("PREPARATION");
   }
 
   /**
