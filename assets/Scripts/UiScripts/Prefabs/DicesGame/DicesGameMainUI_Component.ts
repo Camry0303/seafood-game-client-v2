@@ -41,9 +41,18 @@ export class DicesGameMainUI_Component extends ComponentController {
     null;
   //#endregion
 
+  // 历史结果记录
+  private _results_history_data: number[][] = [];
+
+  // 玩家下单分组汇总数据 key:seat_code-player_id
+  private _players_orders_grouped_data: Record<
+    string,
+    Gateway.Returned.Games.DicesGame.OrderData[]
+  > = {};
+
   start() {
-    // 获取游戏状态
-    DicesGameEvents.getClubGamingStatus();
+    //FIXME - // 获取游戏状态
+    // DicesGameEvents.getClubGamingStatus();
   }
 
   update(deltaTime: number) {}
@@ -144,6 +153,9 @@ export class DicesGameMainUI_Component extends ComponentController {
     data: Gateway.Returned.Games.DicesGame.GamingStatusgData,
   ) {
     console.log(`updateGameStatus--->`, data);
+    // 更新数据
+    this._results_history_data = data.results_history;
+    this._players_orders_grouped_data = data.players_orders_grouped;
 
     // 更新顶部状态栏UI
     this._topStatusBarComponent.updateTopStatusBarUI(data.current_round);
@@ -165,5 +177,59 @@ export class DicesGameMainUI_Component extends ComponentController {
 
     // 更新游戏状态面板UI
     this._gameStatusContainerComponent.updateRoomStatusUI(data);
+  }
+
+  /**
+   * 设置游戏开始
+   * @param remaining_time
+   * @param current_round
+   */
+  public setGameStart(remaining_time: number, current_round: number) {
+    // 更新顶部状态栏UI
+    this._topStatusBarComponent.updateTopStatusBarUI(current_round);
+    // 更新桌面区域UI计时器UI
+    this._gameTableComponent.updateTimeCounterUI(
+      DICES_GAMING_STATUS.PREPARATION,
+      remaining_time,
+    );
+    // 播放骰盅摇动动画
+    this._gameTableComponent.playShakeDiceCupAnimation();
+  }
+
+  /**
+   * 设置开始下单
+   * @param remaining_time
+   */
+  public setStartOrder(remaining_time: number) {
+    // 更新桌面区域UI计时器UI
+    this._gameTableComponent.updateTimeCounterUI(
+      DICES_GAMING_STATUS.ORDERING,
+      remaining_time,
+    );
+    // 设置游戏状态
+    this._gameStatusContainerComponent.updateGamingStatusUI("START_ORDER");
+  }
+
+  // 设置停止下单
+  public setStopOrder(remaining_time: number) {
+    // 设置游戏状态
+    this._gameStatusContainerComponent.updateGamingStatusUI("STOP_ORDER");
+  }
+
+  /**
+   * 设置开骰
+   * @param remaining_time
+   * @param results
+   */
+  public setOpenResults(remaining_time: number, results: number[]) {
+    // 更新历史结果
+    this._results_history_data.push(results);
+    // 更新桌面区域UI计时器UI
+    this._gameTableComponent.updateTimeCounterUI(
+      DICES_GAMING_STATUS.OPEN,
+      remaining_time,
+    );
+    // 播放开骰动画
+    this._gameTableComponent.playerOpenDiceCupAnimation(results);
   }
 }

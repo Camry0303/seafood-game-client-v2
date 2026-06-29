@@ -296,10 +296,10 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
    */
   private onTestBtnClick(event: Event) {
     console.log(`onTestBtnClick--->`);
-    // FIXME: 暂时使用 测试倒计时
-    this._mainComponent
-      .getGameTableComponent()
-      .updateTimeCounterUI(DICES_GAMING_STATUS.PREPARATION, 3);
+    // // FIXME: 暂时使用 测试倒计时
+    // this._mainComponent
+    //   .getGameTableComponent()
+    //   .updateTimeCounterUI(DICES_GAMING_STATUS.PREPARATION, 3);
 
     // // FIXME: 暂时使用 测试下单动画
     // setTimeout(async () => {
@@ -331,6 +331,18 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
     // this._mainComponent
     //   .getGameStatusContainerComponent()
     //   .updateGamingStatusUI("START_ORDER");
+
+    // // FIXME: 设置游戏开始
+    // this._mainComponent.setGameStart(3, 2);
+
+    // // // FIXME: 设置开始下单
+    // this._mainComponent.setStartOrder(40);
+
+    // // FIXME: 设置停止下单
+    // this._mainComponent.setStopOrder(2);
+
+    // FIXME: 设置开骰结果
+    this._mainComponent.setOpenResults(9, [2, 4]);
   }
 
   /**
@@ -370,7 +382,7 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
       GlobalData.Instance.getCurrentGameInfo<Gateway.Returned.Games.DicesGame.ClubDicesGameRoomData>()
         ?.game_room_data;
 
-    this._roomIdLabel.string = `房间：${roomData.room_id}`;
+    this._roomIdLabel.string = `房间：${roomData?.room_id}`;
     this._scoreModeLabel.string = `${roomData?.game_config?.score_mode === 0 ? "不可负分" : "可负分"}`;
     this._totalRoundsLabel.string = `共${roomData?.game_config?.total_game_rounds}局`;
     this._currentRoundLabel.string = `第${current_round}局`;

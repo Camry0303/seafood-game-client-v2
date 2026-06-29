@@ -65,6 +65,7 @@ export default class DicesGameEvents {
     [CLUB_DICES_GAME_EVENT.GAME_STARTED_RESULT, this.onGameStartedResult],
     [CLUB_DICES_GAME_EVENT.START_ORDER_RESULT, this.onStartOrderResult],
     [CLUB_DICES_GAME_EVENT.STOP_ORDER_RESULT, this.onStopOrderResult],
+    [CLUB_DICES_GAME_EVENT.OPEN_RESULTS_RESULT, this.onOpenResultsResult],
     [CLUB_DICES_GAME_EVENT.SETTLEMENT_RESULT, this.onSettlementResult],
     [
       CLUB_DICES_GAME_EVENT.FINAL_SETTLEMENT_RESULT,
@@ -321,7 +322,7 @@ export default class DicesGameEvents {
         "DicesGameMainUI",
         DicesGameMainUI_Component,
       );
-      component.close();
+      component && component.close();
     } else {
       // 弹出提示框
       CommonDailogHandler.showBubbleMessage(`${msg}`);
@@ -450,7 +451,7 @@ export default class DicesGameEvents {
         DicesGameMainUI_Component,
       );
 
-      component.updateGameStatus(data);
+      component && component.updateGameStatus(data);
     } else {
       // 弹出提示框
       CommonDailogHandler.showBubbleMessage(`${msg}`);
@@ -556,6 +557,14 @@ export default class DicesGameEvents {
     }>,
   ) {
     console.log("<DicesGameEvent> onGameStartedResult called --->", returnData);
+    const { code, data, msg } = returnData;
+    const [node, component] = ComponentManager.Instance.getNodeComponent(
+      "DicesGameMainUI",
+      DicesGameMainUI_Component,
+    );
+
+    component &&
+      component.setGameStart(data.remaining_time, data.current_round);
   }
 
   /**
@@ -566,6 +575,14 @@ export default class DicesGameEvents {
     returnData: Gateway.Returned.Common.Result<{ remaining_time: number }>,
   ) {
     console.log("<DicesGameEvent> onStartOrderResult called --->", returnData);
+
+    const { code, data, msg } = returnData;
+    const [node, component] = ComponentManager.Instance.getNodeComponent(
+      "DicesGameMainUI",
+      DicesGameMainUI_Component,
+    );
+
+    component && component.setStartOrder(data.remaining_time);
   }
 
   /**
@@ -575,10 +592,36 @@ export default class DicesGameEvents {
   private static onStopOrderResult(
     returnData: Gateway.Returned.Common.Result<{
       remaining_time: number;
-      results: number[];
     }>,
   ) {
     console.log("<DicesGameEvent> onStopOrderResult called --->", returnData);
+
+    const { code, data, msg } = returnData;
+    const [node, component] = ComponentManager.Instance.getNodeComponent(
+      "DicesGameMainUI",
+      DicesGameMainUI_Component,
+    );
+    component && component.setStopOrder(data.remaining_time);
+  }
+
+  /**
+   * 处理开骰通知结果
+   * @param returnData
+   */
+  private static onOpenResultsResult(
+    returnData: Gateway.Returned.Common.Result<{
+      remaining_time: number;
+      results: number[];
+    }>,
+  ) {
+    console.log("<DicesGameEvent> onOpenResultsResult called --->", returnData);
+
+    const { code, data, msg } = returnData;
+    const [node, component] = ComponentManager.Instance.getNodeComponent(
+      "DicesGameMainUI",
+      DicesGameMainUI_Component,
+    );
+    component && component.setOpenResults(data.remaining_time, data.results);
   }
 
   /**

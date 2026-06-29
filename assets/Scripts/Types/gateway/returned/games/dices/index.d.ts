@@ -271,7 +271,7 @@ export interface CreatedOrderResultData extends OrderData {
 }
 
 /**
- * 游戏状态数据 // TODO: 添加其他状态数据
+ * 游戏状态数据
  */
 export interface GamingStatusgData {
   /**
@@ -307,6 +307,10 @@ export interface GamingStatusgData {
    */
   current_results: number[];
   /**
+   * 结果历史
+   */
+  results_history: number[][];
+  /**
    * 当前单压分数统计
    */
   current_single_order_stats: number[];
@@ -326,6 +330,10 @@ export interface GamingStatusgData {
    * 当前订单数据
    */
   current_orders: OrderData[];
+  /**
+   * 玩家订单数据分组
+   */
+  players_orders_grouped: Record<string, OrderData[]>;
   /**
    * 座位列表
    */

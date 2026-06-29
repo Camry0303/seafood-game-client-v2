@@ -390,6 +390,7 @@ export class DicesGameGameTable_Component extends ComponentController {
       this._shakeDiceCupTween.stop();
     } else {
       this._shakeDiceCupTween = tween(this._diceCupNode)
+        .delay(1)
         // 1. 移动到屏幕中心并放大
         .parallel(
           tween().to(0.5, { position: centerPos }, { easing: "sineOut" }),
@@ -600,6 +601,7 @@ export class DicesGameGameTable_Component extends ComponentController {
     this._preparationNode.active = status === DICES_GAMING_STATUS.PREPARATION;
     this._orderingNode.active = status === DICES_GAMING_STATUS.ORDERING;
     this._openNode.active = status === DICES_GAMING_STATUS.OPEN;
+    this._clockLabel.string = `${remainingTime}`;
 
     this._remainingTime = remainingTime;
     // 取消计时器标签调度所有已调度的回调函数
