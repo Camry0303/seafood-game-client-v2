@@ -94,8 +94,9 @@ export class DicesGamePlayerSeat_Component extends ComponentController {
    * 更新分数
    * @param seatData
    */
-  public updataScore(data: Gateway.Returned.Games.DicesGame.GameSeatData) {
-    this._scoreLabel.string = `${data?.player.score}`;
-    this._seatData = data;
+  public updateScore(data: number) {
+    this._scoreLabel.string = `${data}`;
+    const player = this._seatData.player;
+    player && (player.score = data);
   }
 }

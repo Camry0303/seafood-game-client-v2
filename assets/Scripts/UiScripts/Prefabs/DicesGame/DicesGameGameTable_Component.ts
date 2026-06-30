@@ -21,6 +21,8 @@ import { ResourceManager } from "../../../Runtime/ResourceManager";
 import { DicesGameChip_Component } from "./DicesGameChip_Component";
 import { DicesGameResults_Component } from "./DicesGameResults_Component";
 import { DICES_GAMING_STATUS } from "../../../Enums";
+import { Gateway } from "../../../Types/gateway";
+import { GlobalData } from "../../../Runtime/GlobalData";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameGameTable_Component")
@@ -32,6 +34,22 @@ export class DicesGameGameTable_Component extends ComponentController {
   //#region 桌面UI相关属性
   // 桌面UI面板
   private _tablePanelNode: Node = null;
+  //#endregion
+
+  //#region 分数板相关属性
+  // 分数板面板
+  private _scoreBoardPanelNode: Node = null;
+
+  // 本玩家单压分数统计
+  private _my_single_order_score_stats: number[] = [0, 0, 0, 0, 0, 0];
+  // 当前单压分数统计
+  private _current_single_order_stats: number[] = [];
+  // 当前连串下单分数统计
+  private _current_combo_order_stats: { [key: string]: number } = {};
+  // 当前豹子下单分数统计
+  private _current_leopard_order_stats: number[] = [];
+  // 当前挪单统计
+  private _current_move_order_stats: number = 0;
   //#endregion
 
   //#region 筹码容器面板相关属性
@@ -99,6 +117,7 @@ export class DicesGameGameTable_Component extends ComponentController {
     );
 
     this.initTablePanel();
+    this.initScoreBoardPanel();
     this.initChipsContainerPanel();
     this.initOrderButtonPanel();
     this.initOrderCheckBoxPanel();
@@ -112,6 +131,109 @@ export class DicesGameGameTable_Component extends ComponentController {
    */
   private initTablePanel() {
     this._tablePanelNode = this.getNode("Content/TablePanel");
+  }
+  //#endregion
+
+  //#region 分数板相关方法
+  /**
+   * 初始化分数板面板
+   */
+  private initScoreBoardPanel() {
+    this._scoreBoardPanelNode = this.getNode("Content/ScoreBoardPanel");
+  }
+
+  /**
+   * 更新分数板统计数据
+   * @param data
+   */
+  public updateScoreBoardStats(
+    data: Gateway.Returned.Games.DicesGame.CreatedOrderResultData,
+    is_my_order: boolean,
+  ) {
+    // 判断是否本玩家订单
+    if (is_my_order && data.order_type === 1) {
+      const result = Number(data.order_results);
+      // 更新本玩家订单分数统计
+      this._my_single_order_score_stats[result - 1] += data.order_score;
+    }
+
+    // 更新分数板统计数据
+    this.setScoreBoardStatsData({
+      my_single_order_score_stats: this._my_single_order_score_stats,
+      current_single_order_stats: data.current_single_order_stats,
+      current_combo_order_stats: data.current_combo_order_stats,
+      current_leopard_order_stats: data.current_leopard_order_stats,
+      current_move_order_stats: data.current_move_order_stats,
+    });
+  }
+
+  /**
+   * 设置分数板统计数据
+   * @param data
+   */
+  public setScoreBoardStatsData(data: {
+    my_single_order_score_stats: number[];
+    current_single_order_stats: number[];
+    current_combo_order_stats: { [key: string]: number };
+    current_leopard_order_stats: number[];
+    current_move_order_stats: number;
+  }) {
+    this._my_single_order_score_stats = data.my_single_order_score_stats;
+    this._current_single_order_stats = data.current_single_order_stats;
+    this._current_combo_order_stats = data.current_combo_order_stats;
+    this._current_leopard_order_stats = data.current_leopard_order_stats;
+    this._current_move_order_stats = data.current_move_order_stats;
+
+    // 更新分数板UI
+    const resultsNodes = this._scoreBoardPanelNode.children;
+    for (let index = 0; index < 6; index++) {
+      const my_score = this._my_single_order_score_stats[index];
+      const total_score = this._current_single_order_stats[index];
+      const resultNode = resultsNodes[index];
+      const my_score_label = resultNode
+        .getChildByName("My")
+        ?.getComponent?.(Label);
+      my_score_label && (my_score_label.string = my_score.toString());
+      const total_score_label = resultNode
+        .getChildByName("Total")
+        ?.getComponent?.(Label);
+      total_score_label && (total_score_label.string = total_score.toString());
+    }
+  }
+
+  /**
+   * 重置分数板统计数据
+   */
+  public resetScoreBoardStats() {
+    const my_single_order_score_stats = [0, 0, 0, 0, 0, 0];
+    const current_single_order_stats = [0, 0, 0, 0, 0, 0];
+    const current_combo_order_stats = {
+      "1,2": 0,
+      "1,3": 0,
+      "1,4": 0,
+      "1,5": 0,
+      "1,6": 0,
+      "2,3": 0,
+      "2,4": 0,
+      "2,5": 0,
+      "2,6": 0,
+      "3,4": 0,
+      "3,5": 0,
+      "3,6": 0,
+      "4,5": 0,
+      "4,6": 0,
+      "5,6": 0,
+    };
+    const current_leopard_order_stats = [0, 0, 0, 0, 0, 0];
+    const current_move_order_stats = 0;
+
+    this.setScoreBoardStatsData({
+      my_single_order_score_stats,
+      current_single_order_stats,
+      current_combo_order_stats,
+      current_leopard_order_stats,
+      current_move_order_stats,
+    });
   }
   //#endregion
 
@@ -186,6 +308,13 @@ export class DicesGameGameTable_Component extends ComponentController {
     component.runTween(startLocalPos, targetLocalPos);
   }
 
+  /**
+   * 放置筹码
+   * @param result
+   * @param value
+   * @param player_id
+   * @returns
+   */
   public placeChip(result: number, value: number, player_id: number) {
     // 2. 获取目标容器节点
     const chipsContainerNode =
@@ -226,6 +355,15 @@ export class DicesGameGameTable_Component extends ComponentController {
     const component = chipNode.addComponent(DicesGameChip_Component);
     component.setChipValue(value, player_id);
     chipNode.setPosition(targetLocalPos);
+  }
+
+  /**
+   * 清除筹码
+   */
+  public clearChips() {
+    this._chipsContainerPanelNode.children.forEach((node) => {
+      node.removeAllChildren();
+    });
   }
   //#endregion
 

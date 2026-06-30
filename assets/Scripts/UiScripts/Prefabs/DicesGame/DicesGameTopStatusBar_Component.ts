@@ -301,23 +301,23 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
     //   .getGameTableComponent()
     //   .updateTimeCounterUI(DICES_GAMING_STATUS.PREPARATION, 3);
 
-    // // FIXME: 暂时使用 测试下单动画
-    // setTimeout(async () => {
-    //   const times = 20;
-    //   for (let i = 0; i < times; i++) {
-    //     this._mainComponent
-    //       .getGameTableComponent()
-    //       .placeChipAnimation(
-    //         CryptoUtils.genRandomIntegerBetween(1, 6),
-    //         [5, 25, 50, 100, 500][
-    //           CryptoUtils.genRandomIntegerBetween(0, 4)
-    //         ],
-    //         "0",
-    //         12,
-    //       );
-    //     await sleep(500);
-    //   }
-    // }, 3000);
+    // FIXME: 暂时使用 测试下单动画
+    setTimeout(async () => {
+      const times = 20;
+      for (let i = 0; i < times; i++) {
+        this._mainComponent
+          .getGameTableComponent()
+          .placeChipAnimation(
+            CryptoUtils.genRandomIntegerBetween(1, 6),
+            [5, 25, 50, 100, 500][
+              CryptoUtils.genRandomIntegerBetween(0, 4)
+            ],
+            "0",
+            12,
+          );
+        await sleep(500);
+      }
+    }, 3000);
 
     // // FIXME: 暂时使用 测试摇骰盅动画
     // this._mainComponent.getGameTableComponent().playShakeDiceCupAnimation();
@@ -341,8 +341,8 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
     // // FIXME: 设置停止下单
     // this._mainComponent.setStopOrder(2);
 
-    // FIXME: 设置开骰结果
-    this._mainComponent.setOpenResults(9, [2, 4]);
+    // // FIXME: 设置开骰结果
+    // this._mainComponent.setOpenResults(9, [2, 4]);
   }
 
   /**

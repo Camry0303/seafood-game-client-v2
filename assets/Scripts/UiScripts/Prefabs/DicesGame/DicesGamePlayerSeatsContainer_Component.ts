@@ -236,4 +236,17 @@ export class DicesGamePlayerSeatsContainer_Component extends ComponentController
     this._seatsData[seat.seat_code] = seat;
     this.updatePlayerSeatsUI(this._seatsData);
   }
+
+  /**
+   * 更新玩家座位分数
+   * @param seat_code
+   * @param score
+   */
+  public updatePlayerSeatScore(seat_code: string, score: number) {
+    this._seats.forEach((seat) => {
+      if (seat.getData()?.seat_code === seat_code) {
+        seat.updateScore(score);
+      }
+    });
+  }
 }

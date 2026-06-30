@@ -423,3 +423,37 @@ export interface PlayerFinalSettlementData {
    */
   score_list: number[];
 }
+
+/**
+ * 游戏开始返回数据
+ */
+export interface GameStartedData {
+  /**
+   * 剩余时间
+   */
+  remaining_time: number;
+  /**
+   * 当前局数
+   */
+  current_round: number;
+  /**
+   * 当前单压分数统计
+   */
+  current_single_order_stats: number[];
+  /**
+   * 当前连串下单分数统计
+   */
+  current_combo_order_stats: { [key: string]: number };
+  /**
+   * 当前豹子下单分数统计
+   */
+  current_leopard_order_stats: number[];
+  /**
+   * 当前挪单统计
+   */
+  current_move_order_stats: number;
+  /**
+   * 座位列表
+   */
+  seats: Record<string, GameSeatData>;
+}

@@ -9,6 +9,7 @@ import DicesGameEvents from "../../../Network/SocketIo/DicesGameEvents";
 import { Gateway } from "../../../Types/typing";
 import { DICES_GAMING_STATUS, GAME_ROOM_STATUS } from "../../../Enums";
 import { DicesGameStatusContainer_Component } from "./DicesGameStatusContainer_Component";
+import { GlobalData } from "../../../Runtime/GlobalData";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameMainUI_Component")
@@ -177,6 +178,43 @@ export class DicesGameMainUI_Component extends ComponentController {
 
     // 更新游戏状态面板UI
     this._gameStatusContainerComponent.updateRoomStatusUI(data);
+
+    // 处理游戏订单，更新分数板统计数据
+    const my_single_order_score_stats = [0, 0, 0, 0, 0, 0];
+    const current_single_order_stats = data.current_single_order_stats;
+    const current_combo_order_stats = data.current_combo_order_stats;
+    const current_leopard_order_stats = data.current_leopard_order_stats;
+    const current_move_order_stats = data.current_move_order_stats;
+    const clubPlayer = GlobalData.Instance.getCurrentClubPlayerInfo();
+
+    // 清除筹码
+    this._gameTableComponent.clearChips();
+    // 处理游戏订单
+    data.current_orders.forEach((order) => {
+      // 处理本家订单
+      if (order.player_id === clubPlayer?.player_id && order.order_type === 1) {
+        my_single_order_score_stats[Number(order.order_results) - 1] +=
+          order.order_score;
+      }
+
+      if (order.order_type === 1) {
+        // 放置订单筹码
+        this._gameTableComponent.placeChip(
+          Number(order.order_results),
+          order.order_score,
+          order.player_id,
+        );
+      }
+    });
+
+    // 设置分数板统计数据
+    this._gameTableComponent.setScoreBoardStatsData({
+      my_single_order_score_stats,
+      current_single_order_stats,
+      current_combo_order_stats,
+      current_leopard_order_stats,
+      current_move_order_stats,
+    });
   }
 
   /**
@@ -186,7 +224,35 @@ export class DicesGameMainUI_Component extends ComponentController {
   public onOrderCreated(
     data: Gateway.Returned.Games.DicesGame.CreatedOrderResultData,
   ) {
-    // TODO - 下单成功处理
+    // 更新玩家座位UI
+    this._playerSeatsComponents.updatePlayerSeatScore(
+      data.seat_code,
+      data.current_available_score,
+    );
+
+    // 判断是否本玩家订单
+    const isMyOrder =
+      data.player_id ===
+      GlobalData.Instance.getCurrentClubPlayerInfo().player_id;
+
+    // 更新本家的分数
+    if (isMyOrder) {
+      const clubPlayer = GlobalData.Instance.getCurrentClubPlayerInfo();
+      clubPlayer.club_score = data.current_available_score;
+    }
+
+    // 更新分数板统计数据
+    this._gameTableComponent.updateScoreBoardStats(data, isMyOrder);
+
+    if (data.order_type === 1) {
+      // 放置订单筹码动画
+      this._gameTableComponent.placeChipAnimation(
+        Number(data.order_results),
+        data.order_score,
+        data.seat_code,
+        data.player_id,
+      );
+    }
   }
 
   /**
@@ -194,18 +260,32 @@ export class DicesGameMainUI_Component extends ComponentController {
    * @param remaining_time
    * @param current_round
    */
-  public setGameStart(remaining_time: number, current_round: number) {
+  public setGameStart(data: Gateway.Returned.Games.DicesGame.GameStartedData) {
     // 更新顶部状态栏UI
-    this._topStatusBarComponent.updateTopStatusBarUI(current_round);
+    this._topStatusBarComponent.updateTopStatusBarUI(data.current_round);
     // 更新桌面区域UI计时器UI
     this._gameTableComponent.updateTimeCounterUI(
       DICES_GAMING_STATUS.PREPARATION,
-      remaining_time,
+      data.remaining_time,
     );
     // 播放骰盅摇动动画
     this._gameTableComponent.playShakeDiceCupAnimation();
     // 设置游戏状态
     this._gameStatusContainerComponent.updateGamingStatusUI("PREPARATION");
+
+    // 更新分数板统计数据
+    const my_single_order_score_stats = [0, 0, 0, 0, 0, 0];
+    const current_single_order_stats = data.current_single_order_stats;
+    const current_combo_order_stats = data.current_combo_order_stats;
+    const current_leopard_order_stats = data.current_leopard_order_stats;
+    const current_move_order_stats = data.current_move_order_stats;
+    this._gameTableComponent.setScoreBoardStatsData({
+      my_single_order_score_stats,
+      current_single_order_stats,
+      current_combo_order_stats,
+      current_leopard_order_stats,
+      current_move_order_stats,
+    });
   }
 
   /**
@@ -243,5 +323,9 @@ export class DicesGameMainUI_Component extends ComponentController {
     );
     // 播放开骰动画
     this._gameTableComponent.playerOpenDiceCupAnimation(results);
+    // 重置分数板统计数据
+    this._gameTableComponent.resetScoreBoardStats();
+    // 清除筹码
+    this._gameTableComponent.clearChips();
   }
 }

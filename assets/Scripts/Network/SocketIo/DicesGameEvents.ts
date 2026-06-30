@@ -612,10 +612,7 @@ export default class DicesGameEvents {
    * @param returnData
    */
   private static onGameStartedResult(
-    returnData: Gateway.Returned.Common.Result<{
-      remaining_time: number;
-      current_round: number;
-    }>,
+    returnData: Gateway.Returned.Common.Result<Gateway.Returned.Games.DicesGame.GameStartedData>,
   ) {
     console.log("<DicesGameEvent> onGameStartedResult called --->", returnData);
     const { code, data, msg } = returnData;
@@ -626,7 +623,7 @@ export default class DicesGameEvents {
       );
 
       component &&
-        component.setGameStart(data.remaining_time, data.current_round);
+        component.setGameStart(data);
     }
   }
 
