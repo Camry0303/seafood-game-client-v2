@@ -15,7 +15,7 @@ import { DicesGameMainUI_Component } from "./DicesGameMainUI_Component";
 import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
 import { GlobalData } from "../../../Runtime/GlobalData";
 import { getAvatarSpriteFrame } from "../../../Utils/RemoteSpriteFrameLoader";
-import { Gateway } from "../../../Types/typing";
+import { DicesGameGameTable_Component } from "./DicesGameGameTable_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameBottomStatusBar_Component")
@@ -23,6 +23,8 @@ const { ccclass, menu } = _decorator;
 export class DicesGameBottomStatusBar_Component extends ComponentController {
   // 骰子游戏主界面组件
   private _mainComponent: DicesGameMainUI_Component = null;
+  // 骰子游戏游戏桌组件
+  private _gameTableComponent: DicesGameGameTable_Component = null;
 
   //#region 玩家信息UI相关属性
   // 玩家头像精灵
@@ -36,7 +38,7 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
   //#endregion
 
   //#region 普通下单面板相关属性
-  // 下单面板节点
+  // 普通下单面板节点
   private _chipsOrderPanelNode: Node = null;
   // 当前筹码值
   private _currentChipsValue: number = 5;
@@ -98,6 +100,8 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
       DicesGameMainUI_Component,
     );
 
+    this._gameTableComponent = this._mainComponent.getGameTableComponent?.();
+
     console.log(
       `DicesGameBottomStatusBar_Component _mainComponent--->`,
       this._mainComponent,
@@ -105,7 +109,7 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
 
     // 初始化玩家信息UI
     this.initPlayerUI();
-    // 初始化下单面板
+    // 初始化普通下单面板
     this.initChipsOrderPanel();
     // 初始化滑动下单面板
     this.initSilderOrderPanel();
@@ -168,12 +172,12 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
   }
   //#endregion
 
-  //#region 下单面板相关方法
+  //#region 普通下单面板相关方法
   /**
-   * 初始化下单面板
+   * 初始化普通下单面板
    */
   private initChipsOrderPanel() {
-    // 获取下单面板节点
+    // 获取普通下单面板节点
     this._chipsOrderPanelNode = this.getNode("ChipsOrderPanel");
     // 设置筹码ToggleContainer选中事件
     [, this._chipsToggleContainer] = this.setToggleContainerCheckEvent(
@@ -273,6 +277,16 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    */
   public getCurrentChipsValue() {
     return this._currentChipsValue;
+  }
+
+  /**
+   * 显示普通下单面板
+   */
+  public showChipsOrderPanel() {
+    this._chipsOrderPanelNode.active = true;
+    this._silderOrderPanelNode.active = false;
+    this._debugResultPanelNode.active = false;
+    this._orderType = "Normal";
   }
   //#endregion
 
@@ -405,25 +419,36 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    */
   private onSliderOrderPanelCloseBtnClick(event: Event) {
     console.log(`onSliderOrderPanelCloseBtnClick`);
-    this._silderOrderPanelNode.active = false;
-    this._moveTagNode.active = false;
-    this._orderType = "Normal";
+
+    // 打开普通下单面板
     this._chipsOrderPanelNode.active = true;
+    // 关闭滑动下单面板
+    this._silderOrderPanelNode.active = false;
+    // 关闭调试结果面板
+    this._debugResultPanelNode.active = false;
+
+    // 设置下单类型
+    this._orderType = "Normal";
+    // 隐藏挪标记
+    this._moveTagNode.active = false;
   }
 
   /**
    * 显示滑动下单面板
    * @param orderType
    */
-  private showSliderOrderPanel(orderType: "Move" | "Leopard" | "Combo") {
+  public showSliderOrderPanel(orderType: "Move" | "Leopard" | "Combo") {
+    // 关闭普通下单面板
+    this._chipsOrderPanelNode.active = false;
+    // 打开滑动下单面板
+    this._silderOrderPanelNode.active = true;
+    // 关闭调试结果面板
+    this._debugResultPanelNode.active = false;
+
     // 设置下单类型
     this._orderType = orderType;
     const orderTypeLabel =
       orderType === "Move" ? "挪" : orderType === "Leopard" ? "豹子" : "连串";
-    // 关闭下单面板
-    this._chipsOrderPanelNode.active = false;
-    // 打开滑动下单面板
-    this._silderOrderPanelNode.active = true;
     // 设置下单类型标签
     this._orderTypeLabel.string = orderTypeLabel;
     // 设置下单分数标签
@@ -450,36 +475,36 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
     this._debugResultPanelNode = this.getNode("DebugResultPanel");
     // 设置调试结果面板重置按钮点击事件
     this.setButtonClickEvent(
-      "DebugResultrPanel/ResultPanel/Content/ResetBtn",
+      "DebugResultPanel/ResultPanel/Content/ResetBtn",
       0,
       "onDebugResultPanelResetBtnClick",
       this.getClassName(),
     );
     // 获取调试结果1精灵
     [, this._debugResult1Sprite] = this.getNodeComponent(
-      "DebugResultrPanel/ResultPanel/Content/Result1/Icon",
+      "DebugResultPanel/ResultPanel/Content/Result1/Icon",
       Sprite,
     );
     // 获取调试结果2精灵
     [, this._debugResult2Sprite] = this.getNodeComponent(
-      "DebugResultrPanel/ResultPanel/Content/Result2/Icon",
+      "DebugResultPanel/ResultPanel/Content/Result2/Icon",
       Sprite,
     );
     // 获取调试结果3精灵
     [, this._debugResult3Sprite] = this.getNodeComponent(
-      "DebugResultrPanel/ResultPanel/Content/Result3/Icon",
+      "DebugResultPanel/ResultPanel/Content/Result3/Icon",
       Sprite,
     );
     // 设置调试结果面板确定按钮点击事件
     this.setButtonClickEvent(
-      "DebugResultrPanel/ResultPanel/Content/ConfirmBtn",
+      "DebugResultPanel/ResultPanel/Content/ConfirmBtn",
       0,
       "onDebugResultPanelConfirmBtnClick",
       this.getClassName(),
     );
     // 设置调试结果面板关闭按钮点击事件
     this.setButtonClickEvent(
-      "DebugResultrPanel/RightMenu/Content/CloseBtn",
+      "DebugResultPanel/RightMenu/Content/CloseBtn",
       0,
       "onDebugResultPanelCloseBtnClick",
       this.getClassName(),
@@ -508,6 +533,21 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    */
   private onDebugResultPanelCloseBtnClick(event: Event) {
     console.log(`onDebugResultPanelCloseBtnClick`);
+  }
+
+  /**
+   * 显示调试结果面板
+   */
+  public showDebugResultPanel() {
+    // 关闭普通下单面板
+    this._chipsOrderPanelNode.active = false;
+    // 关闭滑动下单面板
+    this._silderOrderPanelNode.active = false;
+    // 打开调试结果面板
+    this._debugResultPanelNode.active = true;
+
+    // 设置下单类型
+    this._orderType = "Debug";
   }
   //#endregion
 

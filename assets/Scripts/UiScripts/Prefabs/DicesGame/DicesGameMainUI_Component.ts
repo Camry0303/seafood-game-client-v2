@@ -51,6 +51,9 @@ export class DicesGameMainUI_Component extends ComponentController {
     Gateway.Returned.Games.DicesGame.OrderData[]
   > = {};
 
+  // 是否可以下单
+  private _can_order: boolean = false;
+
   start() {
     //FIXME - // 获取游戏状态
     // DicesGameEvents.getClubGamingStatus();
@@ -215,6 +218,16 @@ export class DicesGameMainUI_Component extends ComponentController {
       current_leopard_order_stats,
       current_move_order_stats,
     });
+
+    // 能否下单
+    const can_order =
+      data.gaming_status === DICES_GAMING_STATUS.ORDERING &&
+      data.remaining_time > 2;
+    const orderType = this._bottomStatusBarComponent.getOrderType();
+    // 下单按钮是否可用
+    this._gameTableComponent.setOrderButtonInteractable(
+      can_order && (orderType === "Normal" || orderType === "Debug"),
+    );
   }
 
   /**
@@ -253,6 +266,33 @@ export class DicesGameMainUI_Component extends ComponentController {
         data.player_id,
       );
     }
+
+    // 处理玩家下单分组汇总数据
+    this._players_orders_grouped_data;
+    // 汇总数据玩家Key
+    const playerKey = `${data.seat_code}-${data.player_id}`;
+    // 汇总数据记录
+    const groupedOrderDataList = this._players_orders_grouped_data[playerKey];
+    // 判断玩家是否有汇总订单数据
+    if (!groupedOrderDataList) {
+      this._players_orders_grouped_data[playerKey] = [data];
+    } else {
+      // some 方法会在回调返回 true 时终止遍历
+      const isMatched = groupedOrderDataList.some((groupedORderData) => {
+        const orderDataKey = `${data.seat_code}-${data.player_id}-${data.order_type}-${data.order_results}`;
+        const groupedKey = `${groupedORderData.seat_code}-${groupedORderData.player_id}-${groupedORderData.order_type}-${groupedORderData.order_results}`;
+
+        if (orderDataKey === groupedKey) {
+          groupedORderData.order_score += data.order_score;
+          return true; // 找到匹配，返回 true 终止 some 循环
+        }
+        return false;
+      });
+
+      if (!isMatched) {
+        this._players_orders_grouped_data[playerKey].push(data);
+      }
+    }
   }
 
   /**
@@ -286,6 +326,9 @@ export class DicesGameMainUI_Component extends ComponentController {
       current_leopard_order_stats,
       current_move_order_stats,
     });
+
+    // 玩家下单分组汇总数据
+    this._players_orders_grouped_data = {};
   }
 
   /**
@@ -300,12 +343,34 @@ export class DicesGameMainUI_Component extends ComponentController {
     );
     // 设置游戏状态
     this._gameStatusContainerComponent.updateGamingStatusUI("START_ORDER");
+    // 下单按钮启用
+    this._gameTableComponent.setOrderButtonInteractable(true);
+    // 切换普通下单模式
+    this._bottomStatusBarComponent.showChipsOrderPanel();
+    // 设置可以下单
+    this._can_order = true;
   }
 
-  // 设置停止下单
+  /**
+   * 设置停止下单
+   * @param remaining_time
+   */
   public setStopOrder(remaining_time: number) {
     // 设置游戏状态
     this._gameStatusContainerComponent.updateGamingStatusUI("STOP_ORDER");
+    // 更新桌面区域UI计时器UI
+    this._gameTableComponent.updateTimeCounterUI(
+      DICES_GAMING_STATUS.ORDERING,
+      remaining_time,
+    );
+    // 下单按钮禁用
+    this._gameTableComponent.setOrderButtonInteractable(false);
+
+    // 切换普通下单模式
+    this._bottomStatusBarComponent.showChipsOrderPanel();
+
+    // 设置不可以下单
+    this._can_order = false;
   }
 
   /**
@@ -327,5 +392,13 @@ export class DicesGameMainUI_Component extends ComponentController {
     this._gameTableComponent.resetScoreBoardStats();
     // 清除筹码
     this._gameTableComponent.clearChips();
+  }
+
+  /**
+   * 获取是否可以下单
+   * @returns
+   */
+  public getCanOrder() {
+    return this._can_order;
   }
 }
