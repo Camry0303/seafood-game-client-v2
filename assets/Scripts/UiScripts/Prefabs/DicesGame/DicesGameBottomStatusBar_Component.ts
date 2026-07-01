@@ -71,6 +71,8 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
   private _result3Sprite: Sprite = null;
   // 挪标记节点
   private _moveTagNode: Node = null;
+  // 滑动下单选中结果
+  private _silderOrderSelectedResult: (number | null)[] = [null, null];
   //#endregion
 
   //#region 调试结果面板相关属性
@@ -88,7 +90,9 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
   private _orderType: "Normal" | "Move" | "Leopard" | "Combo" | "Debug" =
     "Normal";
 
-  start() {}
+  start() {
+    this._gameTableComponent = this._mainComponent.getGameTableComponent?.();
+  }
 
   update(deltaTime: number) {}
 
@@ -98,13 +102,6 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
 
     this._mainComponent = this.node.parent.getComponent(
       DicesGameMainUI_Component,
-    );
-
-    this._gameTableComponent = this._mainComponent.getGameTableComponent?.();
-
-    console.log(
-      `DicesGameBottomStatusBar_Component _mainComponent--->`,
-      this._mainComponent,
     );
 
     // 初始化玩家信息UI
@@ -232,12 +229,14 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    */
   private onMoveBtnClick(event: Event) {
     console.log(`onMoveBtnClick`);
-    // TODO - 判断当前是否可以下单
-    const canOrder = true;
+    // 判断当前是否可以下单
+    const canOrder = this._mainComponent.getCanOrder();
     if (!canOrder) {
       CommonDailogHandler.showBubbleMessage(`当前不可下注`);
       return;
     }
+    // 清空选中结果
+    this._silderOrderSelectedResult = [null, null];
     this.showSliderOrderPanel("Move");
   }
 
@@ -247,12 +246,14 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    */
   private onLeopardBtnClick(event: Event) {
     console.log(`onLeopardBtnClick`);
-    // TODO - 判断当前是否可以下单
-    const canOrder = true;
+    // 判断当前是否可以下单
+    const canOrder = this._mainComponent.getCanOrder();
     if (!canOrder) {
       CommonDailogHandler.showBubbleMessage(`当前不可下注`);
       return;
     }
+    // 清空选中结果
+    this._silderOrderSelectedResult = [null, null];
     this.showSliderOrderPanel("Leopard");
   }
 
@@ -262,12 +263,14 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    */
   private onComboBtnClick(event: Event) {
     console.log(`onComboBtnClick`);
-    // TODO - 判断当前是否可以下单
-    const canOrder = true;
+    // 判断当前是否可以下单
+    const canOrder = this._mainComponent.getCanOrder();
     if (!canOrder) {
       CommonDailogHandler.showBubbleMessage(`当前不可下注`);
       return;
     }
+    // 清空选中结果
+    this._silderOrderSelectedResult = [null, null];
     this.showSliderOrderPanel("Combo");
   }
 
@@ -411,6 +414,15 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    */
   private onSliderOrderPanelConfirmBtnClick(event: Event) {
     console.log(`onSliderOrderPanelConfirmBtnClick`);
+    console.log(
+      `onSliderOrderPanelConfirmBtnClick--->`,
+      this._orderType,
+      this._silderOrderSelectedResult,
+    );
+    if (this._silderOrderSelectedResult.every((item) => item === null)) {
+      CommonDailogHandler.showBubbleMessage(`请选择`);
+      return;
+    }
   }
 
   /**
@@ -431,6 +443,9 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
     this._orderType = "Normal";
     // 隐藏挪标记
     this._moveTagNode.active = false;
+
+    // 游戏桌面关闭下单勾选面板
+    this._gameTableComponent.hideOrderCheckBoxPanel();
   }
 
   /**
@@ -463,6 +478,9 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
     // 设置加减按钮不可点击状态
     this._addScoreBtn.interactable = false;
     this._subScoreBtn.interactable = false;
+
+    // 游戏桌面显示下单勾选面板
+    this._gameTableComponent.showOrderCheckBoxPanel(orderType);
   }
   //#endregion
 
@@ -557,5 +575,23 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    */
   public getOrderType() {
     return this._orderType;
+  }
+
+  /**
+   * 获取滑动下单选中结果
+   * @returns
+   */
+  public getSilderOrderSelectedResult() {
+    return this._silderOrderSelectedResult;
+  }
+
+  /**
+   * 设置滑动下单选中结果
+   * @param results
+   */
+  public setSilderOrderSelectedResult(results: (number | null)[]) {
+    this._silderOrderSelectedResult = results;
+    // TODO - 设置结果图片精灵
+    console.log(`setSilderOrderSelectedResult--->`, results);
   }
 }

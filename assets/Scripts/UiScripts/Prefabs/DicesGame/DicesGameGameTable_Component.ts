@@ -23,6 +23,8 @@ import { DicesGameResults_Component } from "./DicesGameResults_Component";
 import { DICES_GAMING_STATUS } from "../../../Enums";
 import { Gateway } from "../../../Types/gateway";
 import { GlobalData } from "../../../Runtime/GlobalData";
+import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
+import { DicesGameBottomStatusBar_Component } from "./DicesGameBottomStatusBar_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameGameTable_Component")
@@ -30,6 +32,8 @@ const { ccclass, menu } = _decorator;
 export class DicesGameGameTable_Component extends ComponentController {
   // 骰子游戏主界面组件
   private _mainComponent: DicesGameMainUI_Component = null;
+  // 骰子游戏底部状态栏组件
+  private _bottomStatusBarComponent: DicesGameBottomStatusBar_Component = null;
 
   //#region 桌面UI相关属性
   // 桌面UI面板
@@ -65,6 +69,8 @@ export class DicesGameGameTable_Component extends ComponentController {
   //#region 下单勾选框相关属性
   // 下单勾选框面板
   private _orderCheckBoxPanelNode: Node = null;
+  // 勾选下单类型
+  private _checkBoxOrderType: "Move" | "Leopard" | "Combo";
   //#endregion
 
   //#region 骰盅相关属性
@@ -104,7 +110,10 @@ export class DicesGameGameTable_Component extends ComponentController {
 
   //#endregion
 
-  start() {}
+  start() {
+    this._bottomStatusBarComponent =
+      this._mainComponent.getBottomStatusBarComponent?.();
+  }
 
   update(deltaTime: number) {}
 
@@ -386,7 +395,7 @@ export class DicesGameGameTable_Component extends ComponentController {
         node.name,
       );
       // 设置下单按钮不可点击
-      button.interactable = false;
+      button.interactable = true;
     }
   }
 
@@ -397,7 +406,12 @@ export class DicesGameGameTable_Component extends ComponentController {
    */
   private onOrderButtonClick(event: Event, customData: string) {
     const orderResult = parseInt(customData);
-    console.log(`onOrderButtonClick orderResult--->`, orderResult);
+    const canOrder = this._mainComponent.getCanOrder();
+    if (canOrder) {
+      console.log(`onOrderButtonClick orderResult--->`, orderResult);
+    } else {
+      CommonDailogHandler.showBubbleMessage(`当前不可下注`);
+    }
   }
 
   /**
@@ -450,8 +464,58 @@ export class DicesGameGameTable_Component extends ComponentController {
     const orderResult = parseInt(customData);
     console.log(`onOrderCheckBoxClick orderResult--->`, orderResult);
     const toggle = (event.target as Node).getComponent(Toggle);
-    // 设置下单勾选框取反（更改无效）
+    // 设置下单勾选框取反（设置取反，更改无效）
     toggle.setIsCheckedWithoutNotify(!toggle.isChecked);
+    console.log(`orderType--->`, this._checkBoxOrderType);
+
+    const toggleNodes = this._orderCheckBoxPanelNode.children;
+
+    const results =
+      this._bottomStatusBarComponent.getSilderOrderSelectedResult();
+    // 根据下单勾选框类型，处理勾选结果
+    if (this._checkBoxOrderType === "Move") {
+      const resultIndex = results.indexOf(orderResult);
+      if (resultIndex !== -1) {
+        results[resultIndex] = null;
+      } else {
+        const nullIndex = results.indexOf(null);
+        if (nullIndex !== -1) {
+          results[nullIndex] = orderResult;
+        } else {
+          results[results.length - 1] = orderResult;
+        }
+      }
+    } else if (this._checkBoxOrderType === "Leopard") {
+      const resultIndex = results.indexOf(orderResult);
+      if (resultIndex !== -1) {
+        results[0] = null;
+        results[1] = null;
+      } else {
+        results[0] = orderResult;
+        results[1] = orderResult;
+      }
+    } else if (this._checkBoxOrderType === "Combo") {
+      const resultIndex = results.indexOf(orderResult);
+      if (resultIndex !== -1) {
+        results[resultIndex] = null;
+      } else {
+        const nullIndex = results.indexOf(null);
+        if (nullIndex !== -1) {
+          results[nullIndex] = orderResult;
+        } else {
+          results[results.length - 1] = orderResult;
+        }
+      }
+    }
+    // 根据勾选结果，设置下单勾选框是否勾选
+    toggleNodes.forEach((node) => {
+      const toggle = node.getComponent(Toggle);
+      const value = parseInt(node.name);
+      const resultIndex = results.indexOf(value);
+      toggle.setIsCheckedWithoutNotify(resultIndex !== -1);
+    });
+    // 设置滑动下单选中结果
+    this._bottomStatusBarComponent.setSilderOrderSelectedResult(results);
   }
 
   /**
@@ -471,16 +535,19 @@ export class DicesGameGameTable_Component extends ComponentController {
   /**
    * 显示下单勾选框面板
    */
-  public showOrderCheckBoxPanel() {
+  public showOrderCheckBoxPanel(orderType: "Move" | "Leopard" | "Combo") {
+    this._checkBoxOrderType = orderType;
     this.initOrderCheckBoxPanel();
     this._orderCheckBoxPanelNode.active = true;
+    this.setOrderCheckBoxInteractable(true);
   }
 
-  /**
+  /**s
    * 隐藏下单勾选框面板
    */
   public hideOrderCheckBoxPanel() {
     this._orderCheckBoxPanelNode.active = false;
+    this.setOrderCheckBoxInteractable(false);
   }
   //#endregion
 

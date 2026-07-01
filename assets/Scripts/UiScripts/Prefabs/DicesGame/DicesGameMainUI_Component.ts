@@ -51,8 +51,8 @@ export class DicesGameMainUI_Component extends ComponentController {
     Gateway.Returned.Games.DicesGame.OrderData[]
   > = {};
 
-  // 是否可以下单
-  private _can_order: boolean = false;
+  // FIXME - 是否可以下单
+  private _can_order: boolean = true;
 
   start() {
     //FIXME - // 获取游戏状态
