@@ -6,6 +6,7 @@ import {
   Node,
   Slider,
   Sprite,
+  SpriteAtlas,
   Toggle,
   ToggleContainer,
   UITransform,
@@ -16,6 +17,9 @@ import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
 import { GlobalData } from "../../../Runtime/GlobalData";
 import { getAvatarSpriteFrame } from "../../../Utils/RemoteSpriteFrameLoader";
 import { DicesGameGameTable_Component } from "./DicesGameGameTable_Component";
+import { min } from "lodash";
+import { ResourceManager } from "../../../Runtime/ResourceManager";
+import DicesGameEvents from "../../../Network/SocketIo/DicesGameEvents";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameBottomStatusBar_Component")
@@ -48,7 +52,7 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
 
   //#region 滑动下单面板相关属性
   // 滑动下单面板节点
-  private _silderOrderPanelNode: Node = null;
+  private _sliderOrderPanelNode: Node = null;
   // 下单类型标签
   private _orderTypeLabel: Label = null;
   // 下单分数标签
@@ -72,7 +76,11 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
   // 挪标记节点
   private _moveTagNode: Node = null;
   // 滑动下单选中结果
-  private _silderOrderSelectedResult: (number | null)[] = [null, null];
+  private _sliderOrderSelectedResult: (number | null)[] = [null, null];
+  // 滑动下单分数
+  private _sliderOrderScore: number = 0;
+  // 滑动下单最大分数
+  private _sliderOrderMaxScore: number = 0;
   //#endregion
 
   //#region 调试结果面板相关属性
@@ -235,8 +243,6 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
       CommonDailogHandler.showBubbleMessage(`当前不可下注`);
       return;
     }
-    // 清空选中结果
-    this._silderOrderSelectedResult = [null, null];
     this.showSliderOrderPanel("Move");
   }
 
@@ -252,8 +258,6 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
       CommonDailogHandler.showBubbleMessage(`当前不可下注`);
       return;
     }
-    // 清空选中结果
-    this._silderOrderSelectedResult = [null, null];
     this.showSliderOrderPanel("Leopard");
   }
 
@@ -269,8 +273,6 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
       CommonDailogHandler.showBubbleMessage(`当前不可下注`);
       return;
     }
-    // 清空选中结果
-    this._silderOrderSelectedResult = [null, null];
     this.showSliderOrderPanel("Combo");
   }
 
@@ -287,7 +289,7 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    */
   public showChipsOrderPanel() {
     this._chipsOrderPanelNode.active = true;
-    this._silderOrderPanelNode.active = false;
+    this._sliderOrderPanelNode.active = false;
     this._debugResultPanelNode.active = false;
     this._orderType = "Normal";
   }
@@ -299,7 +301,7 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    */
   private initSilderOrderPanel() {
     // 获取滑动下单面板节点
-    this._silderOrderPanelNode = this.getNode("SliderOrderPanel");
+    this._sliderOrderPanelNode = this.getNode("SliderOrderPanel");
     // 获取下单类型标签
     [, this._orderTypeLabel] = this.getNodeComponent(
       "SliderOrderPanel/SliderPanel/SliderStatusPanel/Content/OrderTypeLabel",
@@ -388,8 +390,14 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
   private onScoreSliderChange(event: Event) {
     this._scoreSliderMaskUi.width =
       this._originWidth * this._scoreSlider.progress;
-    // TODO - 计算下单分数
-    console.log(`onScoreSliderChange--->`, this._scoreSlider.progress);
+
+    //  计算下单分数
+    this._sliderOrderScore = parseInt(
+      String(this._sliderOrderMaxScore * this._scoreSlider.progress),
+    );
+    // 设置下单分数标签
+    this._orderScoreLabel.string = `分数：${this._sliderOrderScore}`;
+    console.log(`onScoreSliderChange--->`, this._sliderOrderScore);
   }
 
   /**
@@ -398,6 +406,17 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    */
   private onSubScoreBtnClick(event: Event) {
     console.log(`onSubScoreBtnClick`);
+    if (this._sliderOrderMaxScore <= 0) {
+      return;
+    }
+    this._sliderOrderScore--;
+    this._scoreSlider.progress =
+      this._sliderOrderScore / this._sliderOrderMaxScore;
+
+    this._scoreSliderMaskUi.width =
+      this._originWidth * this._scoreSlider.progress;
+    // 设置下单分数标签
+    this._orderScoreLabel.string = `分数：${this._sliderOrderScore}`;
   }
 
   /**
@@ -406,6 +425,17 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    */
   private onAddScoreBtnClick(event: Event) {
     console.log(`onAddScoreBtnClick`);
+    if (this._sliderOrderScore + 1 > this._sliderOrderMaxScore) {
+      return;
+    }
+    this._sliderOrderScore++;
+    this._scoreSlider.progress =
+      this._sliderOrderScore / this._sliderOrderMaxScore;
+
+    this._scoreSliderMaskUi.width =
+      this._originWidth * this._scoreSlider.progress;
+    // 设置下单分数标签
+    this._orderScoreLabel.string = `分数：${this._sliderOrderScore}`;
   }
 
   /**
@@ -417,12 +447,45 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
     console.log(
       `onSliderOrderPanelConfirmBtnClick--->`,
       this._orderType,
-      this._silderOrderSelectedResult,
+      this._sliderOrderSelectedResult,
+      this._sliderOrderScore,
     );
-    if (this._silderOrderSelectedResult.every((item) => item === null)) {
-      CommonDailogHandler.showBubbleMessage(`请选择`);
+    if (this._sliderOrderSelectedResult.every((item) => item === null)) {
+      CommonDailogHandler.showBubbleMessage(`请选择图案`);
       return;
     }
+    if (this._sliderOrderScore === 0) {
+      CommonDailogHandler.showBubbleMessage(`请选择分数`);
+      return;
+    }
+
+    // 发送下单请求
+    let resultsString = "";
+    // 创建下单参数
+    const params = {
+      order_type: undefined,
+      order_results: undefined,
+      order_score: undefined,
+    };
+    if (this._orderType === "Move") {
+      resultsString = this._sliderOrderSelectedResult.join(",");
+      params.order_type = 4;
+    } else if (this._orderType === "Leopard") {
+      resultsString = String(this._sliderOrderSelectedResult[0]);
+      params.order_type = 3;
+    } else if (this._orderType === "Combo") {
+      resultsString = [...this._sliderOrderSelectedResult]
+        .sort((a, b) => a - b)
+        .join(",");
+      params.order_type = 2;
+    }
+    params.order_results = resultsString;
+    params.order_score = this._sliderOrderScore;
+
+    // 发送下单请求
+    DicesGameEvents.createOrder(params);
+    // 切换成普通下单
+    this.showChipsOrderPanel();
   }
 
   /**
@@ -435,7 +498,7 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
     // 打开普通下单面板
     this._chipsOrderPanelNode.active = true;
     // 关闭滑动下单面板
-    this._silderOrderPanelNode.active = false;
+    this._sliderOrderPanelNode.active = false;
     // 关闭调试结果面板
     this._debugResultPanelNode.active = false;
 
@@ -456,7 +519,7 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
     // 关闭普通下单面板
     this._chipsOrderPanelNode.active = false;
     // 打开滑动下单面板
-    this._silderOrderPanelNode.active = true;
+    this._sliderOrderPanelNode.active = true;
     // 关闭调试结果面板
     this._debugResultPanelNode.active = false;
 
@@ -470,17 +533,29 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
     this._orderScoreLabel.string = `分数：0`;
     // 显示挪标记
     this._moveTagNode.active = orderType === "Move";
-    // 初始化分数滑动条
-    this._scoreSlider.progress = 0;
-    this._scoreSliderMaskUi.width = 0;
-    // 设置为不可滑动状态
-    this._scoreSlider.enabled = false;
-    // 设置加减按钮不可点击状态
-    this._addScoreBtn.interactable = false;
-    this._subScoreBtn.interactable = false;
 
     // 游戏桌面显示下单勾选面板
     this._gameTableComponent.showOrderCheckBoxPanel(orderType);
+
+    // 清空选中结果
+    this._sliderOrderSelectedResult = [null, null];
+    // 清空滑动下单分数
+    this._sliderOrderScore = 0;
+    // 清空滑动下单最大分数
+    this._sliderOrderMaxScore = 0;
+    // 清空结果精灵
+    this._result1Sprite.spriteFrame = null;
+    this._result2Sprite.spriteFrame = null;
+
+    // 初始化分数滑动条
+    this._scoreSlider.progress = 0;
+    this._scoreSliderMaskUi.width = 0;
+
+    // 设置是否可滑动状态
+    this._scoreSlider.enabled = false;
+    // 设置加减按钮是否可点击状态
+    this._addScoreBtn.interactable = false;
+    this._subScoreBtn.interactable = false;
   }
   //#endregion
 
@@ -560,7 +635,7 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
     // 关闭普通下单面板
     this._chipsOrderPanelNode.active = false;
     // 关闭滑动下单面板
-    this._silderOrderPanelNode.active = false;
+    this._sliderOrderPanelNode.active = false;
     // 打开调试结果面板
     this._debugResultPanelNode.active = true;
 
@@ -582,7 +657,7 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    * @returns
    */
   public getSilderOrderSelectedResult() {
-    return this._silderOrderSelectedResult;
+    return this._sliderOrderSelectedResult;
   }
 
   /**
@@ -590,8 +665,116 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    * @param results
    */
   public setSilderOrderSelectedResult(results: (number | null)[]) {
-    this._silderOrderSelectedResult = results;
-    // TODO - 设置结果图片精灵
+    this._sliderOrderSelectedResult = results;
+
+    // 设置结果图片精灵
+    const atlas = ResourceManager.Instance.getAsset<SpriteAtlas>(
+      "Images",
+      `DicesGame/icons/small_icon0_atlas`,
+    );
     console.log(`setSilderOrderSelectedResult--->`, results);
+    if (results[0] !== null) {
+      this._result1Sprite.spriteFrame = atlas.getSpriteFrame(`${results[0]}`);
+    } else {
+      this._result1Sprite.spriteFrame = null;
+    }
+
+    if (results[1] !== null) {
+      this._result2Sprite.spriteFrame = atlas.getSpriteFrame(`${results[1]}`);
+    } else {
+      this._result2Sprite.spriteFrame = null;
+    }
+
+    // 清空滑动下单分数
+    this._sliderOrderScore = 0;
+    // 初始化分数滑动条
+    this._scoreSlider.progress = 0;
+    this._scoreSliderMaskUi.width = 0;
+    this._orderScoreLabel.string = `分数：${0}`;
+
+    // 计算可滑动分数
+    // 判断下单类型
+    if (this._orderType === "Move") {
+      // 挪
+      const moveResult = results[0];
+      const moveTargetResult = results[1];
+
+      // 可挪分数
+      const toMoveScore =
+        this._gameTableComponent?.getScoreBoardStatsData?.()
+          .current_single_order_stats?.[moveResult - 1] ?? 0;
+      // 可挪目标分数限制
+      const toMoveTargetScoreLimit =
+        (Number(
+          GlobalData.Instance.getCurrentGameInfo()?.game_room_data?.game_config?.score_limit?.split(
+            ",",
+          )?.[0],
+        ) ?? 0) -
+        (this._gameTableComponent?.getScoreBoardStatsData?.()
+          .current_single_order_stats?.[moveTargetResult - 1] ?? 0);
+      // 玩家分数
+      const playerScore = Math.floor(
+        (GlobalData.Instance.getCurrentClubPlayerInfo()?.club_score ?? 0) / 5,
+      );
+
+      // 取最小值
+      this._sliderOrderMaxScore = Math.min(
+        toMoveScore,
+        isNaN(toMoveTargetScoreLimit) ? 0 : toMoveTargetScoreLimit,
+        playerScore,
+      );
+
+      this._sliderOrderMaxScore = 100;
+    } else if (this._orderType === "Leopard") {
+      // 豹子
+      const leopardResult = results[0];
+
+      // 可豹子分数限制
+      const toLeopardScoreLimit =
+        (Number(
+          GlobalData.Instance.getCurrentGameInfo()?.game_room_data?.game_config?.score_limit?.split(
+            ",",
+          )?.[2],
+        ) ?? 0) -
+        (this._gameTableComponent?.getScoreBoardStatsData?.()
+          .current_leopard_order_stats?.[leopardResult - 1] ?? 0);
+      // 玩家分数
+      const playerScore =
+        GlobalData.Instance.getCurrentClubPlayerInfo()?.club_score ?? 0;
+
+      // 取最小值
+      this._sliderOrderMaxScore = Math.min(
+        isNaN(toLeopardScoreLimit) ? 0 : toLeopardScoreLimit,
+        playerScore,
+      );
+
+      this._sliderOrderMaxScore = 200;
+    } else if (this._orderType === "Combo") {
+      // 连串
+      const resultKey = [...results].sort((a, b) => a - b).join(",");
+
+      // 可连串分数限制
+      const toComboScoreLimit =
+        (Number(
+          GlobalData.Instance.getCurrentGameInfo()?.game_room_data?.game_config?.score_limit?.split(
+            ",",
+          )?.[1],
+        ) ?? 0) -
+        (this._gameTableComponent?.getScoreBoardStatsData?.()
+          .current_combo_order_stats?.[resultKey] ?? 0);
+      // 玩家分数
+      const playerScore =
+        GlobalData.Instance.getCurrentClubPlayerInfo()?.club_score ?? 0;
+
+      // 取最小值
+      this._sliderOrderMaxScore = Math.min(
+        isNaN(toComboScoreLimit) ? 0 : toComboScoreLimit,
+        playerScore,
+      );
+    }
+
+    this._scoreSlider.enabled = this._sliderOrderMaxScore > 0;
+    this._addScoreBtn.interactable = this._sliderOrderMaxScore > 0;
+    this._subScoreBtn.interactable = this._sliderOrderMaxScore > 0;
   }
 }

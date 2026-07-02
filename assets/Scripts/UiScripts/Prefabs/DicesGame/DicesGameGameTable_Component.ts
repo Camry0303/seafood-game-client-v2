@@ -244,6 +244,20 @@ export class DicesGameGameTable_Component extends ComponentController {
       current_move_order_stats,
     });
   }
+
+  /**
+   * 获取分数板统计数据
+   * @returns
+   */
+  public getScoreBoardStatsData() {
+    return {
+      my_single_order_score_stats: this._my_single_order_score_stats,
+      current_single_order_stats: this._current_single_order_stats,
+      current_combo_order_stats: this._current_combo_order_stats,
+      current_leopard_order_stats: this._current_leopard_order_stats,
+      current_move_order_stats: this._current_move_order_stats,
+    };
+  }
   //#endregion
 
   //#region 筹码容器面板相关方法
