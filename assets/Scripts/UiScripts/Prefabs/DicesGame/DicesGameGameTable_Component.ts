@@ -25,6 +25,7 @@ import { Gateway } from "../../../Types/gateway";
 import { GlobalData } from "../../../Runtime/GlobalData";
 import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
 import { DicesGameBottomStatusBar_Component } from "./DicesGameBottomStatusBar_Component";
+import DicesGameEvents from "../../../Network/SocketIo/DicesGameEvents";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameGameTable_Component")
@@ -414,15 +415,23 @@ export class DicesGameGameTable_Component extends ComponentController {
   }
 
   /**
-   * TODO - 下单按钮点击事件
+   * 下单按钮点击事件
    * @param event
    * @param customData
    */
   private onOrderButtonClick(event: Event, customData: string) {
-    const orderResult = parseInt(customData);
+    const orderResult = customData;
     const canOrder = this._mainComponent.getCanOrder();
     if (canOrder) {
-      console.log(`onOrderButtonClick orderResult--->`, orderResult);
+      // 获取下单分数
+      const chipValues = this._bottomStatusBarComponent.getCurrentChipsValue();
+      const resultsString = orderResult;
+      const params = {
+        order_type: 1,
+        order_results: resultsString,
+        order_score: chipValues,
+      };
+      DicesGameEvents.createOrder(params);
     } else {
       CommonDailogHandler.showBubbleMessage(`当前不可下注`);
     }

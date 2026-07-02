@@ -222,13 +222,6 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
     const toggleNode = event.target as Node;
     const toggle = event as unknown as Toggle;
     this._currentChipsValue = Number(toggleNode.name);
-
-    console.log("onChipsToggleCheck toggleNode--->", toggleNode);
-    console.log("onChipsToggleCheck toggle--->", toggle);
-    console.log(
-      `onChipsToggleCheck currentChipsValue--->`,
-      this._currentChipsValue,
-    );
   }
 
   /**
@@ -397,7 +390,6 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
     );
     // 设置下单分数标签
     this._orderScoreLabel.string = `分数：${this._sliderOrderScore}`;
-    console.log(`onScoreSliderChange--->`, this._sliderOrderScore);
   }
 
   /**
@@ -444,12 +436,6 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    */
   private onSliderOrderPanelConfirmBtnClick(event: Event) {
     console.log(`onSliderOrderPanelConfirmBtnClick`);
-    console.log(
-      `onSliderOrderPanelConfirmBtnClick--->`,
-      this._orderType,
-      this._sliderOrderSelectedResult,
-      this._sliderOrderScore,
-    );
     if (this._sliderOrderSelectedResult.every((item) => item === null)) {
       CommonDailogHandler.showBubbleMessage(`请选择图案`);
       return;
@@ -672,7 +658,6 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
       "Images",
       `DicesGame/icons/small_icon0_atlas`,
     );
-    console.log(`setSilderOrderSelectedResult--->`, results);
     if (results[0] !== null) {
       this._result1Sprite.spriteFrame = atlas.getSpriteFrame(`${results[0]}`);
     } else {
@@ -723,8 +708,6 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
         isNaN(toMoveTargetScoreLimit) ? 0 : toMoveTargetScoreLimit,
         playerScore,
       );
-
-      this._sliderOrderMaxScore = 100;
     } else if (this._orderType === "Leopard") {
       // 豹子
       const leopardResult = results[0];
@@ -747,8 +730,6 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
         isNaN(toLeopardScoreLimit) ? 0 : toLeopardScoreLimit,
         playerScore,
       );
-
-      this._sliderOrderMaxScore = 200;
     } else if (this._orderType === "Combo") {
       // 连串
       const resultKey = [...results].sort((a, b) => a - b).join(",");
