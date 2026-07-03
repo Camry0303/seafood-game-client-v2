@@ -9,6 +9,7 @@ import { ComponentManager } from "../../Runtime/ComponentManager";
 import { GameSettingUI_Component } from "../../UiScripts/Prefabs/GameSetting/GameSettingUI_Component";
 import { GlobalData } from "../../Runtime/GlobalData";
 import { DicesGameMainUI_Component } from "../../UiScripts/Prefabs/DicesGame/DicesGameMainUI_Component";
+import { DicesGameOrderDetailsUI_Component } from "../../UiScripts/Prefabs/DicesGame/DicesGameOrderDetailsUI_Component";
 
 /**
  * 骰子游戏事件
@@ -600,8 +601,13 @@ export default class DicesGameEvents {
         "DicesGameMainUI",
         DicesGameMainUI_Component,
       );
-
       component && component.onOrderCreated(data);
+
+      const [dNode, dComponent] = ComponentManager.Instance.getNodeComponent(
+        "DicesGameOrderDetailsUI_Component",
+        DicesGameOrderDetailsUI_Component,
+      );
+      dComponent && dComponent.onOrderCreated(data);
     }
   }
   //#endregion
@@ -622,8 +628,7 @@ export default class DicesGameEvents {
         DicesGameMainUI_Component,
       );
 
-      component &&
-        component.setGameStart(data);
+      component && component.setGameStart(data);
     }
   }
 

@@ -6,6 +6,7 @@ import { ResourceManager } from "../../../Runtime/ResourceManager";
 import { DicesGameOrderDetailsItem_Component } from "./DicesGameOrderDetailsItem_Component";
 import { GlobalData } from "../../../Runtime/GlobalData";
 import { DicesGameMainUI_Component } from "./DicesGameMainUI_Component";
+import { Gateway } from "../../../Types/gateway";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameOrderDetailsUI_Component")
@@ -15,6 +16,16 @@ export class DicesGameOrderDetailsUI_Component extends ComponentController {
 
   // 订单详情容器
   private _orderDetailsItemContainer: Node = null;
+
+  // 订单数据
+  private _data: Record<string, Gateway.Returned.Games.DicesGame.OrderData[]> =
+    null;
+
+  // 座位数据
+  private _seatsData: Record<
+    string,
+    Gateway.Returned.Games.DicesGame.GameSeatData
+  > = null;
 
   start() {}
 
@@ -60,9 +71,12 @@ export class DicesGameOrderDetailsUI_Component extends ComponentController {
    * @param data
    */
   public setData(
-    data: { [key: number]: any[] },
-    dicesGameMain: DicesGameMainUI_Component,
+    data: Record<string, Gateway.Returned.Games.DicesGame.OrderData[]>,
+    seatsData: Record<string, Gateway.Returned.Games.DicesGame.GameSeatData>,
   ) {
+    this._data = data;
+    this._seatsData = seatsData;
+
     // 清空列表项
     this._orderDetailsItemContainer.removeAllChildren();
 
@@ -75,25 +89,26 @@ export class DicesGameOrderDetailsUI_Component extends ComponentController {
     let playerNode: Node = null;
 
     for (const key in data) {
-      const player_id = Number(key);
+      const keys = key.split("-");
+      const seat_code = keys[0];
+      const player_id = keys[1];
+      const seat = seatsData[seat_code];
+      const player = seat.player;
       const gameOrders = data[key];
-      const player = dicesGameMain
-        .getPlayerSeatsComponent()
-        .getSeatsData()
-        .find((x) => x.player_id === player_id);
       const node = instantiate(prefab);
       const component = node.addComponent(DicesGameOrderDetailsItem_Component);
       component.setData({ player, gameOrders });
 
       node.name = key;
       // 判断是否是玩家的订单
-      if (player.player_id === GlobalData.Instance.getCurrentPlayerInfo().id) {
+      if (player.player_id === GlobalData.Instance.getCurrentPlayerInfo()?.id) {
         playerNode = node;
       } else {
         nodes.push(node);
       }
     }
     nodes.unshift(playerNode);
+
     for (let index = 0; index < nodes.length; index++) {
       const itemNode = nodes[index];
       if (itemNode) this._orderDetailsItemContainer.addChild(itemNode);
@@ -101,8 +116,36 @@ export class DicesGameOrderDetailsUI_Component extends ComponentController {
   }
 
   /**
-   * 更新数据
-   * @param orderReturn
+   * 订单创建
+   * @param data
    */
-  public updateData(orderReturn: any) {}
+  public onOrderCreated(
+    data: Gateway.Returned.Games.DicesGame.CreatedOrderResultData,
+  ) {
+    const key = `${data.seat_code}-${data.player_id}`;
+    const node = this._orderDetailsItemContainer.getChildByName(key);
+    if (node) {
+      const component = node.getComponent(DicesGameOrderDetailsItem_Component);
+      const order: Gateway.Returned.Games.DicesGame.OrderData = {
+        seat_code: data.seat_code,
+        player_id: data.player_id,
+        order_type: data.order_type,
+        order_results: data.order_results,
+        order_score: data.order_score,
+      };
+      component.onOrderCreated(order);
+    } else {
+      const prefab: Prefab = ResourceManager.Instance.getAsset<Prefab>(
+        "Prefabs",
+        "DicesGame/DicesGameOrderDetailsItem",
+      );
+      const seat = this._seatsData[data.seat_code];
+      const player = seat.player;
+      const node = instantiate(prefab);
+      const component = node.addComponent(DicesGameOrderDetailsItem_Component);
+      component.setData({ player, gameOrders: [data] });
+      node.name = key;
+      this._orderDetailsItemContainer.addChild(node);
+    }
+  }
 }

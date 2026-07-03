@@ -14,6 +14,7 @@ import sleep from "../../../Utils/Sleep";
 import CryptoUtils from "../../../Utils/CryptoUtils";
 import DicesGameEvents from "../../../Network/SocketIo/DicesGameEvents";
 import { Gateway } from "../../../Types/typing";
+import { DICES_GAME_SEAT_STATUS } from "../../../Enums/Events/DicesGame";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameTopStatusBar_Component")
@@ -309,9 +310,7 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
           .getGameTableComponent()
           .placeChipAnimation(
             CryptoUtils.genRandomIntegerBetween(1, 6),
-            [5, 25, 50, 100, 500][
-              CryptoUtils.genRandomIntegerBetween(0, 4)
-            ],
+            [5, 25, 50, 100, 500][CryptoUtils.genRandomIntegerBetween(0, 4)],
             "0",
             12,
           );
@@ -351,12 +350,20 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
    */
   private onOrderDetailsBtnClick(event: Event) {
     console.log(`onOrderDetailsBtnClick--->`);
-    ComponentManager.Instance.renderUiNode<DicesGameOrderDetailsUI_Component>(
-      "DicesGameOrderDetailsUI",
-      "Prefabs",
-      "DicesGame/DicesGameOrderDetailsUI",
-      DicesGameOrderDetailsUI_Component,
-    );
+
+    const [node, component] =
+      ComponentManager.Instance.renderUiNode<DicesGameOrderDetailsUI_Component>(
+        "DicesGameOrderDetailsUI",
+        "Prefabs",
+        "DicesGame/DicesGameOrderDetailsUI",
+        DicesGameOrderDetailsUI_Component,
+      );
+
+    component &&
+      component.setData(
+        this._mainComponent.getPlayersOrdersGroupedData(),
+        this._mainComponent.getPlayerSeatsComponent().getSeatsData(),
+      );
   }
 
   /**

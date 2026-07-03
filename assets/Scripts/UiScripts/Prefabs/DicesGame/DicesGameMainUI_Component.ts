@@ -51,8 +51,8 @@ export class DicesGameMainUI_Component extends ComponentController {
     Gateway.Returned.Games.DicesGame.OrderData[]
   > = {};
 
-  // FIXME - 是否可以下单
-  private _can_order: boolean = true;
+  // 是否可以下单
+  private _can_order: boolean = false;
 
   start() {
     //FIXME - // 获取游戏状态
@@ -400,5 +400,21 @@ export class DicesGameMainUI_Component extends ComponentController {
    */
   public getCanOrder() {
     return this._can_order;
+  }
+
+  /**
+   * 获取历史结果记录
+   * @returns
+   */
+  public getResultsHistoryData() {
+    return this._results_history_data;
+  }
+
+  /**
+   * 获取玩家下单分组汇总数据
+   * @returns
+   */
+  public getPlayersOrdersGroupedData() {
+    return this._players_orders_grouped_data;
   }
 }
