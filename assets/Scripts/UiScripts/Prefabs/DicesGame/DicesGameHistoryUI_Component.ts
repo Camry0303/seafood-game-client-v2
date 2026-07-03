@@ -12,7 +12,7 @@ export class DicesGameHistoryUI_Component extends ComponentController {
   private _contentNode: Node = null;
 
   // 结果数据
-  private _resultData: any = null;
+  private _resultData: number[][] = null;
 
   start() {}
 
@@ -41,7 +41,7 @@ export class DicesGameHistoryUI_Component extends ComponentController {
    * 设置数据
    * @param data
    */
-  public setData(data: any) {
+  public setData(data: number[][]) {
     this._resultData = data;
 
     this._contentNode.removeAllChildren();
@@ -55,7 +55,10 @@ export class DicesGameHistoryUI_Component extends ComponentController {
       const item = instantiate(prefab);
       const component = item.addComponent(DicesGameHistoryItem_Component);
       this._contentNode.addChild(item);
-      component.setData(item);
+      component.setData({
+        round: i + 1,
+        results: data[i],
+      });
     }
   }
 }

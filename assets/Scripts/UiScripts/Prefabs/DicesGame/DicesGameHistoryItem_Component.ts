@@ -39,22 +39,23 @@ export class DicesGameHistoryItem_Component extends ComponentController {
    * 设置数据
    * @param data
    */
-  public setData(data: any) {
+  public setData(data: { round: number; results: number[] }) {
     this._resultData = data;
     // 从资源管理中获取图集
     const atlas = ResourceManager.Instance.getAsset<SpriteAtlas>(
       "Images",
-      `DicesGame/chips/chips_atlas`,
+      `DicesGame/icons/small_icon0_atlas`,
     );
     // 设置局数
-    this._roundLabel.string = data.round;
+    this._roundLabel.string = data.round.toString();
     // 设置结果1图片
     this._result1Sprite.spriteFrame = atlas.getSpriteFrame(
       `${data.results[0]}`,
     );
-    this._result1Sprite.spriteFrame = atlas.getSpriteFrame(
+    this._result2Sprite.spriteFrame = atlas.getSpriteFrame(
       `${data.results[1]}`,
     );
+
     if (data.results.length === 3) {
       this._result1Sprite.spriteFrame = atlas.getSpriteFrame(
         `${data.results[2]}`,
