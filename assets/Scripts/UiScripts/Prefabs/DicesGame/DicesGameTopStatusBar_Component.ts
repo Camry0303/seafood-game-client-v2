@@ -15,6 +15,7 @@ import CryptoUtils from "../../../Utils/CryptoUtils";
 import DicesGameEvents from "../../../Network/SocketIo/DicesGameEvents";
 import { Gateway } from "../../../Types/typing";
 import { DICES_GAME_SEAT_STATUS } from "../../../Enums/Events/DicesGame";
+import { DicesGameSettlementUI_Component } from "./DicesGameSettlementUI_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameTopStatusBar_Component")
@@ -302,21 +303,21 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
     //   .getGameTableComponent()
     //   .updateTimeCounterUI(DICES_GAMING_STATUS.PREPARATION, 3);
 
-    // FIXME: 暂时使用 测试下单动画
-    setTimeout(async () => {
-      const times = 20;
-      for (let i = 0; i < times; i++) {
-        this._mainComponent
-          .getGameTableComponent()
-          .placeChipAnimation(
-            CryptoUtils.genRandomIntegerBetween(1, 6),
-            [5, 25, 50, 100, 500][CryptoUtils.genRandomIntegerBetween(0, 4)],
-            "0",
-            12,
-          );
-        await sleep(500);
-      }
-    }, 3000);
+    // // FIXME: 暂时使用 测试下单动画
+    // setTimeout(async () => {
+    //   const times = 20;
+    //   for (let i = 0; i < times; i++) {
+    //     this._mainComponent
+    //       .getGameTableComponent()
+    //       .placeChipAnimation(
+    //         CryptoUtils.genRandomIntegerBetween(1, 6),
+    //         [5, 25, 50, 100, 500][CryptoUtils.genRandomIntegerBetween(0, 4)],
+    //         "0",
+    //         12,
+    //       );
+    //     await sleep(500);
+    //   }
+    // }, 3000);
 
     // // FIXME: 暂时使用 测试摇骰盅动画
     // this._mainComponent.getGameTableComponent().playShakeDiceCupAnimation();
@@ -342,6 +343,39 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
 
     // // FIXME: 设置开骰结果
     // this._mainComponent.setOpenResults(9, [2, 4]);
+
+    // FIXME: 设置结算
+    const data = {
+      // 骰子点数结果 (1-6)
+      results: [3, 5, 2],
+      settlements: [
+        {
+          seat_code: "1",
+          player_id: 10001,
+          nickname: "玩家A",
+          avatar: "avatar_01",
+          score: 1500,
+          settlement_score: 120,
+        },
+        {
+          seat_code: "2",
+          player_id: 10002,
+          nickname: "玩家B",
+          avatar: "avatar_02",
+          score: 800,
+          settlement_score: -50,
+        },
+      ],
+    };
+
+    const [node, component] =
+      ComponentManager.Instance.renderUiNode<DicesGameSettlementUI_Component>(
+        "DicesGameSettlementUI",
+        "Prefabs",
+        "DicesGame/DicesGameSettlementUI",
+        DicesGameSettlementUI_Component,
+      );
+    component && component.setData(data);
   }
 
   /**

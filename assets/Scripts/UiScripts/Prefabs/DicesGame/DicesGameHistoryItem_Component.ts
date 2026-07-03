@@ -57,7 +57,7 @@ export class DicesGameHistoryItem_Component extends ComponentController {
     );
 
     if (data.results.length === 3) {
-      this._result1Sprite.spriteFrame = atlas.getSpriteFrame(
+      this._result3Sprite.spriteFrame = atlas.getSpriteFrame(
         `${data.results[2]}`,
       );
       this._result3Sprite.node.active = true;
