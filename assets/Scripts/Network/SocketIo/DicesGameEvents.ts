@@ -11,6 +11,7 @@ import { GlobalData } from "../../Runtime/GlobalData";
 import { DicesGameMainUI_Component } from "../../UiScripts/Prefabs/DicesGame/DicesGameMainUI_Component";
 import { DicesGameOrderDetailsUI_Component } from "../../UiScripts/Prefabs/DicesGame/DicesGameOrderDetailsUI_Component";
 import { DicesGameSettlementUI_Component } from "../../UiScripts/Prefabs/DicesGame/DicesGameSettlementUI_Component";
+import { DicesGameFinalSettlementUI_Component } from "../../UiScripts/Prefabs/DicesGame/DicesGameFinalSettlementUI_Component";
 
 /**
  * 骰子游戏事件
@@ -735,6 +736,14 @@ export default class DicesGameEvents {
     );
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
+      const [node, component] =
+        ComponentManager.Instance.renderUiNode<DicesGameFinalSettlementUI_Component>(
+          "DicesGameFinalSettlementUI",
+          "Prefabs",
+          "DicesGame/DicesGameFinalSettlementUI",
+          DicesGameFinalSettlementUI_Component,
+        );
+      component && component.setData(data);
     }
   }
   //#endregion

@@ -16,6 +16,7 @@ import DicesGameEvents from "../../../Network/SocketIo/DicesGameEvents";
 import { Gateway } from "../../../Types/typing";
 import { DICES_GAME_SEAT_STATUS } from "../../../Enums/Events/DicesGame";
 import { DicesGameSettlementUI_Component } from "./DicesGameSettlementUI_Component";
+import { DicesGameFinalSettlementUI_Component } from "./DicesGameFinalSettlementUI_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameTopStatusBar_Component")
@@ -344,38 +345,191 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
     // // FIXME: 设置开骰结果
     // this._mainComponent.setOpenResults(9, [2, 4]);
 
-    // FIXME: 设置结算
-    const data = {
-      // 骰子点数结果 (1-6)
-      results: [3, 5, 2],
-      settlements: [
-        {
-          seat_code: "1",
-          player_id: 10001,
-          nickname: "玩家A",
-          avatar: "avatar_01",
-          score: 1500,
-          settlement_score: 120,
-        },
-        {
-          seat_code: "2",
-          player_id: 10002,
-          nickname: "玩家B",
-          avatar: "avatar_02",
-          score: 800,
-          settlement_score: -50,
-        },
-      ],
-    };
+    // // FIXME: 设置结算
+    // const data = {
+    //   // 骰子点数结果 (1-6)
+    //   results: [3, 5, 2],
+    //   settlements: [
+    //     {
+    //       seat_code: "1",
+    //       player_id: 10001,
+    //       nickname: "玩家A",
+    //       avatar: "avatar_01",
+    //       score: 1500,
+    //       settlement_score: 120,
+    //     },
+    //     {
+    //       seat_code: "2",
+    //       player_id: 10002,
+    //       nickname: "玩家B",
+    //       avatar: "avatar_02",
+    //       score: 800,
+    //       settlement_score: -50,
+    //     },
+    //   ],
+    // };
 
-    const [node, component] =
-      ComponentManager.Instance.renderUiNode<DicesGameSettlementUI_Component>(
-        "DicesGameSettlementUI",
-        "Prefabs",
-        "DicesGame/DicesGameSettlementUI",
-        DicesGameSettlementUI_Component,
-      );
-    component && component.setData(data);
+    // const [node, component] =
+    //   ComponentManager.Instance.renderUiNode<DicesGameSettlementUI_Component>(
+    //     "DicesGameSettlementUI",
+    //     "Prefabs",
+    //     "DicesGame/DicesGameSettlementUI",
+    //     DicesGameSettlementUI_Component,
+    //   );
+    // component && component.setData(data);
+
+    // // FIXME: 设置最终结算
+    // const mockFinalSettlementList = [
+    //   {
+    //     seat_code: "0",
+    //     player_id: 1001,
+    //     nickname: "风云庄家",
+    //     avatar: "avatar_01",
+    //     is_dealer: true,
+    //     is_big_winner: false,
+    //     is_rich: false,
+    //     room_id: 666666,
+    //     player_count: 10,
+    //     rounds: 8,
+    //     total_score: -1250,
+    //     score_list: [200, -300, 150, -500, 100, -400, 300, -800],
+    //   },
+    //   {
+    //     seat_code: "1",
+    //     player_id: 1002,
+    //     nickname: "大赢家小土豪",
+    //     avatar: "avatar_02",
+    //     is_dealer: false,
+    //     is_big_winner: true,
+    //     is_rich: true,
+    //     room_id: 666666,
+    //     player_count: 10,
+    //     rounds: 8,
+    //     total_score: 3200,
+    //     score_list: [500, 300, 600, 400, 200, 500, 300, 400],
+    //   },
+    //   {
+    //     seat_code: "2",
+    //     player_id: 1003,
+    //     nickname: "稳如泰山",
+    //     avatar: "avatar_03",
+    //     is_dealer: false,
+    //     is_big_winner: false,
+    //     is_rich: false,
+    //     room_id: 666666,
+    //     player_count: 10,
+    //     rounds: 8,
+    //     total_score: 350,
+    //     score_list: [50, -20, 100, -50, 80, 60, -30, 160],
+    //   },
+    //   {
+    //     seat_code: "3",
+    //     player_id: 1004,
+    //     nickname: "天选之子",
+    //     avatar: "avatar_04",
+    //     is_dealer: false,
+    //     is_big_winner: false,
+    //     is_rich: true, // 土豪但不是大赢家
+    //     room_id: 666666,
+    //     player_count: 10,
+    //     rounds: 8,
+    //     total_score: 800,
+    //     score_list: [300, -100, 200, -150, 250, -50, 100, 250],
+    //   },
+    //   {
+    //     seat_code: "4",
+    //     player_id: 1005,
+    //     nickname: "起起落落",
+    //     avatar: "avatar_05",
+    //     is_dealer: false,
+    //     is_big_winner: false,
+    //     is_rich: false,
+    //     room_id: 666666,
+    //     player_count: 10,
+    //     rounds: 8,
+    //     total_score: -150,
+    //     score_list: [-200, 300, -150, 100, -300, 400, -100, -200],
+    //   },
+    //   {
+    //     seat_code: "5",
+    //     player_id: 1006,
+    //     nickname: "惨不忍睹",
+    //     avatar: "avatar_06",
+    //     is_dealer: false,
+    //     is_big_winner: false,
+    //     is_rich: false,
+    //     room_id: 666666,
+    //     player_count: 10,
+    //     rounds: 8,
+    //     total_score: -1800,
+    //     score_list: [-300, -200, -100, -400, -50, -350, -100, -300],
+    //   },
+    //   {
+    //     seat_code: "6",
+    //     player_id: 1007,
+    //     nickname: "保本大师",
+    //     avatar: "avatar_07",
+    //     is_dealer: false,
+    //     is_big_winner: false,
+    //     is_rich: false,
+    //     room_id: 666666,
+    //     player_count: 10,
+    //     rounds: 8,
+    //     total_score: 0,
+    //     score_list: [100, -100, 200, -200, 50, -50, 300, -300],
+    //   },
+    //   {
+    //     seat_code: "7",
+    //     player_id: 1008,
+    //     nickname: "单车变摩托",
+    //     avatar: "avatar_08",
+    //     is_dealer: false,
+    //     is_big_winner: false,
+    //     is_rich: false,
+    //     room_id: 666666,
+    //     player_count: 10,
+    //     rounds: 8,
+    //     total_score: 1100,
+    //     score_list: [-100, -50, 50, 200, 300, -100, 400, 400],
+    //   },
+    //   {
+    //     seat_code: "8",
+    //     player_id: 1009,
+    //     nickname: "佛系玩家",
+    //     avatar: "avatar_09",
+    //     is_dealer: false,
+    //     is_big_winner: true,
+    //     is_rich: false,
+    //     room_id: 666666,
+    //     player_count: 10,
+    //     rounds: 8,
+    //     total_score: 60,
+    //     score_list: [10, -10, 20, -20, 30, -30, 40, 20],
+    //   },
+    //   {
+    //     seat_code: "9",
+    //     player_id: 1010,
+    //     nickname: "最后一把梭哈",
+    //     avatar: "avatar_10",
+    //     is_dealer: false,
+    //     is_big_winner: false,
+    //     is_rich: false,
+    //     room_id: 666666,
+    //     player_count: 10,
+    //     rounds: 8,
+    //     total_score: 500,
+    //     score_list: [-100, -200, -150, -50, -100, -200, 300, 1600], // 模拟最后一把豹子通杀翻盘
+    //   },
+    // ];
+
+    // const [node, component] =
+    //   ComponentManager.Instance.renderUiNode<DicesGameFinalSettlementUI_Component>(
+    //     "DicesGameFinalSettlementUI",
+    //     "Prefabs",
+    //     "DicesGame/DicesGameFinalSettlementUI",
+    //     DicesGameFinalSettlementUI_Component,
+    //   );
+    // component && component.setData(mockFinalSettlementList);
   }
 
   /**
