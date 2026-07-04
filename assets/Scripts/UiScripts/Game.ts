@@ -149,6 +149,10 @@ export class Game extends SingletonComponent {
             "DicesGame/DicesGameHistoryItem",
             "DicesGame/DicesGameChip",
             "DicesGame/DicesGameResults",
+            "DicesGame/DicesGameSettlementUI",
+            "DicesGame/DicesGameSettlementItem",
+            "DicesGame/DicesGameFinalSettlementUI",
+            "DicesGame/DicesGameFinalSettlementItem",
           ],
         },
         // 组件相关预设体资源
