@@ -340,11 +340,6 @@ export default class ClubEvents {
       component.renderClubDetailContent();
 
       const currentPlayer = GlobalData.Instance.getCurrentPlayerInfo();
-      // // FIXME: 判断是否需要重连俱乐部游戏 考虑废弃
-      // if (currentPlayer.in_game_type.includes("club_")) {
-      //   // 游戏重连
-      //   PlazaEvents.gameReconnect();
-      // }
     } else {
       // 连接失败，弹出提示框
       CommonDailogHandler.showBubbleMessage(`${msg}`);

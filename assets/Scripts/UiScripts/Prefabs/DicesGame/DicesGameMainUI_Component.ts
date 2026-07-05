@@ -55,8 +55,8 @@ export class DicesGameMainUI_Component extends ComponentController {
   private _can_order: boolean = false;
 
   start() {
-    //FIXME - // 获取游戏状态
-    // DicesGameEvents.getClubGamingStatus();
+    // 获取游戏状态
+    DicesGameEvents.getClubGamingStatus();
   }
 
   update(deltaTime: number) {}

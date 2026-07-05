@@ -338,9 +338,13 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
 
     // // // FIXME: 设置开始下单
     // this._mainComponent.setStartOrder(40);
+    // // FIXME: 设置开始下单
+    // this._mainComponent
+    //   .getGameStatusContainerComponent()
+    //   .updateGamingStatusUI("START_ORDER");
 
-    // // FIXME: 设置停止下单
-    // this._mainComponent.setStopOrder(2);
+    // FIXME: 设置停止下单
+    this._mainComponent.setStopOrder(2);
 
     // // FIXME: 设置开骰结果
     // this._mainComponent.setOpenResults(9, [2, 4]);

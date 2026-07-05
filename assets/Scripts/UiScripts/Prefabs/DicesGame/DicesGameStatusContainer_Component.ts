@@ -151,8 +151,8 @@ export class DicesGameStatusContainer_Component extends ComponentController {
       this._roomStatusPanelNode.active = false;
 
       this._gamingStatusPanelNode.active = false;
-      this._startOrderMaskNode.active = false;
-      this._stopOrderMaskNode.active = false;
+      this._startOrderNode.active = false;
+      this._stopOrderNode.active = false;
       this._buttonPanelNode.active = false;
     }
   }
@@ -168,8 +168,8 @@ export class DicesGameStatusContainer_Component extends ComponentController {
       this._roomStatusPanelNode.active = false;
 
       this._gamingStatusPanelNode.active = false;
-      this._startOrderMaskNode.active = false;
-      this._stopOrderMaskNode.active = false;
+      this._startOrderNode.active = false;
+      this._stopOrderNode.active = false;
       this._buttonPanelNode.active = false;
     } else if (data === "START_ORDER") {
       this._gamingStatusPanelNode.active = true;
@@ -189,7 +189,7 @@ export class DicesGameStatusContainer_Component extends ComponentController {
           })
           .call(() => {
             // TODO 播放音效
-            console.log(`播放音效`);
+            console.log(`播放音效-开始下注`);
           })
           .to(0.5, {
             width: startOrderWidth,
@@ -219,12 +219,12 @@ export class DicesGameStatusContainer_Component extends ComponentController {
           })
           .call(() => {
             // TODO 播放音效
-            console.log(`播放音效`);
+            console.log(`播放音效-停止下注`);
           })
           .to(0.5, {
             width: stopOrderWidth,
           })
-          .delay(1)
+          .delay(2)
           .call(() => {
             this._gamingStatusPanelNode.active = false;
           });

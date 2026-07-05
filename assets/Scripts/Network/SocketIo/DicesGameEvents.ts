@@ -629,8 +629,14 @@ export default class DicesGameEvents {
         "DicesGameMainUI",
         DicesGameMainUI_Component,
       );
-
       component && component.setGameStart(data);
+
+      // 关闭结算界面
+      const [snode, scomponent] = ComponentManager.Instance.getNodeComponent(
+        "DicesGameSettlementUI",
+        DicesGameSettlementUI_Component,
+      );
+      scomponent && scomponent.close();
     }
   }
 
@@ -736,6 +742,7 @@ export default class DicesGameEvents {
     );
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
+      // 挂载总结算界面
       const [node, component] =
         ComponentManager.Instance.renderUiNode<DicesGameFinalSettlementUI_Component>(
           "DicesGameFinalSettlementUI",
@@ -744,6 +751,13 @@ export default class DicesGameEvents {
           DicesGameFinalSettlementUI_Component,
         );
       component && component.setData(data);
+
+      // 关闭结算界面
+      const [snode, scomponent] = ComponentManager.Instance.getNodeComponent(
+        "DicesGameSettlementUI",
+        DicesGameSettlementUI_Component,
+      );
+      scomponent && scomponent.close();
     }
   }
   //#endregion
