@@ -50,6 +50,10 @@ export default class DicesGameEvents {
       this.onPlayerLeftClubDicesGameRoomResult,
     ],
     [
+      CLUB_DICES_GAME_EVENT.PLAYER_SCORE_CHANGED_RESULT,
+      this.onPlayerScoreChangedClubDicesGameRoomResult,
+    ],
+    [
       CLUB_DICES_GAME_EVENT.ADMIN_DISSOLVE_ROOM_RESULT,
       this.onAdminDissolveClubDicesGameRoomResult,
     ],
@@ -354,6 +358,42 @@ export default class DicesGameEvents {
         DicesGameMainUI_Component,
       );
       component && component.getPlayerSeatsComponent()?.updatePlayerSeat(data);
+    }
+  }
+  //#endregion
+
+  //#region 处理玩家分数变更结果
+  /**
+   * 处理玩家分数变更结果
+   * @param returnData
+   */
+  private static onPlayerScoreChangedClubDicesGameRoomResult(
+    returnData: Gateway.Returned.Common.Result<{
+      seat_code: string;
+      player_id: number;
+      score: number;
+    }>,
+  ) {
+    console.log(
+      "<DicesGameEvent> onPlayerScoreChangedClubDicesGameRoomResult called --->",
+      returnData,
+    );
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      const [node, component] = ComponentManager.Instance.getNodeComponent(
+        "DicesGameMainUI",
+        DicesGameMainUI_Component,
+      );
+      component &&
+        component
+          .getPlayerSeatsComponent()
+          ?.updatePlayerSeatScore(data.seat_code, data.score);
+      const clubPlayer = GlobalData.Instance.getCurrentClubPlayerInfo();
+      // 更新玩家分数
+      if (clubPlayer?.player_id === data.player_id) {
+        clubPlayer.club_score = data.score;
+      }
+    } else {
     }
   }
   //#endregion

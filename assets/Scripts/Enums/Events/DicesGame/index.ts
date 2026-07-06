@@ -26,6 +26,8 @@ export enum CLUB_DICES_GAME_EVENT {
   LEAVE_ROOM_RESULT = "ClubDicesGame.LeaveRoom.Result",
   PLAYER_LEFT_ROOM_RESULT = "ClubDicesGame.PlayerLeftRoom.Result",
 
+  PLAYER_SCORE_CHANGED_RESULT = "ClubDicesGame.PlayerScoreChanged.Result",
+
   SET_DEALER = "ClubDicesGame.SetDealer",
   SET_DEALER_RESULT = "ClubDicesGame.SetDealer.Result",
   DEALER_SETTED_RESULT = "ClubDicesGame.DealerSetted.Result",
