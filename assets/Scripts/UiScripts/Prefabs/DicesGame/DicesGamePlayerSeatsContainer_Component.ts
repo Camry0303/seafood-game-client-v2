@@ -151,6 +151,14 @@ export class DicesGamePlayerSeatsContainer_Component extends ComponentController
   }
 
   /**
+   * 获取座位组件
+   * @returns
+   */
+  public getSeatsComponents() {
+    return this._seats;
+  }
+
+  /**
    * 获取座位的世界坐标
    * @param seat_code 座位编码
    */
@@ -247,6 +255,24 @@ export class DicesGamePlayerSeatsContainer_Component extends ComponentController
       if (seat.getData()?.seat_code === seat_code) {
         seat.updateScore(score);
       }
+    });
+  }
+
+  /**
+   * 结算玩家座位分数
+   * @param data
+   */
+  public settlePlayerSeatScore(
+    data: Gateway.Returned.Games.DicesGame.PlayerSettlementData[],
+  ) {
+    data.forEach((item) => {
+      const seat_code = item.seat_code;
+      const component = this._seats.find(
+        (seat) => seat.getData()?.seat_code === seat_code,
+      );
+      component && component.settleScore(item);
+      const seatData = this._seatsData[seat_code];
+      seatData && (seatData.score = item.score);
     });
   }
 }

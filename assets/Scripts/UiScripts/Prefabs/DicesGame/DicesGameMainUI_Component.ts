@@ -417,4 +417,14 @@ export class DicesGameMainUI_Component extends ComponentController {
   public getPlayersOrdersGroupedData() {
     return this._players_orders_grouped_data;
   }
+
+  /**
+   * 游戏结算
+   * @param data
+   */
+  public onGameSettled(
+    data: Gateway.Returned.Games.DicesGame.PlayerSettlementData[],
+  ) {
+    this._playerSeatsComponents.settlePlayerSeatScore(data);
+  }
 }

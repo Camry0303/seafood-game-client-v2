@@ -12,6 +12,7 @@ import { DicesGameMainUI_Component } from "../../UiScripts/Prefabs/DicesGame/Dic
 import { DicesGameOrderDetailsUI_Component } from "../../UiScripts/Prefabs/DicesGame/DicesGameOrderDetailsUI_Component";
 import { DicesGameSettlementUI_Component } from "../../UiScripts/Prefabs/DicesGame/DicesGameSettlementUI_Component";
 import { DicesGameFinalSettlementUI_Component } from "../../UiScripts/Prefabs/DicesGame/DicesGameFinalSettlementUI_Component";
+import sleep from "../../Utils/Sleep";
 
 /**
  * 骰子游戏事件
@@ -747,7 +748,7 @@ export default class DicesGameEvents {
    * 处理结算结果
    * @param returnData
    */
-  private static onSettlementResult(
+  private static async onSettlementResult(
     returnData: Gateway.Returned.Common.Result<{
       results: number[];
       settlements: Gateway.Returned.Games.DicesGame.PlayerSettlementData[];
@@ -756,14 +757,26 @@ export default class DicesGameEvents {
     console.log("<DicesGameEvent> onSettlementResult called --->", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
-      const [node, component] =
-        ComponentManager.Instance.renderUiNode<DicesGameSettlementUI_Component>(
-          "DicesGameSettlementUI",
-          "Prefabs",
-          "DicesGame/DicesGameSettlementUI",
-          DicesGameSettlementUI_Component,
+      // 先做飘分动画
+      const { code, data, msg } = returnData;
+      if (code === RESPONE_RESULT.SUCCESS) {
+        const [node, component] = ComponentManager.Instance.getNodeComponent(
+          "DicesGameMainUI",
+          DicesGameMainUI_Component,
         );
-      component && component.setData(data);
+        component && component.onGameSettled(data.settlements);
+
+        // 等待一秒后，弹出结算界面
+        await sleep(1000);
+        const [snode, scomponent] =
+          ComponentManager.Instance.renderUiNode<DicesGameSettlementUI_Component>(
+            "DicesGameSettlementUI",
+            "Prefabs",
+            "DicesGame/DicesGameSettlementUI",
+            DicesGameSettlementUI_Component,
+          );
+        scomponent && scomponent.setData(data);
+      }
     }
   }
 

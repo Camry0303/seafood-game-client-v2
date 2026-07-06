@@ -299,6 +299,12 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
    */
   private onTestBtnClick(event: Event) {
     console.log(`onTestBtnClick--->`);
+    // FIXME : 测试飘分
+    const component = this._mainComponent
+      .getPlayerSeatsComponent()
+      .getSeatsComponents()[0];
+    component && component.playScoreBubble(1000);
+
     // // FIXME: 暂时使用 测试倒计时
     // this._mainComponent
     //   .getGameTableComponent()
@@ -343,8 +349,8 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
     //   .getGameStatusContainerComponent()
     //   .updateGamingStatusUI("START_ORDER");
 
-    // FIXME: 设置停止下单
-    this._mainComponent.setStopOrder(2);
+    // // FIXME: 设置停止下单
+    // this._mainComponent.setStopOrder(2);
 
     // // FIXME: 设置开骰结果
     // this._mainComponent.setOpenResults(9, [2, 4]);
@@ -525,7 +531,6 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
     //     score_list: [-100, -200, -150, -50, -100, -200, 300, 1600], // 模拟最后一把豹子通杀翻盘
     //   },
     // ];
-
     // const [node, component] =
     //   ComponentManager.Instance.renderUiNode<DicesGameFinalSettlementUI_Component>(
     //     "DicesGameFinalSettlementUI",
