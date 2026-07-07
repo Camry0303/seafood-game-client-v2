@@ -26,6 +26,7 @@ import { GlobalData } from "../../../Runtime/GlobalData";
 import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
 import { DicesGameBottomStatusBar_Component } from "./DicesGameBottomStatusBar_Component";
 import DicesGameEvents from "../../../Network/SocketIo/DicesGameEvents";
+import { SoundsManager } from "../../../Runtime/SoundsManager";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameGameTable_Component")
@@ -479,7 +480,7 @@ export class DicesGameGameTable_Component extends ComponentController {
   }
 
   /**
-   * TODO -下单勾选框点击事件
+   * 下单勾选框点击事件
    * @param event
    * @param customData
    */
@@ -628,6 +629,10 @@ export class DicesGameGameTable_Component extends ComponentController {
             { easing: "sineOut" },
           ),
         )
+        .call(() => {
+          // 播放摇动音效
+          SoundsManager.Instance.playEffect("shake_cup");
+        })
         // 2. 上下摇动
         .to(0.2, {
           position: new Vec3(
@@ -720,6 +725,14 @@ export class DicesGameGameTable_Component extends ComponentController {
             opacity: 0,
           }),
         )
+        .call(() => {
+          const effectList = ["result_open"];
+          results.forEach((result) => {
+            effectList.push(`result_0_${result}`);
+          });
+          // 播放音效列表
+          SoundsManager.Instance.playEffectList(effectList);
+        })
         .delay(0.2)
         .call(() => {
           // 必须重新获取节点

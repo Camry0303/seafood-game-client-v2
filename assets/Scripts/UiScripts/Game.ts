@@ -204,9 +204,23 @@ export class Game extends SingletonComponent {
           assetType: AudioClip,
           urls: ["Effects/Common/ui_click"],
         },
+        // 骰子游戏相关音效资源
         {
           assetType: AudioClip,
-          urls: [],
+          urls: [
+            "Effects/DicesGame/chips_place",
+            "Effects/DicesGame/count_douwn",
+            "Effects/DicesGame/result_0_1",
+            "Effects/DicesGame/result_0_2",
+            "Effects/DicesGame/result_0_3",
+            "Effects/DicesGame/result_0_4",
+            "Effects/DicesGame/result_0_5",
+            "Effects/DicesGame/result_0_6",
+            "Effects/DicesGame/result_open",
+            "Effects/DicesGame/shake_cup",
+            "Effects/DicesGame/start_order",
+            "Effects/DicesGame/stop_order",
+          ],
         },
       ],
     };
@@ -247,6 +261,54 @@ export class Game extends SingletonComponent {
             {
               name: "button_ui_click",
               url: "Effects/Common/ui_click",
+            },
+            {
+              name: "chips_place",
+              url: "Effects/DicesGame/chips_place",
+            },
+            {
+              name: "count_douwn",
+              url: "Effects/DicesGame/count_douwn",
+            },
+            {
+              name: "result_0_1",
+              url: "Effects/DicesGame/result_0_1",
+            },
+            {
+              name: "result_0_2",
+              url: "Effects/DicesGame/result_0_2",
+            },
+            {
+              name: "result_0_3",
+              url: "Effects/DicesGame/result_0_3",
+            },
+            {
+              name: "result_0_4",
+              url: "Effects/DicesGame/result_0_4",
+            },
+            {
+              name: "result_0_5",
+              url: "Effects/DicesGame/result_0_5",
+            },
+            {
+              name: "result_0_6",
+              url: "Effects/DicesGame/result_0_6",
+            },
+            {
+              name: "result_open",
+              url: "Effects/DicesGame/result_open",
+            },
+            {
+              name: "shake_cup",
+              url: "Effects/DicesGame/shake_cup",
+            },
+            {
+              name: "start_order",
+              url: "Effects/DicesGame/start_order",
+            },
+            {
+              name: "stop_order",
+              url: "Effects/DicesGame/stop_order",
             },
           ],
         };

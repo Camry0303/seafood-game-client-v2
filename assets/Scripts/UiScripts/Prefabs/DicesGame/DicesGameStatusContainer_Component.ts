@@ -13,6 +13,7 @@ import DicesGameEvents from "../../../Network/SocketIo/DicesGameEvents";
 import { Gateway } from "../../../Types/typing";
 import { CLUB_PLAYER_ROLE, GAME_ROOM_STATUS } from "../../../Enums";
 import { GlobalData } from "../../../Runtime/GlobalData";
+import { SoundsManager } from "../../../Runtime/SoundsManager";
 const { ccclass, property, menu } = _decorator;
 
 @ccclass("DicesGameStatusContainer_Component")
@@ -188,8 +189,8 @@ export class DicesGameStatusContainer_Component extends ComponentController {
             width: 0,
           })
           .call(() => {
-            // TODO 播放音效
-            console.log(`播放音效-开始下注`);
+            // 播放音效
+            SoundsManager.Instance.playEffect("start_order");
           })
           .to(0.5, {
             width: startOrderWidth,
@@ -218,8 +219,8 @@ export class DicesGameStatusContainer_Component extends ComponentController {
             width: 0,
           })
           .call(() => {
-            // TODO 播放音效
-            console.log(`播放音效-停止下注`);
+            // 播放音效
+            SoundsManager.Instance.playEffect("stop_order");
           })
           .to(0.5, {
             width: stopOrderWidth,

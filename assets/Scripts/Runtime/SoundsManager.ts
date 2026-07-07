@@ -121,6 +121,62 @@ export class SoundsManager extends SingletonComponent {
   }
 
   /**
+   * 按顺序依次播放音效列表（支持多处并发调用，互不干扰）
+   * @param effectNameList 音效名称列表
+   */
+  public playEffectList(effectNameList: string[]) {
+    if (!this._effectAudioSource) {
+      console.error(
+        `[SoundsManager] playEffectList faild: effectAudioSource not exist!`,
+      );
+      return;
+    }
+    if (
+      !this._effectEnabled ||
+      !effectNameList ||
+      effectNameList.length === 0
+    ) {
+      return;
+    }
+
+    // 利用闭包隔离每个调用队列的 index 状态
+    let currentIndex = 0;
+
+    const playNext = () => {
+      // 列表播放完毕
+      if (currentIndex >= effectNameList.length) {
+        return;
+      }
+
+      const effectName = effectNameList[currentIndex];
+      const audioClip = this._soundsMap[effectName];
+
+      if (!audioClip) {
+        console.error(
+          `[SoundsManager] playEffectList faild:AudioClip<${effectName}> not exist!`,
+        );
+        // 即使当前音效不存在，也继续播放下一个
+        currentIndex++;
+        playNext();
+        return;
+      }
+
+      // 播放当前音效
+      this._effectAudioSource!.playOneShot(audioClip, this._effectVolume);
+
+      // 根据当前音效时长延时播放下一个
+      const duration = audioClip.getDuration();
+      currentIndex++;
+      this.scheduleOnce(() => {
+        playNext();
+      }, duration);
+    };
+
+    // 开始播放第一个
+    playNext();
+  }
+
+  /**
    * 播放背景音乐
    * @param bgmName
    */

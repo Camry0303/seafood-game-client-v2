@@ -297,13 +297,13 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
    * 测试按钮点击事件
    * @param event
    */
-  private onTestBtnClick(event: Event) {
+  private async onTestBtnClick(event: Event) {
     console.log(`onTestBtnClick--->`);
-    // FIXME : 测试飘分
-    const component = this._mainComponent
-      .getPlayerSeatsComponent()
-      .getSeatsComponents()[0];
-    component && component.playScoreBubble(1000);
+    // // FIXME : 测试飘分
+    // const component = this._mainComponent
+    //   .getPlayerSeatsComponent()
+    //   .getSeatsComponents()[0];
+    // component && component.playScoreBubble(1000);
 
     // // FIXME: 暂时使用 测试倒计时
     // this._mainComponent

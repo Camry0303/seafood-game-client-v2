@@ -10,6 +10,7 @@ import {
 } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import { ResourceManager } from "../../../Runtime/ResourceManager";
+import { SoundsManager } from "../../../Runtime/SoundsManager";
 const { ccclass, property, menu } = _decorator;
 
 @ccclass("DicesGameChip_Component")
@@ -75,8 +76,10 @@ export class DicesGameChip_Component extends ComponentController {
           easing: "sineOut",
         },
       )
+      .delay(0.1)
       .call(() => {
-        // TODO - 播放音效
+        // 播放音效
+        SoundsManager.Instance.playEffect("chips_place");
       })
       .start();
   }
