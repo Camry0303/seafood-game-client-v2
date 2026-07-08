@@ -407,8 +407,12 @@ export class ClubMainUI_Component extends ComponentController {
    * @param event
    */
   private onClubGameRecordBtnClick(event: Event) {
-    // TODO - 俱乐部战绩
+    // 俱乐部战绩
     console.log(`onClubGameRecordBtnClick--->`);
+    ClubEvents.getMyClubDicesGameSettlement({
+      current: 1,
+      pageSize: 1000,
+    });
   }
 
   /**

@@ -102,6 +102,11 @@ export default class ClubEvents {
     ],
     [CLUB_EVENT.ROOM_DISSOLVED_RESULT, this.onRoomDissolvedResult],
     [CLUB_EVENT.ROOM_CREATED_RESULT, this.onRoomCreatedResult],
+
+    [
+      CLUB_EVENT.GET_MY_CLUB_DICES_GAME_SETTLEMENT_RESULT,
+      this.onGetMyClubDicesGameSettlementResult,
+    ],
   ]);
 
   /**

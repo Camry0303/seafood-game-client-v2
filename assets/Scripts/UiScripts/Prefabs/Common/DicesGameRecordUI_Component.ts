@@ -22,9 +22,7 @@ export class DicesGameRecordUI_Component extends ComponentController {
 
   private _data: Gateway.Returned.ClubPlayer.ClubDicesGameSettlement[] = null;
 
-  start() {
-    this._tableContentNode.removeAllChildren();
-  }
+  start() {}
 
   update(deltaTime: number) {}
 
@@ -94,14 +92,14 @@ export class DicesGameRecordUI_Component extends ComponentController {
    * 普通房间Toggle点击事件
    */
   private onPublicRoomToggleClick() {
-    console.log(`onPublicRoomToggleClick`);
+    console.log(`onClubRoomToggleClick--->`);
   }
 
   /**
    * 俱乐部房间Toggle点击事件
    */
   private onClubRoomToggleClick() {
-    console.log(`onClubRoomToggleClick--->`, this._data);
+    console.log(`onClubRoomToggleClick--->`);
   }
 
   /**
@@ -122,6 +120,7 @@ export class DicesGameRecordUI_Component extends ComponentController {
       this._tableContentNode.addChild(node);
       component.setData(item);
     });
+    console.log(`setData--->`, data, this._tableContentNode);
   }
 
   /**
