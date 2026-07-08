@@ -12,12 +12,12 @@ import { PlazaSettingUI_Component } from "./PlazaSettingUI_Component";
 import { ShareUI_Component } from "./ShareUI_Component";
 import { InviteUI_Component } from "./InviteUI_Component";
 import { CustomerServiceUI_Component } from "./CustomerServiceUI_Component";
-import { PlazaGameRecordUI_Component } from "./PlazaGameRecordUI_Component";
 import { GameSettingUI_Component } from "../GameSetting/GameSettingUI_Component";
 import { ClubMainUI_Component } from "../Club/ClubMainUI_Component";
 import PlazaEvents from "../../../Network/SocketIo/PlazaEvents";
 import { Gateway } from "../../../Types/gateway";
 import { PlayerInfoEditUI_Component } from "./PlayerInfoEditUI_Component";
+import { DicesGameRecordUI_Component } from "../Common/DicesGameRecordUI_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("PlazaMainUI_Component")
@@ -296,12 +296,14 @@ export class PlazaMainUI_Component extends ComponentController {
    * @param event
    */
   private onGameRecordBtnClick(event: Event) {
-    ComponentManager.Instance.renderUiNode<PlazaGameRecordUI_Component>(
-      "PlazaGameRecordUI",
-      "Prefabs",
-      "Plaza/PlazaGameRecordUI",
-      PlazaGameRecordUI_Component,
-    );
+    const [node, component] =
+      ComponentManager.Instance.renderUiNode<DicesGameRecordUI_Component>(
+        "DicesGameRecordUI",
+        "Prefabs",
+        "Common/DicesGameRecordUI",
+        DicesGameRecordUI_Component,
+      );
+    component.setShowMode("ALL");
   }
 
   /**

@@ -59,7 +59,12 @@ export class Game extends SingletonComponent {
         // 公用预设体资源
         {
           assetType: Prefab,
-          urls: ["Common/CircleLoadingUI", "Common/BubbleMessageUI"],
+          urls: [
+            "Common/CircleLoadingUI",
+            "Common/BubbleMessageUI",
+            "Common/DicesGameRecordUI",
+            "Common/DicesGameRecordItem",
+          ],
         },
         // 对话框预设体资源
         {
@@ -94,7 +99,6 @@ export class Game extends SingletonComponent {
             "Plaza/ShareUI",
             "Plaza/InviteUI",
             "Plaza/CustomerServiceUI",
-            "Plaza/PlazaGameRecordUI",
           ],
         },
         // 俱乐部弹窗相关预设体资源

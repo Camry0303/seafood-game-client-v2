@@ -151,3 +151,21 @@ export type GetMyMemberListParams = {
   pageSize: number;
   nickname_or_id?: string;
 };
+
+/**
+ * 获取我的俱乐部骰子游戏结算列表参数
+ */
+export type GetMyClubDicesGameSettlementParams = {
+  current: number;
+  pageSize: number;
+};
+
+/**
+ * 获取房间俱乐部骰子游戏结算列表参数
+ */
+export type GetRoomClubDicesGameSettlementParams = {
+  current: number;
+  pageSize: number;
+  club_id: number;
+  room_id: number;
+};

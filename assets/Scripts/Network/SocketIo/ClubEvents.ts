@@ -23,6 +23,7 @@ import { PartnerMemberListUI_Component } from "../../UiScripts/Prefabs/Club/Part
 import { MemberScoreLogListUI_Component } from "../../UiScripts/Prefabs/Club/MemberScoreLogListUI_Component";
 import { MemberScoreRankListUI_Component } from "../../UiScripts/Prefabs/Club/MemberScoreRankListUI_Component";
 import { MyMemberListUI_Component } from "../../UiScripts/Prefabs/Club/MyMemberListUI_Component";
+import { DicesGameRecordUI_Component } from "../../UiScripts/Prefabs/Common/DicesGameRecordUI_Component";
 
 /**
  * 俱乐部事件处理类
@@ -1355,7 +1356,7 @@ export default class ClubEvents {
   /**
    * 获取俱乐部游戏房间列表
    */
-  public static onGetClubGameRoomList() {
+  public static getClubGameRoomList() {
     const socket = SocketManager.Instance.SocketInstance;
     if (socket) {
       CommonDailogHandler.showCircleLoading(
@@ -1437,5 +1438,62 @@ export default class ClubEvents {
       );
       component && component.updateClubGameTableList(data.data, "ADD");
     }
+  }
+
+  /**
+   * 获取我的俱乐部骰子游戏结算记录
+   * @param params
+   */
+  public static getMyClubDicesGameSettlement(
+    params: Gateway.Requested.ClubPlayer.GetMyClubDicesGameSettlementParams,
+  ) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(
+        WAITING_TYPE.GET_MY_CLUB_DICES_GAME_SETTLEMENT,
+      );
+      socket.emit(CLUB_EVENT.GET_MY_CLUB_DICES_GAME_SETTLEMENT, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(
+        WAITING_TYPE.GET_MY_CLUB_DICES_GAME_SETTLEMENT,
+      );
+    }
+  }
+
+  /**
+   * 处理我的俱乐部骰子游戏结算记录结果事件
+   * @param returnData
+   */
+  private static onGetMyClubDicesGameSettlementResult(
+    returnData: Gateway.Returned.Common.Result<
+      Gateway.Returned.Common.Pagenation<
+        Gateway.Returned.ClubPlayer.ClubDicesGameSettlement[]
+      >
+    >,
+  ) {
+    console.log(
+      "<DicesGameEvent> onGetMyClubDicesGameSettlementResult called --->",
+      returnData,
+    );
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      // 打开战绩界面
+      const [node, component] =
+        ComponentManager.Instance.renderUiNode<DicesGameRecordUI_Component>(
+          "DicesGameRecordUI",
+          "Prefabs",
+          "Common/DicesGameRecordUI",
+          DicesGameRecordUI_Component,
+        );
+      component && component.setShowMode("ClubOnly");
+      component && component.setData(data.data);
+    } else {
+      // 连接失败，弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(
+      WAITING_TYPE.GET_MY_CLUB_DICES_GAME_SETTLEMENT,
+    );
   }
 }

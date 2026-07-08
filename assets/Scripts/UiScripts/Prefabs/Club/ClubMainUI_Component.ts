@@ -548,7 +548,7 @@ export class ClubMainUI_Component extends ComponentController {
     }
 
     // 获取游戏桌子列表
-    ClubEvents.onGetClubGameRoomList();
+    ClubEvents.getClubGameRoomList();
   }
 
   /**

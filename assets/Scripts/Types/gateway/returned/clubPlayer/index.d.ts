@@ -241,3 +241,75 @@ export type ClubPlayerScoreRank = {
    */
   rank: number;
 };
+
+/**
+ * 俱乐部骰子游戏结算数据
+ */
+export type ClubDicesGameSettlement = {
+  /**
+   * 俱乐部id
+   */
+  club_id: number;
+
+  /**
+   * 房间id
+   */
+  room_id: number;
+
+  /**
+   * 座位编码
+   */
+  seat_code: string;
+
+  /**
+   * 玩家id
+   */
+  player_id: number;
+
+  /**
+   * 玩家昵称
+   */
+  nickname: string;
+
+  /**
+   * 玩家头像
+   */
+  avatar: string;
+
+  /**
+   * 是否庄家
+   */
+  is_dealer: boolean;
+
+  /**
+   * 是否大赢家
+   */
+  is_big_winner: boolean;
+
+  /**
+   * 是否土豪
+   */
+  is_rich: boolean;
+
+  /**
+   * 人数
+   */
+  player_count: number;
+
+  /**
+   * 局数
+   */
+  rounds: number;
+  /**
+   * 总分
+   */
+  total_score: number;
+  /**
+   * 每局分数
+   */
+  score_list: number[];
+  /**
+   * 日期
+   */
+  created_date: string;
+};

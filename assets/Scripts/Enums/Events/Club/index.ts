@@ -82,4 +82,10 @@ export enum CLUB_EVENT {
 
   ROOM_DISSOLVED_RESULT = "Club.RoomDissolved.Result",
   ROOM_CREATED_RESULT = "Club.RoomCreated.Result",
+
+  GET_MY_CLUB_DICES_GAME_SETTLEMENT = "Club.GetMyClubDicesGameSettlement",
+  GET_MY_CLUB_DICES_GAME_SETTLEMENT_RESULT = "Club.GetMyClubDicesGameSettlement.Result",
+
+  GET_ROOM_CLUB_DICES_GAME_SETTLEMENT = "Club.GetRoomClubDicesGameSettlement",
+  GET_ROOM_CLUB_DICES_GAME_SETTLEMENT_RESULT = "Club.GetRoomClubDicesGameSettlement.Result",
 }

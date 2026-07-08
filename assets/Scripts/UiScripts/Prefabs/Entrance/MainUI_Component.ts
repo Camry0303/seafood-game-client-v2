@@ -16,6 +16,7 @@ import moment from "moment";
 import CryptoUtils from "../../../Utils/CryptoUtils";
 import { MemberScoreLogListUI_Component } from "../Club/MemberScoreLogListUI_Component";
 import { DicesGameMainUI_Component } from "../DicesGame/DicesGameMainUI_Component";
+import { DicesGameRecordUI_Component } from "../Common/DicesGameRecordUI_Component";
 
 const { ccclass, menu } = _decorator;
 
@@ -58,7 +59,8 @@ export class MainUI_Component extends ComponentController {
    */
   private async onTestBtnClick(event: Event) {
     console.log(`onTestBtnClick`);
-    this.testDiceGameMain();
+    this.testDicesGameRecordUI();
+    // this.testDiceGameMain();
     // this.testMemberScoreLogList();
     // this.testDialogConfirm();
     // this.testCSWRequest();
@@ -259,6 +261,19 @@ export class MainUI_Component extends ComponentController {
       "DicesGame/DicesGameMainUI",
       DicesGameMainUI_Component,
     );
+  }
+
+  /**
+   * 测试打开骰子游戏记录界面
+   */
+  private testDicesGameRecordUI() {
+    const [node, component] =
+      ComponentManager.Instance.renderUiNode<DicesGameRecordUI_Component>(
+        "DicesGameRecordUI",
+        "Prefabs",
+        "Common/DicesGameRecordUI",
+        DicesGameRecordUI_Component,
+      );
   }
 
   /**

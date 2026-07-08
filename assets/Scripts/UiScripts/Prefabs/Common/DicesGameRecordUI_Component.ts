@@ -1,0 +1,140 @@
+import { _decorator, instantiate, Node, Prefab, Toggle } from "cc";
+import { ComponentController } from "../../../Common/ComponentController";
+import BubbleWindow from "../../../Common/BubbleWindow";
+import { ComponentManager } from "../../../Runtime/ComponentManager";
+import { Gateway } from "../../../Types/gateway";
+import { ResourceManager } from "../../../Runtime/ResourceManager";
+import { DicesGameRecordItem_Component } from "./DicesGameRecordItem_Component";
+const { ccclass, menu } = _decorator;
+
+@ccclass("DicesGameRecordUI_Component")
+@menu("Hidden/DicesGameRecordUI_Component")
+export class DicesGameRecordUI_Component extends ComponentController {
+  public _bubbleWindow: BubbleWindow = null;
+
+  private _publicRoomToggleNode: Node = null;
+  private _publicRoomToggle: Toggle = null;
+
+  private _clubRoomToggleNode: Node = null;
+  private _clubRoomToggle: Toggle = null;
+
+  private _tableContentNode: Node = null;
+
+  private _data: Gateway.Returned.ClubPlayer.ClubDicesGameSettlement[] = null;
+
+  start() {
+    this._tableContentNode.removeAllChildren();
+  }
+
+  update(deltaTime: number) {}
+
+  protected onLoad(): void {
+    super.onLoad();
+    this.printNodeMap();
+
+    // 获取普通房间节点和Toggle组件
+    [this._publicRoomToggleNode, this._publicRoomToggle] =
+      this.getNodeComponent(
+        "MainView/Content/ScrollView/view/content/MainContent/Menu/PublicRoomToggle",
+        Toggle,
+      );
+
+    // 获取俱乐部房间节点和Toggle组件
+    [this._clubRoomToggleNode, this._clubRoomToggle] = this.getNodeComponent(
+      "MainView/Content/ScrollView/view/content/MainContent/Menu/ClubRoomToggle",
+      Toggle,
+    );
+
+    // 获取内容节点
+    this._tableContentNode = this.getNode(
+      "MainView/Content/ScrollView/view/content/MainContent/TableContent/Content/ScrollView/view/content",
+    );
+
+    this.setToggleClickEvent(
+      "MainView/Content/ScrollView/view/content/MainContent/Menu/PublicRoomToggle",
+      0,
+      "onPublicRoomToggleClick",
+      this.getClassName(),
+    );
+
+    this.setToggleClickEvent(
+      "MainView/Content/ScrollView/view/content/MainContent/Menu/ClubRoomToggle",
+      0,
+      "onClubRoomToggleClick",
+      this.getClassName(),
+    );
+
+    // 挂载气泡弹窗组件
+    this._bubbleWindow = this.node
+      .getChildByName("MainView")
+      .addComponent(BubbleWindow);
+
+    // 设置关闭按钮点击事件
+    this.setButtonClickEvent(
+      "MainView/CloseBtn",
+      0,
+      "close",
+      this.getClassName(),
+    );
+
+    // 设置蒙版关闭按钮点击事件
+    this.setButtonClickEvent("MaskNode", 0, "close", this.getClassName());
+  }
+
+  /**
+   * 关闭弹窗
+   */
+  public close() {
+    this._bubbleWindow.close(() => {
+      ComponentManager.Instance.destroyNode(this.node);
+    });
+  }
+
+  /**
+   * 普通房间Toggle点击事件
+   */
+  private onPublicRoomToggleClick() {
+    console.log(`onPublicRoomToggleClick`);
+  }
+
+  /**
+   * 俱乐部房间Toggle点击事件
+   */
+  private onClubRoomToggleClick() {
+    console.log(`onClubRoomToggleClick--->`, this._data);
+  }
+
+  /**
+   * 设置数据
+   * @param data
+   */
+  public setData(data: Gateway.Returned.ClubPlayer.ClubDicesGameSettlement[]) {
+    this._data = data;
+    this._tableContentNode.removeAllChildren();
+
+    const prefab: Prefab = ResourceManager.Instance.getAsset<Prefab>(
+      "Prefabs",
+      "Common/DicesGameRecordItem",
+    );
+    data.forEach((item) => {
+      const node = instantiate(prefab);
+      const component = node.addComponent(DicesGameRecordItem_Component);
+      this._tableContentNode.addChild(node);
+      component.setData(item);
+    });
+  }
+
+  /**
+   * 设置显示模式
+   * @param mode
+   */
+  public setShowMode(mode: "ClubOnly" | "ALL") {
+    if (mode === "ClubOnly") {
+      this._publicRoomToggleNode.active = false;
+      this._clubRoomToggleNode.active = true;
+    } else {
+      this._publicRoomToggleNode.active = true;
+      this._clubRoomToggleNode.active = true;
+    }
+  }
+}
