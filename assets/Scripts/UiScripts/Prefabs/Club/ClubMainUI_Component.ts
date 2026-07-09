@@ -29,6 +29,7 @@ import {
   GetMyMemberListParams,
 } from "../../../Types/gateway/requested/clubPlayer";
 import { GameTable_Component } from "./GameTable_Component";
+import { DicesGameRecordUI_Component } from "../Common/DicesGameRecordUI_Component";
 
 const { ccclass, menu } = _decorator;
 
@@ -407,11 +408,26 @@ export class ClubMainUI_Component extends ComponentController {
    * @param event
    */
   private onClubGameRecordBtnClick(event: Event) {
-    // 俱乐部战绩
     console.log(`onClubGameRecordBtnClick--->`);
+    const club = GlobalData.Instance.getCurrentClubInfoDetail();
+    if (!club) {
+      return;
+    }
+
+    // 挂载战绩界面
+    const [node, component] =
+      ComponentManager.Instance.renderUiNode<DicesGameRecordUI_Component>(
+        "DicesGameRecordUI",
+        "Prefabs",
+        "Common/DicesGameRecordUI",
+        DicesGameRecordUI_Component,
+      );
+    component && component.setShowMode("ClubOnly");
+
     ClubEvents.getMyClubDicesGameSettlement({
       current: 1,
       pageSize: 1000,
+      club_id: club.club_id,
     });
   }
 

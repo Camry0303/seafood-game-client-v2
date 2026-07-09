@@ -158,6 +158,7 @@ export type GetMyMemberListParams = {
 export type GetMyClubDicesGameSettlementParams = {
   current: number;
   pageSize: number;
+  club_id?: number;
 };
 
 /**

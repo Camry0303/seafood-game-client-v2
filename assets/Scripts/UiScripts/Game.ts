@@ -64,6 +64,8 @@ export class Game extends SingletonComponent {
             "Common/BubbleMessageUI",
             "Common/DicesGameRecordUI",
             "Common/DicesGameRecordItem",
+            "Common/DicesGameReviewUI",
+            "Common/DicesGameReviewItem",
           ],
         },
         // 对话框预设体资源

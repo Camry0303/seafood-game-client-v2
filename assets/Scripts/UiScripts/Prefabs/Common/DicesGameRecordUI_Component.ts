@@ -5,6 +5,9 @@ import { ComponentManager } from "../../../Runtime/ComponentManager";
 import { Gateway } from "../../../Types/gateway";
 import { ResourceManager } from "../../../Runtime/ResourceManager";
 import { DicesGameRecordItem_Component } from "./DicesGameRecordItem_Component";
+import { GlobalData } from "../../../Runtime/GlobalData";
+import ClubEvents from "../../../Network/SocketIo/ClubEvents";
+import PlazaEvents from "../../../Network/SocketIo/PlazaEvents";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameRecordUI_Component")
@@ -93,6 +96,11 @@ export class DicesGameRecordUI_Component extends ComponentController {
    */
   private onPublicRoomToggleClick() {
     console.log(`onClubRoomToggleClick--->`);
+    // TODO 获取普通房间战绩
+    // PlazaEvents.getMyPublicDicesGameSettlement({
+    //   current: 1,
+    //   pageSize: 1000,
+    // });
   }
 
   /**
@@ -100,6 +108,31 @@ export class DicesGameRecordUI_Component extends ComponentController {
    */
   private onClubRoomToggleClick() {
     console.log(`onClubRoomToggleClick--->`);
+    const club = GlobalData.Instance.getCurrentClubInfoDetail();
+    let params: Gateway.Requested.ClubPlayer.GetMyClubDicesGameSettlementParams =
+      {
+        current: 1,
+        pageSize: 1000,
+      };
+
+    // 挂载战绩界面
+    const [node, component] =
+      ComponentManager.Instance.renderUiNode<DicesGameRecordUI_Component>(
+        "DicesGameRecordUI",
+        "Prefabs",
+        "Common/DicesGameRecordUI",
+        DicesGameRecordUI_Component,
+      );
+
+    if (club) {
+      component && component.setShowMode("ClubOnly");
+      params.club_id = club.club_id;
+      ClubEvents.getMyClubDicesGameSettlement(params);
+    } else {
+      // 没有俱乐部信息，在大厅中查询俱乐部战绩
+      component && component.setShowMode("ALL");
+      ClubEvents.getMyClubDicesGameSettlement(params);
+    }
   }
 
   /**
@@ -120,7 +153,6 @@ export class DicesGameRecordUI_Component extends ComponentController {
       this._tableContentNode.addChild(node);
       component.setData(item);
     });
-    console.log(`setData--->`, data, this._tableContentNode);
   }
 
   /**

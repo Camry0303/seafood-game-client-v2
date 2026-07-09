@@ -54,6 +54,7 @@ export enum WAITING_TYPE {
 
   GET_MY_MEMBER_LIST = "正在获取我的成员列表",
   GET_MY_CLUB_DICES_GAME_SETTLEMENT = "正在获取战绩",
+  GET_ROOM_CLUB_DICES_GAME_SETTLEMENT = "正在获取回放",
 
   GET_CLUB_GAME_ROOM_LIST = "正在获取俱乐部游戏房间列表",
 

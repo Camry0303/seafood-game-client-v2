@@ -6,6 +6,7 @@ import { GlobalData } from "../../../Runtime/GlobalData";
 import { Gateway } from "../../../Types/gateway";
 import Constants from "../../../Common/Constants";
 import DicesGameEvents from "../../../Network/SocketIo/DicesGameEvents";
+import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
 const { ccclass, menu } = _decorator;
 
 @ccclass("GameSettingUI_Component")
@@ -321,6 +322,7 @@ export class GameSettingUI_Component extends ComponentController {
     if (this._type === "CLUB") {
       DicesGameEvents.createClubDicesGameRoom(this._gameSettingParams);
     } else if (this._type === "PUBLIC") {
+      CommonDailogHandler.showBubbleMessage("大厅游戏维护，暂未开放");
     }
   }
 }

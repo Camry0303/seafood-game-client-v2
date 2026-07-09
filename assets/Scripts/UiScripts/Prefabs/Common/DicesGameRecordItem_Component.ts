@@ -2,6 +2,7 @@ import { _decorator, Label, Node, Event } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import { Gateway } from "../../../Types/gateway";
 import moment from "moment";
+import ClubEvents from "../../../Network/SocketIo/ClubEvents";
 
 const { ccclass, menu } = _decorator;
 
@@ -79,5 +80,11 @@ export class DicesGameRecordItem_Component extends ComponentController {
    */
   private onReviewBtnClick(event: Event) {
     console.log(`onReviewBtnClick--->`, this._data);
+    ClubEvents.getRoomClubDicesGameSettlement({
+      current: 1,
+      pageSize: 1000,
+      room_id: this._data.room_id,
+      club_id: this._data.club_id,
+    });
   }
 }
