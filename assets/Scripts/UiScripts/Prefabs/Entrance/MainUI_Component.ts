@@ -59,8 +59,8 @@ export class MainUI_Component extends ComponentController {
    */
   private async onTestBtnClick(event: Event) {
     console.log(`onTestBtnClick`);
-    this.testDicesGameRecordUI();
-    // this.testDiceGameMain();
+    this.testDiceGameMain();
+    // this.testDicesGameRecordUI();
     // this.testMemberScoreLogList();
     // this.testDialogConfirm();
     // this.testCSWRequest();

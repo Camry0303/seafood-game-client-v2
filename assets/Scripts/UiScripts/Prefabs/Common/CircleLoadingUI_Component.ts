@@ -68,6 +68,8 @@ export enum WAITING_TYPE {
   SET_DEALER = "正在设置庄家",
   START_GAME = "正在开始游戏",
   CREATE_ORDER = "正在下注",
+  DEBUG_MODE = "正在进入调试模式",
+  SET_DEBUG_RESULT = "正在设置调试结果",
 
   GAME_RECONNECT = "正在重连游戏",
 }

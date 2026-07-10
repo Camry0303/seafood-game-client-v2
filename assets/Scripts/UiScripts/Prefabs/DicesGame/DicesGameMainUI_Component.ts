@@ -427,4 +427,11 @@ export class DicesGameMainUI_Component extends ComponentController {
   ) {
     this._playerSeatsComponents.settlePlayerSeatScore(data);
   }
+
+  /**
+   * 进入调试模式
+   */
+  public intoDebugMode() {
+    this._bottomStatusBarComponent.showDebugResultPanel();
+  }
 }

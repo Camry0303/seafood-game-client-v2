@@ -82,6 +82,11 @@ export default class DicesGameEvents {
       CLUB_DICES_GAME_EVENT.FINAL_SETTLEMENT_RESULT,
       this.onFinalSettlementResult,
     ],
+    [CLUB_DICES_GAME_EVENT.DEBUG_MODE_RESULT, this.onDebugModeResult],
+    [
+      CLUB_DICES_GAME_EVENT.SET_DEBUG_RESULT_RESULT,
+      this.onSetDebugResultResult,
+    ],
   ]);
 
   /**
@@ -652,6 +657,79 @@ export default class DicesGameEvents {
       );
       dComponent && dComponent.onOrderCreated(data);
     }
+  }
+  //#endregion
+
+  //#region 调试模式
+  /**
+   * 进入调试模式
+   */
+  public static debugMode() {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.DEBUG_MODE);
+      socket.emit(CLUB_DICES_GAME_EVENT.DEBUG_MODE);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.DEBUG_MODE);
+    }
+  }
+
+  /**
+   * 处理进入调试模式结果
+   * @param returnData
+   */
+  private static onDebugModeResult(
+    returnData: Gateway.Returned.Common.Result<boolean>,
+  ) {
+    console.log("<DicesGameEvent> onDebugModeResult called --->", returnData);
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      // 进入调试模式
+      const [node, component] = ComponentManager.Instance.getNodeComponent(
+        "DicesGameMainUI",
+        DicesGameMainUI_Component,
+      );
+      if (data) {
+        component && component.intoDebugMode();
+      }
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.DEBUG_MODE);
+  }
+  //#endregion
+
+  //#region 设置调试结果
+  /**
+   * 设置调试结果
+   * @param params
+   */
+  public static setDebugResult(params: { results: string }) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.SET_DEBUG_RESULT);
+      socket.emit(CLUB_DICES_GAME_EVENT.SET_DEBUG_RESULT, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.SET_DEBUG_RESULT);
+    }
+  }
+
+  /**
+   * 处理设置调试结果结果
+   * @param returnData
+   */
+  private static onSetDebugResultResult(
+    returnData: Gateway.Returned.Common.Result<boolean>,
+  ) {
+    console.log(
+      "<DicesGameEvent> onSetDebugResultResult called --->",
+      returnData,
+    );
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      CommonDailogHandler.showBubbleMessage(`操作成功!`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.SET_DEBUG_RESULT);
   }
   //#endregion
 

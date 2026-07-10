@@ -72,7 +72,7 @@ export class DicesGameGameTable_Component extends ComponentController {
   // 下单勾选框面板
   private _orderCheckBoxPanelNode: Node = null;
   // 勾选下单类型
-  private _checkBoxOrderType: "Move" | "Leopard" | "Combo";
+  private _checkBoxOrderType: "Move" | "Leopard" | "Combo" | "Debug";
   //#endregion
 
   //#region 骰盅相关属性
@@ -495,7 +495,9 @@ export class DicesGameGameTable_Component extends ComponentController {
     const toggleNodes = this._orderCheckBoxPanelNode.children;
 
     const results =
-      this._bottomStatusBarComponent.getSilderOrderSelectedResult();
+      this._checkBoxOrderType === "Debug"
+        ? this._bottomStatusBarComponent.getDebugResultSelectedResult()
+        : this._bottomStatusBarComponent.getSilderOrderSelectedResult();
     // 根据下单勾选框类型，处理勾选结果
     if (this._checkBoxOrderType === "Move") {
       const resultIndex = results.indexOf(orderResult);
@@ -530,7 +532,15 @@ export class DicesGameGameTable_Component extends ComponentController {
           results[results.length - 1] = orderResult;
         }
       }
+    } else if (this._checkBoxOrderType === "Debug") {
+      const nullIndex = results.indexOf(null);
+      if (nullIndex !== -1) {
+        results[nullIndex] = orderResult;
+      } else {
+        results[results.length - 1] = orderResult;
+      }
     }
+
     // 根据勾选结果，设置下单勾选框是否勾选
     toggleNodes.forEach((node) => {
       const toggle = node.getComponent(Toggle);
@@ -538,8 +548,26 @@ export class DicesGameGameTable_Component extends ComponentController {
       const resultIndex = results.indexOf(value);
       toggle.setIsCheckedWithoutNotify(resultIndex !== -1);
     });
-    // 设置滑动下单选中结果
-    this._bottomStatusBarComponent.setSilderOrderSelectedResult(results);
+
+    if (this._checkBoxOrderType === "Debug") {
+      // 设置滑动下单选中结果
+      this._bottomStatusBarComponent.setDebugResultSelectedResult(results);
+    } else {
+      // 设置滑动下单选中结果
+      this._bottomStatusBarComponent.setSilderOrderSelectedResult(results);
+    }
+  }
+
+  /**
+   * 重置下单勾选框面板
+   */
+  public resetOrderCheckBoxPanel() {
+    const toggleNodes = this._orderCheckBoxPanelNode.children;
+    // 根据下单勾选框类型，设置下单勾选框是否勾选
+    toggleNodes.forEach((node) => {
+      const toggle = node.getComponent(Toggle);
+      toggle.setIsCheckedWithoutNotify(false);
+    });
   }
 
   /**
@@ -559,14 +587,16 @@ export class DicesGameGameTable_Component extends ComponentController {
   /**
    * 显示下单勾选框面板
    */
-  public showOrderCheckBoxPanel(orderType: "Move" | "Leopard" | "Combo") {
+  public showOrderCheckBoxPanel(
+    orderType: "Move" | "Leopard" | "Combo" | "Debug",
+  ) {
     this._checkBoxOrderType = orderType;
     this.initOrderCheckBoxPanel();
     this._orderCheckBoxPanelNode.active = true;
     this.setOrderCheckBoxInteractable(true);
   }
 
-  /**s
+  /**
    * 隐藏下单勾选框面板
    */
   public hideOrderCheckBoxPanel() {

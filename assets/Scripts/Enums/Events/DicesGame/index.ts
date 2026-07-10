@@ -45,6 +45,12 @@ export enum CLUB_DICES_GAME_EVENT {
   OPEN_RESULTS_RESULT = "ClubDicesGame.OpenResults.Result",
   SETTLEMENT_RESULT = "ClubDicesGame.Settlement.Result",
   FINAL_SETTLEMENT_RESULT = "ClubDicesGame.FinalSettlement.Result",
+
+  DEBUG_MODE = "ClubDicesGame.DebugMode",
+  DEBUG_MODE_RESULT = "ClubDicesGame.DebugMode.Result",
+
+  SET_DEBUG_RESULT = "ClubDicesGame.SetDebugResult",
+  SET_DEBUG_RESULT_RESULT = "ClubDicesGame.SetDebugResult.Result",
 }
 
 /**

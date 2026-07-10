@@ -76,7 +76,7 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
   // 挪标记节点
   private _moveTagNode: Node = null;
   // 滑动下单选中结果
-  private _sliderOrderSelectedResult: (number | null)[] = [null, null];
+  private _sliderOrderSelectedResult: (number | null)[] = [];
   // 滑动下单分数
   private _sliderOrderScore: number = 0;
   // 滑动下单最大分数
@@ -92,6 +92,8 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
   private _debugResult2Sprite: Sprite = null;
   // 调试结果3精灵
   private _debugResult3Sprite: Sprite = null;
+  // 调试结果
+  private _debugResultSelectedResult: (number | null)[] = [];
   //#endregion
 
   // 下单类型
@@ -160,6 +162,8 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    */
   private onAvatarClick(event: Event) {
     console.log(`onAvatarClick`);
+    // 请求进入调试
+    DicesGameEvents.debugMode();
   }
 
   /**
@@ -284,7 +288,12 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
     this._chipsOrderPanelNode.active = true;
     this._sliderOrderPanelNode.active = false;
     this._debugResultPanelNode.active = false;
+    // 设置下单类型
     this._orderType = "Normal";
+    // 隐藏挪标记
+    this._moveTagNode.active = false;
+    // 游戏桌面关闭下单勾选面板
+    this._gameTableComponent.hideOrderCheckBoxPanel();
   }
   //#endregion
 
@@ -435,8 +444,9 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    * @param event
    */
   private onSliderOrderPanelConfirmBtnClick(event: Event) {
-    console.log(`onSliderOrderPanelConfirmBtnClick`);
-    if (this._sliderOrderSelectedResult.every((item) => item === null)) {
+    console.log(`onSliderOrderPanelConfirmBtnClick--->`);
+
+    if (this._sliderOrderSelectedResult.some((item) => item === null)) {
       CommonDailogHandler.showBubbleMessage(`请选择图案`);
       return;
     }
@@ -480,21 +490,8 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    */
   private onSliderOrderPanelCloseBtnClick(event: Event) {
     console.log(`onSliderOrderPanelCloseBtnClick`);
-
-    // 打开普通下单面板
-    this._chipsOrderPanelNode.active = true;
-    // 关闭滑动下单面板
-    this._sliderOrderPanelNode.active = false;
-    // 关闭调试结果面板
-    this._debugResultPanelNode.active = false;
-
-    // 设置下单类型
-    this._orderType = "Normal";
-    // 隐藏挪标记
-    this._moveTagNode.active = false;
-
-    // 游戏桌面关闭下单勾选面板
-    this._gameTableComponent.hideOrderCheckBoxPanel();
+    // 显示普通下单面板
+    this.showChipsOrderPanel();
   }
 
   /**
@@ -596,6 +593,8 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    */
   private onDebugResultPanelResetBtnClick(event: Event) {
     console.log(`onDebugResultPanelResetBtnClick`);
+    this.setDebugResultSelectedResult([null, null]);
+    this._gameTableComponent.resetOrderCheckBoxPanel();
   }
 
   /**
@@ -603,7 +602,20 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    * @param event
    */
   private onDebugResultPanelConfirmBtnClick(event: Event) {
-    console.log(`onDebugResultPanelConfirmBtnClick`);
+    console.log(`onDebugResultPanelConfirmBtnClick--->`);
+
+    if (this._debugResultSelectedResult.some((item) => item === null)) {
+      CommonDailogHandler.showBubbleMessage(`请选择图案`);
+      return;
+    }
+
+    const params = {
+      results: this._debugResultSelectedResult.join(","),
+    };
+    // 发送调试请求
+    DicesGameEvents.setDebugResult(params);
+    // 切换成普通下单
+    this.showChipsOrderPanel();
   }
 
   /**
@@ -612,6 +624,8 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    */
   private onDebugResultPanelCloseBtnClick(event: Event) {
     console.log(`onDebugResultPanelCloseBtnClick`);
+    // 显示普通下单面板
+    this.showChipsOrderPanel();
   }
 
   /**
@@ -627,7 +641,20 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
 
     // 设置下单类型
     this._orderType = "Debug";
+    // 设置勾选结果
+    this._gameTableComponent.showOrderCheckBoxPanel("Debug");
+
+    // 清空选中调试结果
+    this._debugResultSelectedResult = [null, null];
+
+    // 清空调试结果精灵
+    this._debugResult1Sprite.spriteFrame = null;
+    this._debugResult2Sprite.spriteFrame = null;
+
+    this._debugResult3Sprite.spriteFrame = null;
+    this._debugResult3Sprite.node.active = false;
   }
+
   //#endregion
 
   /**
@@ -757,5 +784,42 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
     this._scoreSlider.enabled = this._sliderOrderMaxScore > 0;
     this._addScoreBtn.interactable = this._sliderOrderMaxScore > 0;
     this._subScoreBtn.interactable = this._sliderOrderMaxScore > 0;
+  }
+
+  /**
+   * 获取调试选中结果
+   * @returns
+   */
+  public getDebugResultSelectedResult() {
+    return this._debugResultSelectedResult;
+  }
+
+  /**
+   * 设置调试选中结果
+   * @param results
+   */
+  public setDebugResultSelectedResult(results: (number | null)[]) {
+    this._debugResultSelectedResult = results;
+
+    // 设置结果图片精灵
+    const atlas = ResourceManager.Instance.getAsset<SpriteAtlas>(
+      "Images",
+      `DicesGame/icons/small_icon0_atlas`,
+    );
+    if (results[0] !== null) {
+      this._debugResult1Sprite.spriteFrame = atlas.getSpriteFrame(
+        `${results[0]}`,
+      );
+    } else {
+      this._debugResult1Sprite.spriteFrame = null;
+    }
+
+    if (results[1] !== null) {
+      this._debugResult2Sprite.spriteFrame = atlas.getSpriteFrame(
+        `${results[1]}`,
+      );
+    } else {
+      this._debugResult2Sprite.spriteFrame = null;
+    }
   }
 }
