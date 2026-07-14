@@ -512,14 +512,14 @@ export default class ClubEvents {
       );
       if (component) {
         const club_id = component.setReviewed();
-        const [clubMainNode, clubMainComponent] =
-          ComponentManager.Instance.getNodeComponent(
-            "ClubMainUI",
-            ClubMainUI_Component,
-          );
-        if (clubMainComponent) {
-          clubMainComponent.setApplicationHint(club_id, -1);
-        }
+        // const [clubMainNode, clubMainComponent] =
+        //   ComponentManager.Instance.getNodeComponent(
+        //     "ClubMainUI",
+        //     ClubMainUI_Component,
+        //   );
+        // if (clubMainComponent) {
+        //   clubMainComponent.setApplicationHint(club_id, -1);
+        // }
       }
     } else {
       // 连接失败，弹出提示框

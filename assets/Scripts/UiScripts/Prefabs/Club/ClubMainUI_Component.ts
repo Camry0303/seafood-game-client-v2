@@ -655,16 +655,19 @@ export class ClubMainUI_Component extends ComponentController {
 
   /**
    * 设置申请提示
-   * @param club_id
-   * @param diff
+   * @param data
    */
-  public setApplicationHint(club_id: number, diff: number) {
+  public setApplicationHint(data: {
+    club_id: number;
+    joinCount: number;
+    quitCount: number;
+  }) {
     const toggles = this._clubToggleContainer.toggleItems;
     for (const toggle of toggles) {
       const clubToggle = toggle.getComponent(ClubToggle_Component);
       const clubData = clubToggle.getData();
-      if (clubData?.club_id === club_id) {
-        clubData.has_hint += diff;
+      if (clubData?.club_id === data.club_id) {
+        clubData.has_hint = data.joinCount + data.quitCount > 0 ? 1 : 0;
         clubToggle?.updateApplicationHint();
         break;
       }

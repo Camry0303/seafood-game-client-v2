@@ -122,16 +122,21 @@ export default class PlazaEvents {
    * @param returnData
    */
   private static onIncomingClubHintResult(
-    returnData: Gateway.Returned.Common.Result<number>,
+    returnData: Gateway.Returned.Common.Result<{
+      club_id: number;
+      joinCount: number;
+      quitCount: number;
+    }>,
   ) {
     console.log("<PlazaEvent> onIncomingClubHintResult called!");
+    const { code, data, msg } = returnData;
     // PlazaEvents.getClubHasHint();
     // 判断如果在俱乐部界面，则更新相应的toggle上的申请标记
     const [node, component] = ComponentManager.Instance.getNodeComponent(
       "ClubMainUI",
       ClubMainUI_Component,
     );
-    component && component.setApplicationHint(returnData.data, 1);
+    component && component.setApplicationHint(data);
   }
 
   /**

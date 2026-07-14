@@ -289,10 +289,7 @@
       "b": 255,
       "a": 255
     },
-    "_spriteFrame": {
-      "__uuid__": "b05c97e3-2283-4192-8e34-cae0033bc445@f9941",
-      "__expectedType__": "cc.SpriteFrame"
-    },
+    "_spriteFrame": null,
     "_type": 0,
     "_fillType": 0,
     "_sizeMode": 0,
@@ -703,7 +700,7 @@
       "b": 103,
       "a": 255
     },
-    "_string": "阿白",
+    "_string": "",
     "_horizontalAlign": 0,
     "_verticalAlign": 1,
     "_actualFontSize": 20,
@@ -862,7 +859,7 @@
       "b": 103,
       "a": 255
     },
-    "_string": "888888",
+    "_string": "",
     "_horizontalAlign": 0,
     "_verticalAlign": 1,
     "_actualFontSize": 20,
@@ -1274,10 +1271,7 @@
       "b": 255,
       "a": 255
     },
-    "_spriteFrame": {
-      "__uuid__": "b05c97e3-2283-4192-8e34-cae0033bc445@f9941",
-      "__expectedType__": "cc.SpriteFrame"
-    },
+    "_spriteFrame": null,
     "_type": 0,
     "_fillType": 0,
     "_sizeMode": 0,
@@ -1724,7 +1718,7 @@
       "b": 255,
       "a": 255
     },
-    "_string": "阿白",
+    "_string": "",
     "_horizontalAlign": 0,
     "_verticalAlign": 1,
     "_actualFontSize": 20,
@@ -1883,7 +1877,7 @@
       "b": 255,
       "a": 255
     },
-    "_string": "888888",
+    "_string": "",
     "_horizontalAlign": 0,
     "_verticalAlign": 1,
     "_actualFontSize": 20,

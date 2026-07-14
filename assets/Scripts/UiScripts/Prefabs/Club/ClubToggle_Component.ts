@@ -115,8 +115,7 @@ export class ClubToggle_Component extends ComponentController {
    */
   public updateApplicationHint() {
     // 是否有申请
-    if (this._clubData.has_hint) {
-      this._applicationBtnNode.active = true;
+    if (this._clubData.has_hint && this._clubData.has_hint > 0) {
       // 设置申请按钮点击事件
       this.setButtonClickEvent(
         "ApplicationBtn",
@@ -124,8 +123,11 @@ export class ClubToggle_Component extends ComponentController {
         "onApplicationBtnClick",
         this.getClassName(),
       );
+      this._applicationBtnNode.active = true;
+      this._applicationBtnButton.interactable = true;
     } else {
       this._applicationBtnNode.active = false;
+      this._applicationBtnButton.interactable = false;
     }
   }
 }
