@@ -349,7 +349,7 @@ export class GlobalData extends Singleton {
     {
       dice_skin: DICE_SKIN.虎狮骰,
       dice_num: 2,
-      score_mode: 1,
+      score_mode: 0,
       total_game_rounds: 5,
       max_players: 10,
       score_limit: "1000,400,200",

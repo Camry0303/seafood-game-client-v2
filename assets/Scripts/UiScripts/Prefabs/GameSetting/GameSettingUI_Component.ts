@@ -29,7 +29,7 @@ export class GameSettingUI_Component extends ComponentController {
   // 游戏设置
   private _gameSetting: Gateway.Returned.Games.DicesGame.DicesGameConfig = null;
   // 游戏设置参数
-  private _gameSettingParams: Gateway.Requested.Games.DicesGame.DicesGameConfig =
+  private _gameSettingParams: Gateway.Returned.Games.DicesGame.DicesGameConfig =
     null;
 
   // 显示类型
@@ -320,8 +320,12 @@ export class GameSettingUI_Component extends ComponentController {
   private onCreateBtnClick(event: Event) {
     console.log(`onCreateBtnClick--->`, this._gameSettingParams, this._type);
     if (this._type === "CLUB") {
+      // 持久化俱乐部建房配置，供下次打开默认填充
+      GlobalData.Instance.defaultClubDicesConfig = this._gameSettingParams;
       DicesGameEvents.createClubDicesGameRoom(this._gameSettingParams);
     } else if (this._type === "PUBLIC") {
+      // 持久化大厅建房配置，供下次打开默认填充
+      GlobalData.Instance.defaultDicesConfig = this._gameSettingParams;
       CommonDailogHandler.showBubbleMessage("大厅游戏维护，暂未开放");
     }
   }
