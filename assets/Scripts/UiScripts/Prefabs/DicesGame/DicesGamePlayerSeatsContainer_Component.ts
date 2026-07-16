@@ -226,8 +226,6 @@ export class DicesGamePlayerSeatsContainer_Component extends ComponentController
       seat.setData(seatsDataToRender[index]);
     });
 
-    console.log(`updatePlayerSeatsUI seatsDataToRender--->`, seatsDataToRender);
-
     // 计算玩家人数
     const playernum = seatsDataSorted.reduce((acc, seat) => {
       return seat.status !== DICES_GAME_SEAT_STATUS.EMPTY ? acc + 1 : acc;

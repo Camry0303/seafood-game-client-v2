@@ -6,6 +6,9 @@ import { SoundsManager } from "./Runtime/SoundsManager";
 import { HotUpdateUI_Component } from "./UiScripts/Prefabs/Entrance/HotUpdateUI_Component";
 import SocketManager from "./Network/SocketIo/SocketManager";
 import NativeAPI from "./Utils/NativeAPI";
+import { GlobalData } from "./Runtime/GlobalData";
+import { DicesGameMainUI_Component } from "./UiScripts/Prefabs/DicesGame/DicesGameMainUI_Component";
+import DicesGameEvents from "./Network/SocketIo/DicesGameEvents";
 const { ccclass, property } = _decorator;
 
 /**
@@ -104,6 +107,26 @@ export class GameLanch extends Component {
   private listenGamePauseEvent() {
     game.on(CCGame.EVENT_PAUSE, () => {
       console.log("在此处理暂停逻辑（如暂停音效、动画等）");
+      // 判断socket是否连接
+      if (SocketManager.Instance.SocketInstance.connected) {
+        const [dicesGameNode, dicesGameComponent] =
+          ComponentManager.Instance.getNodeComponent(
+            "DicesGameMainUI",
+            DicesGameMainUI_Component,
+          );
+        // 判断是否在骰子游戏场景
+        if (dicesGameNode && dicesGameComponent) {
+          // 判断是否在俱乐部
+          const club = GlobalData.Instance.getCurrentClubInfoDetail();
+          if (club) {
+            // 请求俱乐部骰子游戏状态数据
+            DicesGameEvents.getClubGamingStatus();
+          } else {
+            // // 请求大厅骰子游戏状态数据
+            // DicesGameEvents.getHallGamingStatus();
+          }
+        }
+      }
     });
   }
 }

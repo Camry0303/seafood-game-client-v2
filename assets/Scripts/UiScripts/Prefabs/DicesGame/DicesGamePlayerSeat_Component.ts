@@ -69,13 +69,14 @@ export class DicesGamePlayerSeat_Component extends ComponentController {
     this.node.active = true;
 
     if (data === null) {
-      this._seatData = null;
       this.node.active = false;
+      // 赋值
+      this._seatData = data;
       return;
     } else if (data.status !== DICES_GAME_SEAT_STATUS.EMPTY) {
       this.node.active = true;
       this._nicknameLabel.string = data.player.nickname;
-      this._scoreLabel.string = `${data?.player.score}`;
+      this._scoreLabel.string = `${data.player.score}`;
       // 是否庄家
       this._dealerTagNode.active = data.is_dealer;
       // 渲染头像
@@ -83,13 +84,19 @@ export class DicesGamePlayerSeat_Component extends ComponentController {
         (this._avatarSprite.spriteFrame = await getAvatarSpriteFrame(
           data.player.avatar,
         ));
+      // 赋值
+      this._seatData = data;
       return;
     } else if (data.status === DICES_GAME_SEAT_STATUS.EMPTY && data.is_dealer) {
       this._dealerTagNode.active = true;
       this.node.active = true;
+      // 赋值
+      this._seatData = data;
     } else {
       this._dealerTagNode.active = false;
       this.node.active = false;
+      // 赋值
+      this._seatData = data;
     }
     // 清除昵称
     this._nicknameLabel.string = "";
@@ -97,9 +104,6 @@ export class DicesGamePlayerSeat_Component extends ComponentController {
     this._scoreLabel.string = "";
     // 清除渲染头像
     this._avatarSprite.spriteFrame = null;
-
-    // 赋值
-    this._seatData = data;
   }
 
   /**

@@ -399,7 +399,6 @@ export default class DicesGameEvents {
       if (clubPlayer?.player_id === data.player_id) {
         clubPlayer.club_score = data.score;
       }
-    } else {
     }
   }
   //#endregion
@@ -507,6 +506,30 @@ export default class DicesGameEvents {
     } else {
       // 弹出提示框
       CommonDailogHandler.showBubbleMessage(`${msg}`);
+      // 关闭最终结算界面
+      const [fsnode, fscomponent] = ComponentManager.Instance.getNodeComponent(
+        "DicesGameFinalSettlementUI",
+        DicesGameFinalSettlementUI_Component,
+      );
+      fscomponent && fscomponent.close();
+      // 关闭结算界面
+      const [snode, scomponent] = ComponentManager.Instance.getNodeComponent(
+        "DicesGameSettlementUI",
+        DicesGameSettlementUI_Component,
+      );
+      scomponent && scomponent.close();
+      // 关闭下单详情界面
+      const [dnode, dcomponent] = ComponentManager.Instance.getNodeComponent(
+        "DicesGameOrderDetailsUI",
+        DicesGameOrderDetailsUI_Component,
+      );
+      dcomponent && dcomponent.close();
+      // 关闭主界面
+      const [node, component] = ComponentManager.Instance.getNodeComponent(
+        "DicesGameMainUI",
+        DicesGameMainUI_Component,
+      );
+      component && component.close();
     }
     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.GET_GAME_STATUS);
   }
