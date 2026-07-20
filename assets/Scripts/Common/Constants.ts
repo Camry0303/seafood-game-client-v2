@@ -2,8 +2,13 @@ import { Config } from "../Types/typing";
 
 // API签名密钥
 const API_KEY = "Us9wppPKKZH77R2UWSzM0J2EGboO4VTcx";
+
 // 加密密码密钥
 const PASSWORD_KEY = "s9wppPKKZH77R2UW";
+
+// 服务器配置地址
+const SERVER_CONFIG_URL = "https://config.zehior.top/seafood-xbxj-config.json";
+
 // 游戏限制分选项
 const SCORE_LIMIT_OPTIONS: Config.ComboBoxOption[] = [
   {
@@ -57,6 +62,7 @@ const SCORE_LIMIT_OPTIONS: Config.ComboBoxOption[] = [
     value: "500000,200000,100000",
   },
 ];
+
 // 上下分类型选项
 const SCORE_TYPE_OPTIONS: Config.ComboBoxOption[] = [
   {
@@ -79,6 +85,7 @@ const SCORE_TYPE_OPTIONS: Config.ComboBoxOption[] = [
 export default {
   API_KEY,
   PASSWORD_KEY,
+  SERVER_CONFIG_URL,
   SCORE_LIMIT_OPTIONS,
   SCORE_TYPE_OPTIONS,
 };

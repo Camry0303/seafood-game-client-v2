@@ -17,6 +17,19 @@ const { ccclass, property } = _decorator;
  */
 // @ccclass("ResourceManager")
 export class ResourceManager extends SingletonComponent {
+  /**
+   * 是否输出详细加载日志（成功级）。默认关闭以减少日志噪音；
+   * 排查加载问题时可临时置为 true。错误日志不受此开关影响，始终输出。
+   */
+  public static verboseLog: boolean = false;
+
+  /** 详细日志输出（受 verboseLog 开关控制） */
+  private static log(...args: unknown[]): void {
+    if (ResourceManager.verboseLog) {
+      console.log(...args);
+    }
+  }
+
   private _assetsBundle: { [key: string]: AssetManager.Bundle } = {};
 
   private _total: number = 0;
@@ -59,7 +72,9 @@ export class ResourceManager extends SingletonComponent {
         this._assetsBundle[abName] = null;
         return;
       } else {
-        console.log(`[ResourceManager] loadAssetsBundle <${abName}> success!`);
+        ResourceManager.log(
+          `[ResourceManager] loadAssetsBundle <${abName}> success!`
+        );
         this._assetsBundle[abName] = bundle;
       }
       if (completeFunc) {
@@ -104,7 +119,7 @@ export class ResourceManager extends SingletonComponent {
         console.error(`[ResourceManager] loadAsset <${url}> failed: ${error}`);
       } else {
         const clazz = asset.constructor;
-        console.log(
+        ResourceManager.log(
           `[ResourceManager] loadAsset <${clazz.name}>-<${url}> success!`
         );
 

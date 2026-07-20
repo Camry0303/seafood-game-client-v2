@@ -18,6 +18,29 @@ import CommonDailogHandler from "../Utils/CommonDailogHandler";
 import { WAITING_TYPE } from "./Prefabs/Common/CircleLoadingUI_Component";
 
 /**
+ * 音效清单：url 与播放名一一对应，作为预加载与音频映射的唯一数据源。
+ * 新增音效只需在此处添加一项，避免预加载列表与 SoundsMap 两处维护、容易不一致。
+ */
+const SOUND_LIST: { url: string; name: string }[] = [
+  { url: "BGM/bgm_00", name: "bgm_00" },
+  { url: "BGM/bgm_01", name: "bgm_01" },
+  { url: "BGM/bgm_02", name: "bgm_02" },
+  { url: "Effects/Common/ui_click", name: "button_ui_click" },
+  { url: "Effects/DicesGame/chips_place", name: "chips_place" },
+  { url: "Effects/DicesGame/count_douwn", name: "count_douwn" },
+  { url: "Effects/DicesGame/result_0_1", name: "result_0_1" },
+  { url: "Effects/DicesGame/result_0_2", name: "result_0_2" },
+  { url: "Effects/DicesGame/result_0_3", name: "result_0_3" },
+  { url: "Effects/DicesGame/result_0_4", name: "result_0_4" },
+  { url: "Effects/DicesGame/result_0_5", name: "result_0_5" },
+  { url: "Effects/DicesGame/result_0_6", name: "result_0_6" },
+  { url: "Effects/DicesGame/result_open", name: "result_open" },
+  { url: "Effects/DicesGame/shake_cup", name: "shake_cup" },
+  { url: "Effects/DicesGame/start_order", name: "start_order" },
+  { url: "Effects/DicesGame/stop_order", name: "stop_order" },
+];
+
+/**
  * 游戏主脚本
  */
 // @ccclass('Game')
@@ -161,19 +184,9 @@ export class Game extends SingletonComponent {
             "DicesGame/DicesGameFinalSettlementItem",
           ],
         },
-        // 组件相关预设体资源
-        {
-          assetType: Prefab,
-          urls: [],
-        },
       ],
       // 图片资源包
       Images: [
-        // 背景图片资源
-        {
-          assetType: ImageAsset,
-          urls: [],
-        },
         // Atlas资源
         {
           assetType: SpriteAtlas,
@@ -194,39 +207,12 @@ export class Game extends SingletonComponent {
             }),
           ],
         },
-        // 俱乐部相关
-        {
-          assetType: ImageAsset,
-          urls: [],
-        },
       ],
-      // 声音资源包
+      // 声音资源包（url 由 SOUND_LIST 统一提供，避免与音频映射两处维护）
       Sounds: [
         {
           assetType: AudioClip,
-          urls: ["BGM/bgm_00", "BGM/bgm_01", "BGM/bgm_02"],
-        },
-        {
-          assetType: AudioClip,
-          urls: ["Effects/Common/ui_click"],
-        },
-        // 骰子游戏相关音效资源
-        {
-          assetType: AudioClip,
-          urls: [
-            "Effects/DicesGame/chips_place",
-            "Effects/DicesGame/count_douwn",
-            "Effects/DicesGame/result_0_1",
-            "Effects/DicesGame/result_0_2",
-            "Effects/DicesGame/result_0_3",
-            "Effects/DicesGame/result_0_4",
-            "Effects/DicesGame/result_0_5",
-            "Effects/DicesGame/result_0_6",
-            "Effects/DicesGame/result_open",
-            "Effects/DicesGame/shake_cup",
-            "Effects/DicesGame/start_order",
-            "Effects/DicesGame/stop_order",
-          ],
+          urls: SOUND_LIST.map((s) => s.url),
         },
       ],
     };
@@ -235,13 +221,12 @@ export class Game extends SingletonComponent {
     ResourceManager.Instance.preloadResourcePackages(
       resPkgs,
       (loadedCount: number, totalCount: number, detail: string) => {
-        const progress = (loadedCount + 1) / totalCount;
+        const progress = totalCount > 0 ? loadedCount / totalCount : 1;
         hotUpdateUiComponent?.setProgress(progress >= 1 ? 1 : progress);
         hotUpdateUiComponent?.setLoadingText("加载游戏资源中...");
         hotUpdateUiComponent?.setLoadingDetailsText(
-          `进度:${loadedCount + 1}/${totalCount} ${detail}`,
+          `进度:${loadedCount}/${totalCount} ${detail}`,
         );
-        // console.log(`${loadedCount}/${totalCount}`);
       },
       () => {
         console.log("资源包加载完成！");
@@ -249,74 +234,9 @@ export class Game extends SingletonComponent {
         hotUpdateUiComponent?.setLoadingText("加载完！");
         hotUpdateUiComponent?.setLoadingDetailsText(`正在初始化游戏界面！`);
 
-        // 构建音频资源映射
+        // 构建音频资源映射（由 SOUND_LIST 派生，与预加载清单自动保持一致）
         const soundsMap: Config.SoundsMap = {
-          Sounds: [
-            {
-              name: "bgm_00",
-              url: "BGM/bgm_00",
-            },
-            {
-              name: "bgm_01",
-              url: "BGM/bgm_01",
-            },
-            {
-              name: "bgm_02",
-              url: "BGM/bgm_02",
-            },
-            {
-              name: "button_ui_click",
-              url: "Effects/Common/ui_click",
-            },
-            {
-              name: "chips_place",
-              url: "Effects/DicesGame/chips_place",
-            },
-            {
-              name: "count_douwn",
-              url: "Effects/DicesGame/count_douwn",
-            },
-            {
-              name: "result_0_1",
-              url: "Effects/DicesGame/result_0_1",
-            },
-            {
-              name: "result_0_2",
-              url: "Effects/DicesGame/result_0_2",
-            },
-            {
-              name: "result_0_3",
-              url: "Effects/DicesGame/result_0_3",
-            },
-            {
-              name: "result_0_4",
-              url: "Effects/DicesGame/result_0_4",
-            },
-            {
-              name: "result_0_5",
-              url: "Effects/DicesGame/result_0_5",
-            },
-            {
-              name: "result_0_6",
-              url: "Effects/DicesGame/result_0_6",
-            },
-            {
-              name: "result_open",
-              url: "Effects/DicesGame/result_open",
-            },
-            {
-              name: "shake_cup",
-              url: "Effects/DicesGame/shake_cup",
-            },
-            {
-              name: "start_order",
-              url: "Effects/DicesGame/start_order",
-            },
-            {
-              name: "stop_order",
-              url: "Effects/DicesGame/stop_order",
-            },
-          ],
+          Sounds: SOUND_LIST.map((s) => ({ name: s.name, url: s.url })),
         };
         // 映射音频资源
         SoundsManager.Instance.mapAudioClips(soundsMap);
