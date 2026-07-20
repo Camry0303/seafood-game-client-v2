@@ -40,6 +40,167 @@ const SOUND_LIST: { url: string; name: string }[] = [
   { url: "Effects/DicesGame/stop_order", name: "stop_order" },
 ];
 
+/** 单个资源分组（一个 assetType 对应一批 urls），Prefabs/Images 的元素类型 */
+type ResourceGroup = ResMgr.ResourcePackage<Asset>["Prefabs"][number];
+
+/**
+ * 预设体资源清单：按模块拆分为独立常量，便于单独定位维护。
+ * 每个模块常量即一个资源分组，新增预设体在对应模块追加 url 即可。
+ */
+// 入口预设体资源
+const PREFAB_ENTRANCE: ResourceGroup = {
+  assetType: Prefab,
+  urls: ["Entrance/HotUpdateUI", "Entrance/MainUI"],
+};
+// 公用预设体资源
+const PREFAB_COMMON: ResourceGroup = {
+  assetType: Prefab,
+  urls: [
+    "Common/CircleLoadingUI",
+    "Common/BubbleMessageUI",
+    "Common/DicesGameRecordUI",
+    "Common/DicesGameRecordItem",
+    "Common/DicesGameReviewUI",
+    "Common/DicesGameReviewItem",
+  ],
+};
+// 对话框预设体资源
+const PREFAB_DIALOG: ResourceGroup = {
+  assetType: Prefab,
+  urls: [
+    "Dialog/DialogConfirmSmallUI",
+    "Dialog/DialogMiniKeyboardUI",
+    "Dialog/DialogInputUI",
+    "Dialog/DialogMessageUI",
+  ],
+};
+// 登录注册预设体资源
+const PREFAB_LOGIN_REGISTER: ResourceGroup = {
+  assetType: Prefab,
+  urls: [
+    "LoginRegister/LoginRegisterMainUI",
+    "LoginRegister/AgreementUI",
+    "LoginRegister/PhoneLoginUI",
+    "LoginRegister/PhoneRegisterUI",
+    "LoginRegister/ResetPasswordUI",
+  ],
+};
+// 大厅相关预设体资源
+const PREFAB_PLAZA: ResourceGroup = {
+  assetType: Prefab,
+  urls: [
+    "Plaza/PlazaMainUI",
+    "Plaza/PlayerInfoEditUI",
+    "Plaza/BindPhoneUI",
+    "Plaza/ActivityUI",
+    "Plaza/PlazaSettingUI",
+    "Plaza/ShareUI",
+    "Plaza/InviteUI",
+    "Plaza/CustomerServiceUI",
+  ],
+};
+// 俱乐部弹窗相关预设体资源
+const PREFAB_CLUB_DIALOGS: ResourceGroup = {
+  assetType: Prefab,
+  urls: [
+    "Club/ClubMainUI",
+    "Club/ClubSettingUI",
+    "Club/ApplicationUI",
+    "Club/MemberManagementUI",
+    "Club/MemberListUI",
+    "Club/PartnerListUI",
+    "Club/PartnerMemberListUI",
+    "Club/MemberScoreLogListUI",
+    "Club/MemberScoreRankListUI",
+    "Club/MyMemberListUI",
+  ],
+};
+// 俱乐部组件预设体资源
+const PREFAB_CLUB_COMPONENTS: ResourceGroup = {
+  assetType: Prefab,
+  urls: [
+    "Club/ClubToggle",
+    "Club/ApplicationItem",
+    "Club/MemberManagementItem",
+    "Club/MemberListItem",
+    "Club/PartnerListItem",
+    "Club/PartnerMemberListItem",
+    "Club/MemberScoreLogListItem",
+    "Club/MemberScoreRankListItem",
+    "Club/MyMemberListItem",
+    "Club/GameTable",
+  ],
+};
+// 游戏设置相关预设体资源
+const PREFAB_GAME_SETTING: ResourceGroup = {
+  assetType: Prefab,
+  urls: ["GameSetting/GameSettingUI"],
+};
+// 骰子游戏房间相关预设体资源
+const PREFAB_DICES_GAME: ResourceGroup = {
+  assetType: Prefab,
+  urls: [
+    "DicesGame/DicesGameMainUI",
+    "DicesGame/DicesGameHelpUI",
+    "DicesGame/DicesGameSoundSettingUI",
+    "DicesGame/DicesGameDialogConfirmSmallUI",
+    "DicesGame/DicesGameOrderDetailsUI",
+    "DicesGame/DicesGameOrderDetailsItem",
+    "DicesGame/DicesGameOrderItem",
+    "DicesGame/DicesGameHistoryUI",
+    "DicesGame/DicesGameHistoryItem",
+    "DicesGame/DicesGameChip",
+    "DicesGame/DicesGameResults",
+    "DicesGame/DicesGameSettlementUI",
+    "DicesGame/DicesGameSettlementItem",
+    "DicesGame/DicesGameFinalSettlementUI",
+    "DicesGame/DicesGameFinalSettlementItem",
+  ],
+};
+
+/** 预设体资源包：汇总各模块常量（顺序即加载顺序） */
+const PREFAB_PACKAGES: ResMgr.ResourcePackage<Asset>["Prefabs"] = [
+  PREFAB_ENTRANCE,
+  PREFAB_COMMON,
+  PREFAB_DIALOG,
+  PREFAB_LOGIN_REGISTER,
+  PREFAB_PLAZA,
+  PREFAB_CLUB_DIALOGS,
+  PREFAB_CLUB_COMPONENTS,
+  PREFAB_GAME_SETTING,
+  PREFAB_DICES_GAME,
+];
+
+/**
+ * 图片资源清单：按用途拆分为独立常量，便于单独定位维护。
+ */
+// Atlas资源
+const IMAGE_ATLAS: ResourceGroup = {
+  assetType: SpriteAtlas,
+  urls: [
+    "DicesGame/dices/dices0_atlas",
+    "DicesGame/chips/chips_atlas",
+    "DicesGame/icons/icons0_atlas",
+    "DicesGame/icons/small_icon0_atlas",
+  ],
+};
+// 内置头像资源
+const IMAGE_AVATARS: ResourceGroup = {
+  assetType: ImageAsset,
+  urls: [
+    "Common/default_avatar_01",
+    ...Array.from({ length: 40 }).map((_, i) => {
+      return `Avatars/avatar_${i.toString().padStart(3, "0")}`;
+    }),
+  ],
+};
+
+/** 图片资源包：汇总各用途常量 */
+const IMAGE_PACKAGES: ResMgr.ResourcePackage<Asset>["Images"] = [
+  IMAGE_ATLAS,
+  IMAGE_AVATARS,
+];
+
 /**
  * 游戏主脚本
  */
@@ -70,144 +231,10 @@ export class Game extends SingletonComponent {
     console.log("进入游戏逻辑！");
     console.log("开始加载资源包！");
 
-    // 配置资源包信息列表
+    // 配置资源包信息列表（Prefabs/Images 由模块级常量统一维护，Sounds 由 SOUND_LIST 派生）
     const resPkgs: ResMgr.ResourcePackage<Asset> = {
-      // 预设体资源包
-      Prefabs: [
-        // 入口预设体资源
-        {
-          assetType: Prefab,
-          urls: ["Entrance/HotUpdateUI", "Entrance/MainUI"],
-        },
-        // 公用预设体资源
-        {
-          assetType: Prefab,
-          urls: [
-            "Common/CircleLoadingUI",
-            "Common/BubbleMessageUI",
-            "Common/DicesGameRecordUI",
-            "Common/DicesGameRecordItem",
-            "Common/DicesGameReviewUI",
-            "Common/DicesGameReviewItem",
-          ],
-        },
-        // 对话框预设体资源
-        {
-          assetType: Prefab,
-          urls: [
-            "Dialog/DialogConfirmSmallUI",
-            "Dialog/DialogMiniKeyboardUI",
-            "Dialog/DialogInputUI",
-            "Dialog/DialogMessageUI",
-          ],
-        },
-        // 登录注册预设体资源
-        {
-          assetType: Prefab,
-          urls: [
-            "LoginRegister/LoginRegisterMainUI",
-            "LoginRegister/AgreementUI",
-            "LoginRegister/PhoneLoginUI",
-            "LoginRegister/PhoneRegisterUI",
-            "LoginRegister/ResetPasswordUI",
-          ],
-        },
-        // 大厅相关预设体资源
-        {
-          assetType: Prefab,
-          urls: [
-            "Plaza/PlazaMainUI",
-            "Plaza/PlayerInfoEditUI",
-            "Plaza/BindPhoneUI",
-            "Plaza/ActivityUI",
-            "Plaza/PlazaSettingUI",
-            "Plaza/ShareUI",
-            "Plaza/InviteUI",
-            "Plaza/CustomerServiceUI",
-          ],
-        },
-        // 俱乐部弹窗相关预设体资源
-        {
-          assetType: Prefab,
-          urls: [
-            "Club/ClubMainUI",
-            "Club/ClubSettingUI",
-            "Club/ApplicationUI",
-            "Club/MemberManagementUI",
-            "Club/MemberListUI",
-            "Club/PartnerListUI",
-            "Club/PartnerMemberListUI",
-            "Club/MemberScoreLogListUI",
-            "Club/MemberScoreRankListUI",
-            "Club/MyMemberListUI",
-          ],
-        },
-        // 俱乐部组件预设体资源
-        {
-          assetType: Prefab,
-          urls: [
-            "Club/ClubToggle",
-            "Club/ApplicationItem",
-            "Club/MemberManagementItem",
-            "Club/MemberListItem",
-            "Club/PartnerListItem",
-            "Club/PartnerMemberListItem",
-            "Club/MemberScoreLogListItem",
-            "Club/MemberScoreRankListItem",
-            "Club/MyMemberListItem",
-            "Club/GameTable",
-          ],
-        },
-        // 游戏设置相关预设体资源
-        {
-          assetType: Prefab,
-          urls: ["GameSetting/GameSettingUI"],
-        },
-        // 骰子游戏房间相关预设体资源
-        {
-          assetType: Prefab,
-          urls: [
-            "DicesGame/DicesGameMainUI",
-            "DicesGame/DicesGameHelpUI",
-            "DicesGame/DicesGameSoundSettingUI",
-            "DicesGame/DicesGameDialogConfirmSmallUI",
-            "DicesGame/DicesGameOrderDetailsUI",
-            "DicesGame/DicesGameOrderDetailsItem",
-            "DicesGame/DicesGameOrderItem",
-            "DicesGame/DicesGameHistoryUI",
-            "DicesGame/DicesGameHistoryItem",
-            "DicesGame/DicesGameChip",
-            "DicesGame/DicesGameResults",
-            "DicesGame/DicesGameSettlementUI",
-            "DicesGame/DicesGameSettlementItem",
-            "DicesGame/DicesGameFinalSettlementUI",
-            "DicesGame/DicesGameFinalSettlementItem",
-          ],
-        },
-      ],
-      // 图片资源包
-      Images: [
-        // Atlas资源
-        {
-          assetType: SpriteAtlas,
-          urls: [
-            "DicesGame/dices/dices0_atlas",
-            "DicesGame/chips/chips_atlas",
-            "DicesGame/icons/icons0_atlas",
-            "DicesGame/icons/small_icon0_atlas",
-          ],
-        },
-        // 内置头像资源
-        {
-          assetType: ImageAsset,
-          urls: [
-            "Common/default_avatar_01",
-            ...Array.from({ length: 40 }).map((_, i) => {
-              return `Avatars/avatar_${i.toString().padStart(3, "0")}`;
-            }),
-          ],
-        },
-      ],
+      Prefabs: PREFAB_PACKAGES,
+      Images: IMAGE_PACKAGES,
       // 声音资源包（url 由 SOUND_LIST 统一提供，避免与音频映射两处维护）
       Sounds: [
         {
