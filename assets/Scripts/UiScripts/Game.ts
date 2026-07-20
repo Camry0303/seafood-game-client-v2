@@ -5,6 +5,7 @@ import {
   Prefab,
   SpriteAtlas,
   _decorator,
+  game,
 } from "cc";
 import { SingletonComponent } from "../Common/SingletonComponent";
 import { Config, ResMgr } from "../Types/typing";
@@ -16,6 +17,7 @@ import { LoginRegisterMainUI_Component } from "./Prefabs/LoginRegister/LoginRegi
 import { MainUI_Component } from "./Prefabs/Entrance/MainUI_Component";
 import CommonDailogHandler from "../Utils/CommonDailogHandler";
 import { WAITING_TYPE } from "./Prefabs/Common/CircleLoadingUI_Component";
+import HttpApiServices from "../Utils/HttpApiServices";
 
 /**
  * 音效清单：url 与播放名一一对应，作为预加载与音频映射的唯一数据源。
@@ -27,7 +29,7 @@ const SOUND_LIST: { url: string; name: string }[] = [
   { url: "BGM/bgm_02", name: "bgm_02" },
   { url: "Effects/Common/ui_click", name: "button_ui_click" },
   { url: "Effects/DicesGame/chips_place", name: "chips_place" },
-  { url: "Effects/DicesGame/count_douwn", name: "count_douwn" },
+  { url: "Effects/DicesGame/count_down", name: "count_douwn" },
   { url: "Effects/DicesGame/result_0_1", name: "result_0_1" },
   { url: "Effects/DicesGame/result_0_2", name: "result_0_2" },
   { url: "Effects/DicesGame/result_0_3", name: "result_0_3" },
@@ -227,9 +229,8 @@ export class Game extends SingletonComponent {
   /**
    * 进入游戏逻辑
    */
-  public startGame(hotUpdateUiComponent: HotUpdateUI_Component): void {
+  public startGame(hotUpdateUiComponent: HotUpdateUI_Component) {
     console.log("进入游戏逻辑！");
-    console.log("开始加载资源包！");
 
     // 配置资源包信息列表（Prefabs/Images 由模块级常量统一维护，Sounds 由 SOUND_LIST 派生）
     const resPkgs: ResMgr.ResourcePackage<Asset> = {
@@ -243,8 +244,8 @@ export class Game extends SingletonComponent {
         },
       ],
     };
-
     // 预加载所有资源
+    console.log("开始加载资源包！");
     ResourceManager.Instance.preloadResourcePackages(
       resPkgs,
       (loadedCount: number, totalCount: number, detail: string) => {
@@ -255,10 +256,10 @@ export class Game extends SingletonComponent {
           `进度:${loadedCount}/${totalCount} ${detail}`,
         );
       },
-      () => {
+      async () => {
         console.log("资源包加载完成！");
         hotUpdateUiComponent?.setProgress(1);
-        hotUpdateUiComponent?.setLoadingText("加载完！");
+        hotUpdateUiComponent?.setLoadingText("加载完成！");
         hotUpdateUiComponent?.setLoadingDetailsText(`正在初始化游戏界面！`);
 
         // 构建音频资源映射（由 SOUND_LIST 派生，与预加载清单自动保持一致）
@@ -271,6 +272,23 @@ export class Game extends SingletonComponent {
         SoundsManager.Instance.setGlobalButtonEffect("button_ui_click", [
           "_NoEffect",
         ]);
+
+        // 获取服务器配置（失败时回退，避免阻塞整个启动流程）
+        let data: any = null;
+        try {
+          data = await HttpApiServices.getServerConfigJson();
+          console.log(`server config data--->`, data);
+        } catch (err) {
+          console.error("获取服务器配置失败！", err);
+          CommonDailogHandler.showDialogMessage(
+            "获取服务器配置失败！\n请退出重试或联系管理员！",
+            () => {
+              // game.restart();
+              console.log(`重启游戏`);
+            },
+          );
+          return;
+        }
 
         // 进入游戏场景
         this.enterGameScene();

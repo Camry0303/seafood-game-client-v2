@@ -52,6 +52,17 @@ export default class HttpApiServices {
   }
 
   /**
+   * 获取服务器配置
+   * @returns
+   */
+  public static async getServerConfigJson() {
+    const host = Constants.SERVER_CONFIG_URL;
+    const reponse = await fly.get(`${host}`);
+    const data = reponse.data;
+    return data;
+  }
+
+  /**
    * 获取验证码图片
    * @returns
    */

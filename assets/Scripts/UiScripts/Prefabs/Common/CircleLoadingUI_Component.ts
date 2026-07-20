@@ -1,4 +1,4 @@
-import { _decorator, Node, tween } from "cc";
+import { _decorator, Node, Tween, tween } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
 const { ccclass, menu } = _decorator;
@@ -90,7 +90,7 @@ export class CircleLoadingUI_Component extends ComponentController {
   /**
    * 旋转动画实例
    */
-  private _rotateTween: any = null;
+  private _rotateTween: Tween = null;
 
   start() {}
 
@@ -167,7 +167,7 @@ export class CircleLoadingUI_Component extends ComponentController {
   /**
    * 开始旋转动画
    */
-  private startRotateAnimation() {
+  public startRotateAnimation() {
     // 如果已有动画，先停止
     if (this._rotateTween) {
       this._rotateTween.stop();

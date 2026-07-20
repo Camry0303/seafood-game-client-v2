@@ -7,6 +7,8 @@ import {
   Node,
   ProgressBar,
   sys,
+  Tween,
+  tween,
 } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import HotUpdateTools from "../../../Utils/HotUpdateTools";
@@ -15,6 +17,8 @@ import { HotUpdate } from "../../../Types/typing";
 import { Game } from "../../Game";
 import { GlobalData } from "../../../Runtime/GlobalData";
 import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
+import Constants from "../../../Common/Constants";
+import { CircleLoadingUI_Component } from "../Common/CircleLoadingUI_Component";
 const { ccclass, menu } = _decorator;
 
 @ccclass("HotUpdateUI_Component")
@@ -24,6 +28,11 @@ export class HotUpdateUI_Component extends ComponentController {
    * 版本号节点
    */
   private _versionNode: Node = null;
+
+  /**
+   * 进度条容器节点
+   */
+  private _progressContainerNode: Node = null;
 
   /**
    * 进度条节点
@@ -41,6 +50,15 @@ export class HotUpdateUI_Component extends ComponentController {
   private _loadingDetailsTextNode: Node = null;
 
   /**
+   * 圆形加载节点
+   */
+  private _circleLoadingUINode: Node = null;
+
+  private _circleLoadingNode: Node = null;
+
+  private _rotateTween: Tween = null;
+
+  /**
    * 热更新工具实例
    */
   private _hotUpdateTools: HotUpdateTools = null;
@@ -51,6 +69,16 @@ export class HotUpdateUI_Component extends ComponentController {
   private _manifest: Asset = null;
 
   start() {
+    // 是否显示热更新进度
+    this._progressContainerNode.active = Constants.SHOW_HOTUPDATE_PROCESS;
+
+    if (!Constants.SHOW_HOTUPDATE_PROCESS) {
+      this._circleLoadingUINode.active = true;
+      this.startRotateAnimation();
+    } else {
+      this._circleLoadingUINode.active = false;
+    }
+
     // 初始化热更新工具
     this._initHotUpdateTools();
     console.log(`热更新工具初始化完成！`);
@@ -87,6 +115,8 @@ export class HotUpdateUI_Component extends ComponentController {
     this._versionNode = this.getNode("Version");
     this.setVersion("本地版本号:1.0.0, 服务器版本号:1.0.0");
 
+    this._progressContainerNode = this.getNode("ProgressContainer");
+
     this._progressBarNode = this.getNode("ProgressContainer/ProgressBar");
     this.setProgress(0);
 
@@ -97,6 +127,9 @@ export class HotUpdateUI_Component extends ComponentController {
       "ProgressContainer/LoadingDetailText",
     );
     this.setLoadingDetailsText("");
+
+    this._circleLoadingUINode = this.getNode("CircleLoading");
+    this._circleLoadingNode = this.getNode("CircleLoading/Loading");
   }
 
   /**
@@ -255,5 +288,22 @@ export class HotUpdateUI_Component extends ComponentController {
    */
   public setManifest(manifest: Asset) {
     this._manifest = manifest;
+  }
+
+  /**
+   * 开始旋转动画
+   */
+  public startRotateAnimation() {
+    // 如果已有动画，先停止
+    if (this._rotateTween) {
+      this._rotateTween.stop();
+    }
+
+    // 创建并启动旋转动画
+    this._rotateTween = tween(this._circleLoadingNode)
+      .by(1, { angle: -360 }) // 1秒内旋转360度
+      .union() // 合并动画，使旋转更流畅
+      .repeatForever() // 无限循环
+      .start();
   }
 }
