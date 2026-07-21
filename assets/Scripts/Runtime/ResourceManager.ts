@@ -215,4 +215,25 @@ export class ResourceManager extends SingletonComponent {
     spriteFrame.texture = texture;
     return spriteFrame;
   }
+
+  /**
+   * 加载远程图片为 SpriteFrame
+   * @param url 远程图片地址（http/https）
+   * @returns Promise<SpriteFrame>
+   */
+  public loadRemoteSprite(url: string): Promise<SpriteFrame> {
+    return new Promise<SpriteFrame>((resolve, reject) => {
+      assetManager.loadRemote<ImageAsset>(url, { ext: ".png" }, (err, imageAsset) => {
+        if (err || !imageAsset) {
+          reject(err || new Error(`loadRemote <${url}> failed`));
+          return;
+        }
+        const texture = new Texture2D();
+        texture.image = imageAsset;
+        const spriteFrame = new SpriteFrame();
+        spriteFrame.texture = texture;
+        resolve(spriteFrame);
+      });
+    });
+  }
 }

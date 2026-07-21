@@ -71,4 +71,7 @@ export interface CustomerService {
 
   /**客服QQ */
   qq_service: string;
+
+  /**微信二维码地址 */
+  wechat_qr_url: string;
 }

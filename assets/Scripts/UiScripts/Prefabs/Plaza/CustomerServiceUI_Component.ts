@@ -3,6 +3,7 @@ import { ComponentController } from "../../../Common/ComponentController";
 import BubbleWindow from "../../../Common/BubbleWindow";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
 import { GlobalData } from "../../../Runtime/GlobalData";
+import { ResourceManager } from "../../../Runtime/ResourceManager";
 const { ccclass, menu } = _decorator;
 
 @ccclass("CustomerServiceUI_Component")
@@ -68,10 +69,21 @@ export class CustomerServiceUI_Component extends ComponentController {
   private initCustomerServiceInfo() {
     const customerService = GlobalData.Instance.getCustomerService();
     if (customerService) {
-      this._customerServiceLabel.string = `客服微信：${customerService.wechat_service}\n客服QQ：${customerService.qq_service}`;
+      this._customerServiceLabel.string = `客服微信：${customerService.wechat_service}`;
+
+      // 加载微信二维码
+      const qrUrl = customerService.wechat_qr_url;
+      if (qrUrl && this._customerServiceQRCodeSprite) {
+        ResourceManager.Instance.loadRemoteSprite(qrUrl)
+          .then((spriteFrame) => {
+            this._customerServiceQRCodeSprite.spriteFrame = spriteFrame;
+          })
+          .catch((err) => {
+            console.warn(`加载客服微信二维码失败: ${err}`);
+          });
+      }
     } else {
       this._customerServiceLabel.string = `客服信息加载中...`;
     }
-    // TODO - 初始化客服二维码（需服务端返回二维码资源或地址）
   }
 }
