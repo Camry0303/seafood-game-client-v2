@@ -2,7 +2,7 @@ import {
   IN_GAME_TYPE,
   RESPONE_RESULT,
   RESPONE_STATUS,
-} from "db://assets/Scripts/Enums/enums";
+} from "db://assets/Scripts/Enums";
 
 /**
  * 请求返回
@@ -47,4 +47,17 @@ export interface GameReconnectResultData<T> {
 export interface CurrentGameInfo<T> {
   in_game_type: IN_GAME_TYPE;
   game_room_data: T;
+}
+
+/**
+ * 服务器配置信息
+ */
+export interface ServerConfig {
+  env: string;
+  version: string;
+  auth_server_url: string;
+  auth_server_port: number;
+  gateway_server_url: string;
+  gateway_server_port: number;
+  is_maintain: boolean;
 }

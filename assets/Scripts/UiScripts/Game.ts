@@ -8,16 +8,16 @@ import {
   game,
 } from "cc";
 import { SingletonComponent } from "../Common/SingletonComponent";
-import { Config, ResMgr } from "../Types/typing";
+import { Config, Gateway, ResMgr } from "../Types/typing";
 import { ResourceManager } from "../Runtime/ResourceManager";
 import { ComponentManager } from "../Runtime/ComponentManager";
 import { SoundsManager } from "../Runtime/SoundsManager";
 import { HotUpdateUI_Component } from "./Prefabs/Entrance/HotUpdateUI_Component";
 import { LoginRegisterMainUI_Component } from "./Prefabs/LoginRegister/LoginRegisterMainUI_Component";
-import { MainUI_Component } from "./Prefabs/Entrance/MainUI_Component";
 import CommonDailogHandler from "../Utils/CommonDailogHandler";
-import { WAITING_TYPE } from "./Prefabs/Common/CircleLoadingUI_Component";
 import HttpApiServices from "../Utils/HttpApiServices";
+import { MainUI_Component } from "./Prefabs/Entrance/MainUI_Component";
+import { GlobalData } from "../Runtime/GlobalData";
 
 /**
  * 音效清单：url 与播放名一一对应，作为预加载与音频映射的唯一数据源。
@@ -273,21 +273,40 @@ export class Game extends SingletonComponent {
           "_NoEffect",
         ]);
 
-        // 获取服务器配置（失败时回退，避免阻塞整个启动流程）
-        let data: any = null;
-        try {
-          data = await HttpApiServices.getServerConfigJson();
-          console.log(`server config data--->`, data);
-        } catch (err) {
-          console.error("获取服务器配置失败！", err);
-          CommonDailogHandler.showDialogMessage(
-            "获取服务器配置失败！\n请退出重试或联系管理员！",
-            () => {
-              // game.restart();
-              console.log(`重启游戏`);
-            },
-          );
-          return;
+        // 初始化服务器配置
+        let serverConfig = {
+          env: "dev",
+          version: "1.0.0",
+          auth_server_url: "localhost",
+          auth_server_port: 18000,
+          gateway_server_url: "localhost",
+          gateway_server_port: 18300,
+          is_maintain: false,
+        };
+        // 判断是否本地开发
+        if (GlobalData.Instance.isLocalDev) {
+          // 本地开发：使用本地配置
+          GlobalData.Instance.setServerConfig(serverConfig);
+        } else {
+          try {
+            const data = await HttpApiServices.getServerConfigJson();
+            if (data) {
+              GlobalData.Instance.setServerConfig(data);
+            }
+            throw new Error("获取服务器配置失败！");
+          } catch (err) {
+            console.error("获取服务器配置失败！", err);
+            CommonDailogHandler.showDialogMessage(
+              "获取服务器配置失败！\n请退出重试或联系管理员！",
+              () => {
+                // game.restart();
+                console.log(`重启游戏`);
+              },
+            );
+            // 默认配置
+            GlobalData.Instance.setServerConfig(serverConfig);
+            return;
+          }
         }
 
         // 进入游戏场景

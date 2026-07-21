@@ -9,6 +9,7 @@ import { GlobalData } from "../Runtime/GlobalData";
  * HTTP接口服务类
  */
 export default class HttpApiServices {
+  //#region 测试用
   /**
    * 测试CSW接口请求
    * @returns
@@ -50,6 +51,7 @@ export default class HttpApiServices {
 
     return data;
   }
+  //#endregion
 
   /**
    * 获取服务器配置
@@ -72,11 +74,10 @@ export default class HttpApiServices {
       captcha_image: string;
     }>
   > {
-    // TODO - 改为配置获取
-    const host = GlobalData.Instance.isLocalDev
-      ? "http://localhost"
-      : "http://61.164.174.115";
-    const port = "18000";
+    // 获取鉴权服务器地址
+    const host = GlobalData.Instance.getServerConfig()?.auth_server_url;
+    // 获取鉴权服务器端口
+    const port = GlobalData.Instance.getServerConfig()?.auth_server_port;
 
     const reponse = await fly.get(`${host}:${port}/get-captcha`);
     const data = reponse.data as Gateway.Returned.Common.Result<{
@@ -96,14 +97,11 @@ export default class HttpApiServices {
     phone_number: string,
     type: "register" | "reset" | "bind",
   ): Promise<Gateway.Returned.Common.Result<boolean>> {
-    // TODO - 改为配置获取
-    let host = "";
-    if (GlobalData.Instance.isLocalDev) {
-      host = "http://localhost";
-    } else {
-      host = "http://61.164.174.115";
-    }
-    const port = "18000";
+    // 获取鉴权服务器地址
+    const host = GlobalData.Instance.getServerConfig()?.auth_server_url;
+    // 获取鉴权服务器端口
+    const port = GlobalData.Instance.getServerConfig()?.auth_server_port;
+
     const params =
       CryptoUtils.genSignedParams<Gateway.Requested.Authorization.SmsParams>(
         {
@@ -126,14 +124,11 @@ export default class HttpApiServices {
   public static async registerByPhone(
     rawParams: Gateway.Requested.Authorization.PhoneRegisterParams,
   ): Promise<Gateway.Returned.Common.Result<{ token: string }>> {
-    // TODO - 改为配置获取
-    let host = "";
-    if (GlobalData.Instance.isLocalDev) {
-      host = "http://localhost";
-    } else {
-      host = "http://61.164.174.115";
-    }
-    const port = "18000";
+    // 获取鉴权服务器地址
+    const host = GlobalData.Instance.getServerConfig()?.auth_server_url;
+    // 获取鉴权服务器端口
+    const port = GlobalData.Instance.getServerConfig()?.auth_server_port;
+
     const params =
       CryptoUtils.genSignedParams<Gateway.Requested.Authorization.PhoneRegisterParams>(
         rawParams,
@@ -155,14 +150,11 @@ export default class HttpApiServices {
   public static async resetPasswordByPhone(
     rawParams: Gateway.Requested.Authorization.ResetPasswordParams,
   ): Promise<Gateway.Returned.Common.Result<boolean>> {
-    // TODO - 改为配置获取
-    let host = "";
-    if (GlobalData.Instance.isLocalDev) {
-      host = "http://localhost";
-    } else {
-      host = "http://61.164.174.115";
-    }
-    const port = "18000";
+    // 获取鉴权服务器地址
+    const host = GlobalData.Instance.getServerConfig()?.auth_server_url;
+    // 获取鉴权服务器端口
+    const port = GlobalData.Instance.getServerConfig()?.auth_server_port;
+
     const params =
       CryptoUtils.genSignedParams<Gateway.Requested.Authorization.ResetPasswordParams>(
         rawParams,
@@ -182,14 +174,11 @@ export default class HttpApiServices {
   public static async loginByPhone(
     rawParams: Gateway.Requested.Authorization.PhoneLoginParams,
   ): Promise<Gateway.Returned.Common.Result<{ token: string }>> {
-    // TODO - 改为配置获取
-    let host = "";
-    if (GlobalData.Instance.isLocalDev) {
-      host = "http://localhost";
-    } else {
-      host = "http://61.164.174.115";
-    }
-    const port = "18000";
+    // 获取鉴权服务器地址
+    const host = GlobalData.Instance.getServerConfig()?.auth_server_url;
+    // 获取鉴权服务器端口
+    const port = GlobalData.Instance.getServerConfig()?.auth_server_port;
+
     const params =
       CryptoUtils.genSignedParams<Gateway.Requested.Authorization.PhoneLoginParams>(
         rawParams,
@@ -211,14 +200,11 @@ export default class HttpApiServices {
   public static async wechatAuthorize(
     rawParams: Gateway.Requested.Authorization.WeChatAuthParams,
   ): Promise<Gateway.Returned.Common.Result<{ token: string }>> {
-    // TODO - 改为配置获取
-    let host = "";
-    if (GlobalData.Instance.isLocalDev) {
-      host = "http://localhost";
-    } else {
-      host = "http://61.164.174.115";
-    }
-    const port = "18000";
+    // 获取鉴权服务器地址
+    const host = GlobalData.Instance.getServerConfig()?.auth_server_url;
+    // 获取鉴权服务器端口
+    const port = GlobalData.Instance.getServerConfig()?.auth_server_port;
+
     const params =
       CryptoUtils.genSignedParams<Gateway.Requested.Authorization.WeChatAuthParams>(
         rawParams,
@@ -238,14 +224,11 @@ export default class HttpApiServices {
   public static async bindPhone(
     rawParams: Gateway.Requested.Authorization.BindPhoneParams,
   ): Promise<Gateway.Returned.Common.Result<boolean>> {
-    // TODO - 改为配置获取
-    let host = "";
-    if (GlobalData.Instance.isLocalDev) {
-      host = "http://localhost";
-    } else {
-      host = "http://61.164.174.115";
-    }
-    const port = "18000";
+    // 获取鉴权服务器地址
+    const host = GlobalData.Instance.getServerConfig()?.auth_server_url;
+    // 获取鉴权服务器端口
+    const port = GlobalData.Instance.getServerConfig()?.auth_server_port;
+
     const params =
       CryptoUtils.genSignedParams<Gateway.Requested.Authorization.BindPhoneParams>(
         rawParams,

@@ -43,6 +43,24 @@ export class GlobalData extends Singleton {
   }
   //#endregion
 
+  //#region 服务器配置信息
+  private _serverConfig: Gateway.Returned.Common.ServerConfig | null = null;
+  /**
+   * 设置服务器配置信息
+   * @param serverConfig
+   */
+  public setServerConfig(serverConfig: Gateway.Returned.Common.ServerConfig) {
+    this._serverConfig = serverConfig;
+  }
+  /**
+   * 获取服务器配置信息
+   * @returns
+   */
+  public getServerConfig() {
+    return this._serverConfig;
+  }
+  //#endregion
+
   //#region 本地存储操作
 
   /**

@@ -44,17 +44,16 @@ export default class SocketManager extends SingletonComponent {
    */
   private initInstance() {
     if (this.SocketInstance) return;
-    // TODO - 改为配置获取
-    const host = GlobalData.Instance.isLocalDev
-      ? "localhost"
-      : "61.164.174.115";
-    const port = 18300;
+    // 获取网关服务器地址
+    const host = GlobalData.Instance.getServerConfig()?.gateway_server_url;
+    // 获取网关服务器端口
+    const port = GlobalData.Instance.getServerConfig()?.gateway_server_port;
 
     const url = `${host}:${port}/main`;
 
     // 申明socket配置
     const opts: Partial<ManagerOptions & SocketOptions> = {};
-    // TODO - 改为配置获取 配置path
+    // 配置path
     opts.path = "/socket.io";
     // 设置传输方式:移动端弱网-["websocket", "polling"]-优先 WebSocket 节省流量，失败回退
     opts.transports = ["websocket", "polling"];
