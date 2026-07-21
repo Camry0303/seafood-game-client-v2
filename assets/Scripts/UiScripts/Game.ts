@@ -277,9 +277,9 @@ export class Game extends SingletonComponent {
         let serverConfig = {
           env: "dev",
           version: "1.0.0",
-          auth_server_url: "localhost",
+          auth_server_url: "http://localhost",
           auth_server_port: 18000,
-          gateway_server_url: "localhost",
+          gateway_server_url: "http://localhost",
           gateway_server_port: 18300,
           is_maintain: false,
         };
@@ -305,7 +305,6 @@ export class Game extends SingletonComponent {
             );
             // 默认配置
             GlobalData.Instance.setServerConfig(serverConfig);
-            return;
           }
         }
 

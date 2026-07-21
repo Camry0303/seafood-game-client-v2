@@ -32,6 +32,7 @@ export default class PlazaEvents {
       [PLAZA_EVENT.SET_CUSTOM_AVATAR_RESULT, this.onSetCustomAvatarResult],
       [PLAZA_EVENT.BIND_AGENT_RESULT, this.onBindAgentResult],
       [PLAZA_EVENT.GET_MARQUEES_RESULT, this.onGetMarqueesResult],
+      [PLAZA_EVENT.GET_CUSTOMER_SERVICE_RESULT, this.onGetCustomerServiceResult],
       // NOTE - 此版本忽略
       // [PLAZA_EVENT.GET_CLUB_HAS_HINT_RESULT, this.onGetClubHasHintResult],
       [PLAZA_EVENT.GAME_RECONNECT_RESULT, this.onGameReconnectResult],
@@ -375,6 +376,34 @@ export default class PlazaEvents {
       if (plazaMainUiComponent) {
         plazaMainUiComponent.renderMarquees(returnData.data);
       }
+    } else {
+      // 获取失败，气泡提示
+      CommonDailogHandler.showBubbleMessage(`错误：${returnData.msg}`);
+    }
+  }
+
+  /**
+   * 获取客服信息
+   */
+  public static getCustomerService() {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      socket.emit(PLAZA_EVENT.GET_CUSTOMER_SERVICE);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+    }
+  }
+
+  /**
+   * 处理获取客服信息事件
+   * @param returnData
+   */
+  private static onGetCustomerServiceResult(
+    returnData: Gateway.Returned.Common.Result<Gateway.Returned.Common.CustomerService>,
+  ) {
+    if (returnData.code === RESPONE_RESULT.SUCCESS) {
+      // 保存客服信息到全局数据，供客服界面读取
+      GlobalData.Instance.setCustomerService(returnData.data);
     } else {
       // 获取失败，气泡提示
       CommonDailogHandler.showBubbleMessage(`错误：${returnData.msg}`);

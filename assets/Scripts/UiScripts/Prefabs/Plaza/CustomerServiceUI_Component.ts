@@ -2,6 +2,7 @@ import { _decorator, Label, Sprite } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import BubbleWindow from "../../../Common/BubbleWindow";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
+import { GlobalData } from "../../../Runtime/GlobalData";
 const { ccclass, menu } = _decorator;
 
 @ccclass("CustomerServiceUI_Component")
@@ -65,9 +66,12 @@ export class CustomerServiceUI_Component extends ComponentController {
    * 初始化客服信息
    */
   private initCustomerServiceInfo() {
-    // TODO - 初始化客服二维码和联系方式
-    console.log(`初始化客服二维码`);
-    // this._customerServiceQRCodeSprite.spriteFrame = ...
-    // this._customerServiceLabel.string = `微信号: `;
+    const customerService = GlobalData.Instance.getCustomerService();
+    if (customerService) {
+      this._customerServiceLabel.string = `客服微信：${customerService.wechat_service}\n客服QQ：${customerService.qq_service}`;
+    } else {
+      this._customerServiceLabel.string = `客服信息加载中...`;
+    }
+    // TODO - 初始化客服二维码（需服务端返回二维码资源或地址）
   }
 }

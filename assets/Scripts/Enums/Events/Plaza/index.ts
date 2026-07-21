@@ -22,6 +22,9 @@ export enum PLAZA_EVENT {
   GET_MARQUEES = "Plaza.GetMarquees",
   GET_MARQUEES_RESULT = "Plaza.GetMarquees.Result",
 
+  GET_CUSTOMER_SERVICE = "Plaza.GetCustomerService",
+  GET_CUSTOMER_SERVICE_RESULT = "Plaza.GetCustomerService.Result",
+
   GET_CLUB_HAS_HINT = "Plaza.GetClubHasHint",
   GET_CLUB_HAS_HINT_RESULT = "Plaza.GetClubHasHint.Result",
 

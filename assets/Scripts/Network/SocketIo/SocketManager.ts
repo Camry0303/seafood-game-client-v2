@@ -31,9 +31,6 @@ export default class SocketManager extends SingletonComponent {
     // 单例模式代码
     if (SocketManager.GetInstance() === null) {
       SocketManager.SetInstance(this);
-
-      // 初始化socket实例
-      SocketManager.Instance.initInstance();
     } else {
       this.destroy();
     }

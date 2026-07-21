@@ -41,6 +41,8 @@ export class PlazaMainUI_Component extends ComponentController {
 
     // 获取跑马灯信息
     PlazaEvents.getMarquees();
+    // 获取客服信息
+    PlazaEvents.getCustomerService();
     // // NOTE - 此版本忽略 获取是否有俱乐部提示
     // PlazaEvents.getClubHasHint();
   }

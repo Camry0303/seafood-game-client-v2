@@ -61,6 +61,29 @@ export class GlobalData extends Singleton {
   }
   //#endregion
 
+  //#region 客服信息
+  /**
+   * 客服信息
+   */
+  private _customerService: Gateway.Returned.Common.CustomerService | null = null;
+  /**
+   * 设置客服信息
+   * @param customerService
+   */
+  public setCustomerService(
+    customerService: Gateway.Returned.Common.CustomerService | null,
+  ) {
+    this._customerService = customerService;
+  }
+  /**
+   * 获取客服信息
+   * @returns
+   */
+  public getCustomerService() {
+    return this._customerService;
+  }
+  //#endregion
+
   //#region 本地存储操作
 
   /**

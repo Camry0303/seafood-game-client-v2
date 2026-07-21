@@ -108,7 +108,7 @@ export class GameLanch extends Component {
     game.on(CCGame.EVENT_PAUSE, () => {
       console.log("在此处理暂停逻辑（如暂停音效、动画等）");
       // 判断socket是否连接
-      if (SocketManager.Instance.SocketInstance.connected) {
+      if (SocketManager.Instance.SocketInstance?.connected) {
         const [dicesGameNode, dicesGameComponent] =
           ComponentManager.Instance.getNodeComponent(
             "DicesGameMainUI",

@@ -61,3 +61,14 @@ export interface ServerConfig {
   gateway_server_port: number;
   is_maintain: boolean;
 }
+
+/**
+ * 客服信息
+ */
+export interface CustomerService {
+  /**客服微信 */
+  wechat_service: string;
+
+  /**客服QQ */
+  qq_service: string;
+}
