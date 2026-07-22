@@ -20,7 +20,7 @@ export class GlobalData extends Singleton {
    * 是否是本地开发环境
    * //NOTE - 切换是否本地开发环境
    */
-  public isLocalDev: boolean = true;
+  public isLocalDev: boolean = false;
 
   //#region 版本号信息
   /**
@@ -65,7 +65,8 @@ export class GlobalData extends Singleton {
   /**
    * 客服信息
    */
-  private _customerService: Gateway.Returned.Common.CustomerService | null = null;
+  private _customerService: Gateway.Returned.Common.CustomerService | null =
+    null;
   /**
    * 设置客服信息
    * @param customerService

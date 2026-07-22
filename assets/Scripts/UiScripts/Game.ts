@@ -283,6 +283,7 @@ export class Game extends SingletonComponent {
           gateway_server_port: 18300,
           is_maintain: false,
         };
+
         // 判断是否本地开发
         if (GlobalData.Instance.isLocalDev) {
           // 本地开发：使用本地配置
@@ -292,8 +293,9 @@ export class Game extends SingletonComponent {
             const data = await HttpApiServices.getServerConfigJson();
             if (data) {
               GlobalData.Instance.setServerConfig(data);
+            } else {
+              throw new Error("获取服务器配置失败！");
             }
-            throw new Error("获取服务器配置失败！");
           } catch (err) {
             console.error("获取服务器配置失败！", err);
             CommonDailogHandler.showDialogMessage(
