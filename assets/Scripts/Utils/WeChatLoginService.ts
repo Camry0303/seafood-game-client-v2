@@ -206,6 +206,7 @@ export default class WeChatLoginService {
       );
       // 连接网关服务器，进行登录
       SocketManager.Instance.connect();
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.WECHAT_AUTH);
     } else {
       CommonDailogHandler.showBubbleMessage(`登录失败！${authResponse.msg}`);
       CommonDailogHandler.hideCircleLoading(WAITING_TYPE.WECHAT_AUTH);

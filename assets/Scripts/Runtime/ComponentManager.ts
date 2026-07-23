@@ -94,10 +94,10 @@ export class ComponentManager extends SingletonComponent {
     if (prefab) {
       // 实例化预制体
       const node: Node = (this._uiMap[absUiName] = instantiate(prefab));
-      // NOTE: 直接用类引用添加组件（避免 release 构建类名被混淆导致找不到组件）
-      console.log(
-        `TEST [ComponentManager] Add component:${js.getClassName(constructor)}`,
-      );
+      // // NOTE: 直接用类引用添加组件（避免 release 构建类名被混淆导致找不到组件）
+      // console.log(
+      //   `TEST [ComponentManager] Add component:${js.getClassName(constructor)}`,
+      // );
       try {
         // 添加组件
         const component = node.addComponent(constructor) as T;
