@@ -7,12 +7,12 @@ import {
   Prefab,
   UITransform,
   Vec3,
+  js,
 } from "cc";
 import { SingletonComponent } from "../Common/SingletonComponent";
 import { ResourceManager } from "./ResourceManager";
 import { ComponentController } from "../Common/ComponentController";
 import _ from "lodash";
-import ClassNameGetter from "../Utils/ClassNameGetter";
 const { ccclass, property } = _decorator;
 
 /**
@@ -62,9 +62,6 @@ export class ComponentManager extends SingletonComponent {
     siblingTop: boolean = true,
     parentNode: Node | null = null,
   ): [node: Node, component: T, created: boolean | null] {
-    const componentClassName =
-      ClassNameGetter.getComponentClassName(constructor);
-
     let absUiName: string = "";
     if (!parentNode) {
       parentNode = this._canvas;
@@ -87,7 +84,7 @@ export class ComponentManager extends SingletonComponent {
       // console.log(`uiMap-->`, this._uiMap);
       return [
         this._uiMap[absUiName],
-        this._uiMap[absUiName].getComponent(componentClassName) as T,
+        this._uiMap[absUiName].getComponent(constructor) as T,
         false,
       ];
     }
@@ -97,13 +94,13 @@ export class ComponentManager extends SingletonComponent {
     if (prefab) {
       // 实例化预制体
       const node: Node = (this._uiMap[absUiName] = instantiate(prefab));
-      // FIXME: 添加组件时候，真机报错找不到组件名称
+      // NOTE: 直接用类引用添加组件（避免 release 构建类名被混淆导致找不到组件）
       console.log(
-        `TEST [ComponentManager] Add component:${componentClassName}`,
+        `TEST [ComponentManager] Add component:${js.getClassName(constructor)}`,
       );
       try {
         // 添加组件
-        const component = node.addComponent(componentClassName) as T;
+        const component = node.addComponent(constructor) as T;
         node.name = uiName;
         node.setPosition(0, 0, 0);
         // 挂载到父节点
