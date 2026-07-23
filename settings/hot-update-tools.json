@@ -1,0 +1,23 @@
+{
+    "version": "1.0.0",
+    "serverUrl": "https://xbxj.hotupdate.cj33.cn",
+    "resourceRootDir": "/Users/xdd/ProjectCode/Games/seafood-game-client-v2/build/android/data",
+    "genManifestDir": "/Users/xdd/ProjectCode/Games/seafood-game-client-v2/hot-update-tools/manifest",
+    "localServerPath": "",
+    "supportVersionDirectory": false,
+    "minManifest": false,
+    "modifyMainJS": false,
+    "showExt": false,
+    "packZipChunk": false,
+    "packZipChunkSize": 2097152,
+    "diff": false,
+    "hotAddressArray": [
+        {
+            "label": "https://xbxj.hotupdate.cj33.cn",
+            "value": "https://xbxj.hotupdate.cj33.cn"
+        }
+    ],
+    "buildTime": 0,
+    "genTime": 0,
+    "genVersion": ""
+}

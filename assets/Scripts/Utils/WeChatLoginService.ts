@@ -45,8 +45,8 @@ type WechatUserInfo = {
 export default class WeChatLoginService {
   public static isAndroid = sys.isNative && sys.os === sys.OS.ANDROID;
   public static isIOS = sys.isNative && sys.os === sys.OS.IOS;
-  private static appId = "wxc57eff6c9dec3193";
-  private static appSecret = "d41dba4982847466f50e665703e11e3d";
+  private static appId = "wx8fec0cd047c3178b";
+  private static appSecret = "ee322f7379d3d09b6e7c34c0b5b26e87";
 
   /**
    * 微信登录
@@ -222,12 +222,6 @@ export default class WeChatLoginService {
       headimgurl:
         "https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83erEia7Tic6IL9wDRqtefBNt7qZ0s69WwV4BM3IzicxKlArCbYUUIT3L2VtMlWFjbwghlOgg47nd7dicYw/132", //头像
     };
-    // const data: WechatUserInfo = {
-    //   openid: "oYgfa6qWYJjJb5JRwBRU5ferYOkY",
-    //   nickname: "海岛底迪", //昵称
-    //   headimgurl:
-    //     "https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83erEia7Tic6IL9wDRqtefBNt7qZ0s69WwV4BM3IzicxKlArCbYUUIT3L2VtMlWFjbwghlOgg47nd7dicYw/132", //头像
-    // };
     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.WECHAT_AUTH);
 
     // 处理授权登录

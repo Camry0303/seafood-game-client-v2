@@ -1,0 +1,60 @@
+{
+  "name": "hot-update-tools",
+  "version": "1.0.9",
+  "description": "hotUpdateTools",
+  "author": "xu_yanfeng",
+  "main": "./main.js",
+  "package_version": 2,
+  "contributions": {
+    "builder": "./builder.js",
+    "messages": {
+      "onBuilder": {
+        "methods": [
+          "onBuilder"
+        ]
+      },
+      "main-recv_entry": {
+        "methods": [
+          "main.recv_entry"
+        ]
+      },
+      "showPanel": {
+        "methods": [
+          "showPanel"
+        ]
+      }
+    },
+    "menu": [
+      {
+        "path": "i18n:menu.extension",
+        "label": "i18n:hot-update-tools.title",
+        "message": "showPanel"
+      }
+    ],
+    "shortcuts": [
+      {
+        "message": "showPanel",
+        "win": "CmdOrCtrl+u",
+        "mac": "CmdOrCtrl+u"
+      }
+    ],
+    "asset-db": {},
+    "assets": {}
+  },
+  "editor": ">=3.0.0",
+  "panels": {
+    "main": {
+      "main": "dockable/main_panel.js",
+      "title": "热更工具",
+      "type": "dockable",
+      "size": {
+        "width": 900,
+        "height": 900,
+        "min-width": 550,
+        "min-height": 400
+      }
+    }
+  },
+  "dependencies": {},
+  "_storeId": "500bb23ffa1d29d67e645533cf0a9021"
+}
