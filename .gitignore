@@ -4,9 +4,25 @@
 library/
 temp/
 local/
+# 生成的原生工程 + 编译产物（含引擎 cpp 拷贝等），不追踪
 build/
 profiles/
+
+#///////////////////////////
+# 原生工程（白名单：默认忽略整个 native，再用 !native/ 放开；构建产物与依赖仍忽略）
+#///////////////////////////
 native
+!native/
+# —— 重新忽略构建产物与依赖 ——
+native/engine/android/**/build/
+native/engine/android/**/.cxx/
+native/engine/android/**/.gradle/
+native/engine/android/**/.externalNativeBuild/
+native/engine/android/**/libs/**/*.jar
+native/engine/android/**/libs/**/*.aar
+native/engine/ios/**/build/
+native/engine/ios/**/DerivedData/
+native/engine/ios/**/Pods/
 
 #///////////////////////////
 # Cocos Creator Hot Update
@@ -27,6 +43,11 @@ node_modules/
 # WebStorm
 #//////////////////////////
 .idea/
+
+#//////////////////////////
+# macOS
+#//////////////////////////
+.DS_Store
 
 #//////////////////////////
 # CodeBuddy
