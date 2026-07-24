@@ -207,8 +207,12 @@ public class AppActivity extends CocosActivity {
         req.state = "request_userinfo";
         System.out.println("AppActivity: req is " + req);
         //利用微信api发送请求
-        api.sendReq(req);
-        System.out.println("AppActivity: 发送请求完毕");
+        boolean sent = api.sendReq(req);
+        System.out.println("AppActivity: 发送请求完毕, sent=" + sent);
+        if (!sent) {
+            // 微信未安装或拉起失败时 sendReq 返回 false，onResp 永不回调，需主动通知失败并隐藏 loading
+            wechatAuthFailed("未安装微信或拉起失败");
+        }
         System.out.println("AppActivity: In AppActivity api is " + api);
     }
 

@@ -22,6 +22,8 @@ type WeChatAuthRes = {
   openid: string;
   scope: string;
   unionid?: string;
+  errcode?: number;
+  errmsg?: string;
 };
 
 /**
@@ -104,17 +106,16 @@ export default class WeChatLoginService {
     const url = `https://api.weixin.qq.com/sns/oauth2/access_token?appid=${this.appId}&secret=${this.appSecret}&code=${code}&grant_type=authorization_code`;
 
     const response = await fly.get(url);
+    // 统一处理 fly 返回字符串/对象两种情形，避免 JSON.parse 崩溃或 errcode 判断失效
+    const data: WeChatAuthRes = typeof response.data === 'string' ? JSON.parse(response.data) : response.data;
 
     // 判断返回结果
-    if (response.data.errcode) {
+    if (data.errcode) {
       CommonDailogHandler.showDialogMessage(
-        `微信登录失败！\n\r<get access token>\n\r${JSON.stringify(
-          response.data,
-        )}`,
+        `微信登录失败！\n\r<get access token>\n\r${JSON.stringify(data)}`,
       );
       return [null, null];
     }
-    const data: WeChatAuthRes = JSON.parse(response.data);
     if (!data.access_token) {
       CommonDailogHandler.showDialogMessage(JSON.stringify(data));
       throw new Error(JSON.stringify(data));
@@ -128,16 +129,15 @@ export default class WeChatLoginService {
       // 刷新accessToken Url
       const refreshUrl = `https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=${this.appId}&grant_type=refresh_token&refresh_token=${refresh_token}`;
       const refreshResponse = await fly.get(refreshUrl);
+      // 统一解析刷新响应
+      const refreshData: WeChatAuthRes = typeof refreshResponse.data === 'string' ? JSON.parse(refreshResponse.data) : refreshResponse.data;
       // 判断返回结果
-      if (refreshResponse.data.errcode) {
+      if (refreshData.errcode) {
         CommonDailogHandler.showDialogMessage(
-          `微信登录失败！\n\r<reflush access token>\n\r${JSON.stringify(
-            refreshResponse.data,
-          )}`,
+          `微信登录失败！\n\r<reflush access token>\n\r${JSON.stringify(refreshData)}`,
         );
         return [null, null];
       }
-      const refreshData: WeChatAuthRes = JSON.parse(refreshResponse.data);
       access_token = refreshData.access_token;
     }
 
@@ -155,25 +155,18 @@ export default class WeChatLoginService {
 
     const response = await fly.get(url);
 
-    if (response.data.errcode) {
+    // 统一处理 fly 返回字符串/对象两种情形，避免 JSON.parse 崩溃或 errcode 判断失效
+    const res = typeof response.data === 'string' ? JSON.parse(response.data) : response.data;
+    if (res.errcode) {
       CommonDailogHandler.showDialogMessage(
-        `微信登录失败！\n\r<get user info>\n\r${JSON.stringify(response.data)}`,
-      );
-      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.WECHAT_AUTH);
-      return;
-    }
-
-    if (response.data.errcode) {
-      CommonDailogHandler.showBubbleMessage(
-        `登录失败！${response.data.errmsg}`,
+        `微信登录失败！\n\r<get user info>\n\r${JSON.stringify(res)}`,
       );
       CommonDailogHandler.hideCircleLoading(WAITING_TYPE.WECHAT_AUTH);
       return;
     }
 
     // 返回微信授权用户信息
-    const data: WechatUserInfo = JSON.parse(response.data);
-    return data;
+    return res as WechatUserInfo;
   }
 
   /**
