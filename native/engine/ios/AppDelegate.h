@@ -30,12 +30,26 @@ you.
 
 #import "platform/ios/AppDelegateBridge.h"
 #import <UIKit/UIKit.h>
+#import "WechatSDK/WXApi.h"
 
 @class ViewController;
 
-@interface AppDelegate : NSObject <UIApplicationDelegate> {
+@interface AppDelegate : NSObject <UIApplicationDelegate,WXApiDelegate> {
 }
 
 @property(nonatomic, readonly) ViewController *viewController;
 @property(nonatomic, readonly) AppDelegateBridge *appDelegateBridge;
+
++(NSString*)getSignDomain; //获取签名域名
+
++(void)wechatLogin; // 微信登陆验证
+
++(NSString*)getBatteryInfo; // 主动获取电池信息
++(void)startBatteryMonitoring; // 开始监听电池信息
++(void)stopBatteryMonitoring; //停止监听电池信息
+
++(void)requestLocationPermission; // 请求定位授权
++(NSString*)getLastLocation; // 获取一次最后的定位信息
++(void)openLocationSettings;
+
 @end
