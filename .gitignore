@@ -20,6 +20,7 @@ native/engine/android/**/.gradle/
 native/engine/android/**/.externalNativeBuild/
 native/engine/android/**/libs/**/*.jar
 native/engine/android/**/libs/**/*.aar
+native/engine/android/app/release/
 native/engine/ios/**/build/
 native/engine/ios/**/DerivedData/
 native/engine/ios/**/Pods/
