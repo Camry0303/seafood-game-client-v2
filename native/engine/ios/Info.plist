@@ -52,5 +52,24 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 
 	</array>
+
+	<!-- 微信登录：URL Scheme，用于微信回调拉回 App -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>weixin</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>wx8fec0cd047c3178b</string>
+			</array>
+		</dict>
+	</array>
+	<!-- 允许查询微信是否安装，用于 canOpenURL 判断 -->
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>weixin</string>
+		<string>weixinULAPI</string>
+	</array>
 </dict>
 </plist>
