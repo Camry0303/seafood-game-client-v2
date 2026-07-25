@@ -144,7 +144,17 @@ NSString* wxCode;
     req.scope = @"snsapi_userinfo"; // 只能填 snsapi_userinfo
     req.state = @"123";
     //第三方向微信终端发送一个SendAuthReq消息结构
-    [WXApi sendReq:req completion:nil];
+    [WXApi sendReq:req completion:^(BOOL success) {
+        if (!success) {
+            // 微信未安装或 Universal Link 配置错误时不会触发 onResp，需主动通知 JS 关闭 loading
+            NSString *callStr = @"NativeAPI.notifyWxAuthFailed('微信拉起失败，请确认已安装微信且 Universal Link 配置正确')";
+            char callChars[512];
+            [callStr getCString:callChars maxLength:sizeof(callChars) encoding:NSUTF8StringEncoding];
+            CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread([=](){
+                se::ScriptEngine::getInstance()->evalString(callChars);
+            });
+        }
+    }];
     NSLog(@"wechatLogin called!");
 }
 
@@ -153,6 +163,10 @@ NSString* wxCode;
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    return [WXApi handleOpenURL:url delegate:self];
+}
+
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
     return [WXApi handleOpenURL:url delegate:self];
 }
 
@@ -173,6 +187,15 @@ NSString* wxCode;
             printf("%s\n",callChars);
             
             // 调用JSB返回wxCode "NativeAPI.receiveAccessCode('')"
+            CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread([=](){
+                se::ScriptEngine::getInstance()->evalString(callChars);
+            });
+        } else {
+            // 用户取消(-2) 或其他错误：主动通知 JS 关闭 loading，避免永转
+            NSString *errMsg = [NSString stringWithFormat:@"微信授权失败，错误码：%ld", (long)aresp.errCode];
+            NSString *callStr = [NSString stringWithFormat:@"NativeAPI.notifyWxAuthFailed('%@')", errMsg];
+            char callChars[512];
+            [callStr getCString:callChars maxLength:sizeof(callChars) encoding:NSUTF8StringEncoding];
             CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread([=](){
                 se::ScriptEngine::getInstance()->evalString(callChars);
             });
