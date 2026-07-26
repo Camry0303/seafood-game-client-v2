@@ -15,6 +15,10 @@
         {
             "label": "https://xbxj.hotupdate.cj33.cn",
             "value": "https://xbxj.hotupdate.cj33.cn"
+        },
+        {
+            "label": "http://xbxj.hotupdate.cj33.cn",
+            "value": "http://xbxj.hotupdate.cj33.cn"
         }
     ],
     "buildTime": 0,

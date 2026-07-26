@@ -195,9 +195,11 @@ export class HotUpdateUI_Component extends ComponentController {
      */
     hotUpdateOptions.OnUpdateFailed = (event: native.EventAssetsManager) => {
       const code: number = event.getEventCode();
-      const msg = `更新失败:${code}`;
+      const detail = (event.getMessage && event.getMessage()) || "";
+      console.error(`[HotUpdate] 更新失败 code=${code}, msg=${detail}`);
+      const msg = `更新失败:${code}[${detail}]`;
       this.setLoadingText(msg);
-      this.setLoadingDetailsText(`游戏更新失败，请重启游戏！`);
+      this.setLoadingDetailsText(`游戏更新失败，请点击确定重试！`);
 
       CommonDailogHandler.showDialogMsgCallback(
         {

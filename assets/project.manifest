@@ -25,8 +25,8 @@
       "compressed": false
     },
     "src/settings.json": {
-      "size": 21331,
-      "md5": "d7213d03d7ebbfb1b00ecce2d7e13fa8",
+      "size": 1966,
+      "md5": "0b46d2145d2ad88e2f7d7b5d41fdb7f7",
       "compressed": false
     },
     "src/system.bundle.js": {
@@ -3250,8 +3250,8 @@
       "compressed": false
     },
     "assets/Images/native/1b/1bc79244-527e-4329-894f-6b4c258470f9.png": {
-      "size": 4539,
-      "md5": "5d76588ab93ebe6b593821ca096e0261",
+      "size": 3783,
+      "md5": "3d5b4911ed407407dea7f81c80503287",
       "compressed": false
     },
     "assets/Images/native/1c/1c6e1a98-208b-4406-8f62-f0b455590dd1.png": {
@@ -6220,8 +6220,8 @@
       "compressed": false
     },
     "assets/Prefabs/native/1b/1bc79244-527e-4329-894f-6b4c258470f9.png": {
-      "size": 4539,
-      "md5": "5d76588ab93ebe6b593821ca096e0261",
+      "size": 3783,
+      "md5": "3d5b4911ed407407dea7f81c80503287",
       "compressed": false
     },
     "assets/Prefabs/native/1e/1e6bd0ea-3e36-44f7-a198-c99f160ba3d1.png": {
@@ -7495,8 +7495,13 @@
       "compressed": false
     },
     "assets/main/cc.config.json": {
-      "size": 1335,
-      "md5": "7d91136b30a53bc48076bcbd0ceaeb8d",
+      "size": 1392,
+      "md5": "481c776e18ff5e84f51f018486d0b0db",
+      "compressed": false
+    },
+    "assets/main/import/05/053d650d5.json": {
+      "size": 2796,
+      "md5": "fd82b5b026006d9754d4db8c2e44b278",
       "compressed": false
     },
     "assets/main/import/0d/0d9102458.json": {
@@ -7539,11 +7544,6 @@
       "md5": "a253314ec7107d95345d7fc89b8d7bb5",
       "compressed": false
     },
-    "assets/main/import/b7/b7813c3e-56f1-4f59-82bb-288f912ab9cc.json": {
-      "size": 2654,
-      "md5": "4935da53279ee4fc6cc2d834d73c2984",
-      "compressed": false
-    },
     "assets/main/import/ba/ba21476f-2866-4f81-9c4d-6e359316e448.json": {
       "size": 192,
       "md5": "8bce784945efd554512e8520ec9caccb",
@@ -7560,8 +7560,8 @@
       "compressed": false
     },
     "assets/main/index.js": {
-      "size": 349705,
-      "md5": "4706702e3cda9868becb056661195299",
+      "size": 349706,
+      "md5": "ddc6f62680da7d614dd15a45d77cdc39",
       "compressed": false
     },
     "assets/main/native/02/02c082cb-9974-4627-a276-5047678eb19e/FZLanTingYuanS-DB1-GB.ttf": {
@@ -7592,6 +7592,11 @@
     "assets/main/native/5c/5ce6c907-c1e9-4ed3-8860-d01df06962f1.jpg": {
       "size": 28170,
       "md5": "fa20cd592cbf51623303374e939bdc85",
+      "compressed": false
+    },
+    "assets/main/native/9b/9be31f2e-d184-41c0-a60c-7219d5aa23c8.manifest": {
+      "size": 267582,
+      "md5": "b0c0d764bdef60ae768a91e6104e7251",
       "compressed": false
     },
     "assets/main/native/9f/9fd900dd-221b-4f89-8f2c-fba34243c835.png": {

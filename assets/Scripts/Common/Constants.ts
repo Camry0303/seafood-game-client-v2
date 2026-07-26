@@ -10,7 +10,7 @@ const PASSWORD_KEY = "s9wppPKKZH77R2UW";
 const SERVER_CONFIG_URL = "http://json.cj33.cn:8088/seafood-xbxj-config.json";
 
 // 是否显示热更新进度
-const SHOW_HOTUPDATE_PROCESS = false;
+const SHOW_HOTUPDATE_PROCESS = true;
 
 // 游戏限制分选项
 const SCORE_LIMIT_OPTIONS: Config.ComboBoxOption[] = [
