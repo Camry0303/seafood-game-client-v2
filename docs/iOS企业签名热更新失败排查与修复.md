@@ -44,7 +44,21 @@ iOS 的后台下载守护进程 **`nsurlsessiond`** 在接收后台下载任务�
 
 ## 4. 修复方案
 
-### 4.1 引擎侧修改（核心修复，改一行）
+### 4.0 项目侧 Swizzle（✅ 已采用，不改引擎）
+
+> `build/` 目录中没有引擎源码副本（`build/ios/proj/cfg.cmake` 的 `COCOS_X_PATH` 直接指向 Creator 安装目录，每次构建从那里编译），因此无法通过改 build 产物解决。改为在项目自己的原生壳代码里做运行时拦截。
+
+- 新增 `native/engine/ios/HotUpdateSessionFix.mm`：通过 Method Swizzling 拦截
+  `+[NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:]`，
+  仅当 identifier 以 `BackgroundDownloadIdentifier` 开头（即 Cocos 热更下载器）时
+  返回 `defaultSessionConfiguration`（前台会话），其它调用不受影响。
+- `native/engine/ios/CMakeLists.txt` 的 `target_sources` 中加入该文件。
+- 优点：不碰 Creator 引擎文件、随仓库 git 管理、Creator 升级不丢失；
+  工程已有 `-ObjC -all_load` 链接标记，category 的 `+load` 必定执行。
+- 验证：构建后真机日志应出现
+  `[HotUpdateSessionFix] swizzled ...` 与热更时的 `[HotUpdateSessionFix] intercept ...`。
+
+### 4.1 引擎侧修改（备选方案，改引擎一行）
 
 文件（Creator 3.8.6 内置引擎）：
 

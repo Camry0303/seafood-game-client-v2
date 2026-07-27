@@ -30,7 +30,8 @@ cc_ios_after_target(${EXECUTABLE_NAME})
 # 不会自动包含用户新增的 .mm，需在 CMake 里手动 target_sources，否则链接报 Undefined symbol。
 target_sources(${EXECUTABLE_NAME} PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/BatteryMonitor.mm
-    ${CMAKE_CURRENT_LIST_DIR}/LocationService.mm)
+    ${CMAKE_CURRENT_LIST_DIR}/LocationService.mm
+    ${CMAKE_CURRENT_LIST_DIR}/HotUpdateSessionFix.mm)
 
 # ===== 微信 SDK 接入 =====
 # 头文件路径：AppDelegate 用 #import "WechatSDK/WXApi.h"，需把 WechatSDK 的父目录加入搜索路径
