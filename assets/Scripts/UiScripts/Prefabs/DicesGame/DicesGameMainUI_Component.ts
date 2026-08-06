@@ -237,7 +237,7 @@ export class DicesGameMainUI_Component extends ComponentController {
   public onOrderCreated(
     data: Gateway.Returned.Games.DicesGame.CreatedOrderResultData,
   ) {
-    // 更新玩家座位UI
+    // 更新对应座位分数（全局广播的下单结果，按 seat_code 匹配前端已渲染座位）
     this._playerSeatsComponents.updatePlayerSeatScore(
       data.seat_code,
       data.current_available_score,

@@ -1,4 +1,4 @@
-import { _decorator, Node, Vec3 } from "cc";
+import { _decorator, Label, Node, Vec3 } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import { DicesGameMainUI_Component } from "./DicesGameMainUI_Component";
 import { DicesGamePlayerSeat_Component } from "./DicesGamePlayerSeat_Component";
@@ -196,15 +196,18 @@ export class DicesGamePlayerSeatsContainer_Component extends ComponentController
 
     const player = GlobalData.Instance.getCurrentPlayerInfo();
 
-    // 获取庄家座位数据
+    // 获取庄家座位数据（明确按 seat_code 取，不依赖 Object.values 顺序）
     const dealerSeatData = data["0"];
 
-    // 整理座位数据
-    const seatsData = Object.values(data);
-    seatsData.shift(); // 移除庄家座位数据
+    // 整理座位数据：非庄家座位
+    const seatsData = Object.values(data).filter(
+      (seat) => seat.seat_code !== "0",
+    );
 
-    // 根据玩家排序，不含庄家座位
-    const seatsDataSorted = _.sortBy(seatsData, (seat) => seat.player);
+    // 按 seat_code 数值稳定排序（避免按 player 对象排序导致空座位挤占真人）
+    const seatsDataSorted = _.sortBy(seatsData, (seat) =>
+      Number(seat.seat_code),
+    );
 
     // 尝试找出本玩家的座位索引
     const index = seatsDataSorted.findIndex(
@@ -226,12 +229,24 @@ export class DicesGamePlayerSeatsContainer_Component extends ComponentController
       seat.setData(seatsDataToRender[index]);
     });
 
-    // 计算玩家人数
+    // 计算玩家人数（非庄家且非空闲的座位）
     const playernum = seatsDataSorted.reduce((acc, seat) => {
       return seat.status !== DICES_GAME_SEAT_STATUS.EMPTY ? acc + 1 : acc;
     }, 0);
 
-    this._morePlayersNode.active = playernum > 8;
+    // 超出前 8 个座位的玩家进入 MorePlayers 节点
+    const moreCount = Math.max(0, playernum - 8);
+    this._morePlayersNode.active = moreCount > 0;
+
+    // 若 MorePlayers 节点下有 Label，则写入剩余玩家数（无 Label 时安全跳过）
+    if (moreCount > 0) {
+      const labelNode = this._morePlayersNode
+        .getComponentsInChildren(Label)
+        .find((l) => l);
+      if (labelNode) {
+        labelNode.string = `+${moreCount}`;
+      }
+    }
   }
 
   /**
