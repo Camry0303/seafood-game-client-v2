@@ -129,12 +129,22 @@ export class CircleLoadingUI_Component extends ComponentController {
 
   /**
    * 显示
-   * @param callback
+   * @param waiting 等待类型
+   * @param callback 回调
+   * @param silent 静默模式：仅入队记账，不显示蒙版/旋转动画（用于极短耗时请求避免一闪而过）
    */
-  public show(waiting: WAITING_TYPE, callback?: Function) {
-    this.node.active = true;
+  public show(waiting: WAITING_TYPE, callback?: Function, silent?: boolean) {
     this._waitings.add(waiting as WAITING_TYPE);
     // console.log(`show-->`, this._waitings, waiting);
+
+    if (silent) {
+      if (callback) {
+        callback();
+      }
+      return;
+    }
+
+    this.node.active = true;
 
     // 如果是第一个等待任务，开始旋转动画
     if (this._waitings.size === 1) {

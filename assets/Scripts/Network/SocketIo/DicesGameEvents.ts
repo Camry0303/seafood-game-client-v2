@@ -630,7 +630,9 @@ export default class DicesGameEvents {
   ) {
     const socket = SocketManager.Instance.SocketInstance;
     if (socket) {
-      CommonDailogHandler.showCircleLoading(WAITING_TYPE.CREATE_ORDER);
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.CREATE_ORDER, undefined, {
+        silent: true,
+      });
       socket.emit(CLUB_DICES_GAME_EVENT.CREATE_ORDER, params);
     } else {
       CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);

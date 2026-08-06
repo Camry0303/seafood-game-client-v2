@@ -34,9 +34,15 @@ export default class CommonDailogHandler {
 
   /**
    * 显示加载动画
-   * @param callback
+   * @param waiting 等待类型
+   * @param callback 回调
+   * @param options.silent 静默模式：仅入队记账，不显示蒙版/旋转动画
    */
-  public static showCircleLoading(waiting: WAITING_TYPE, callback?: Function) {
+  public static showCircleLoading(
+    waiting: WAITING_TYPE,
+    callback?: Function,
+    options?: { silent?: boolean },
+  ) {
     const [, uiComponent] =
       ComponentManager.Instance.renderUiNode<CircleLoadingUI_Component>(
         "CircleLoadingUI",
@@ -44,7 +50,7 @@ export default class CommonDailogHandler {
         "Common/CircleLoadingUI",
         CircleLoadingUI_Component,
       );
-    uiComponent.show(waiting, callback);
+    uiComponent.show(waiting, callback, options?.silent);
   }
 
   /**
