@@ -206,16 +206,38 @@ export default class WeChatLoginService {
     }
   }
 
+  /** localStorage 中缓存测试微信用户的键名 */
+  private static readonly WECHAT_TEST_USER_KEY = "wechat_test_user";
+
   /**
    * 测试微信授权登录
+   * 优先从 localStorage 读取已缓存的测试用户，没有则使用内置测试数据并写回 localStorage。
    */
   private static async getWeChatUserTest() {
-    const data: WechatUserInfo = {
-      openid: "oMgfa6qWYJjJb5JRwBRU5ferYOkX",
-      nickname: "踏雪山巅", //昵称
-      headimgurl:
-        "https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83erEia7Tic6IL9wDRqtefBNt7qZ0s69WwV4BM3IzicxKlArCbYUUIT3L2VtMlWFjbwghlOgg47nd7dicYw/132", //头像
-    };
+    let data: WechatUserInfo = null;
+
+    const cached = sys.localStorage.getItem(this.WECHAT_TEST_USER_KEY);
+    if (cached) {
+      try {
+        data = JSON.parse(cached) as WechatUserInfo;
+      } catch (e) {
+        console.warn(`解析缓存的测试微信用户失败: ${e}`);
+      }
+    }
+
+    if (!data) {
+      data = {
+        openid: "oMgfa6qWYJjJb5JRwBRU5ferYOkX",
+        nickname: "踏雪山巅", //昵称
+        headimgurl:
+          "https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83erEia7Tic6IL9wDRqtefBNt7qZ0s69WwV4BM3IzicxKlArCbYUUIT3L2VtMlWFjbwghlOgg47nd7dicYw/132", //头像
+      };
+      sys.localStorage.setItem(
+        this.WECHAT_TEST_USER_KEY,
+        JSON.stringify(data),
+      );
+    }
+
     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.WECHAT_AUTH);
 
     // 处理授权登录

@@ -92,6 +92,8 @@ export class DicesGameGameTable_Component extends ComponentController {
   private _shakeDiceCupTween: Tween = null;
   // 打开骰盅动画
   private _openDiceCupTween: Tween = null;
+  // 当前开骰结果（供 tween 闭包读取，避免使用首次构建时的 results 捕获值）
+  private _currentOpenResults: number[] = null;
   //#endregion
 
   //#region 计时器相关属性
@@ -698,6 +700,8 @@ export class DicesGameGameTable_Component extends ComponentController {
    * @param results
    */
   public playerOpenDiceCupAnimation(results: number[]) {
+    // 保存当前开骰结果，供 tween 闭包（仅首次构建）读取最新值
+    this._currentOpenResults = results;
     // 骰盅中心位置
     const centerPos = this._diceCupPanelNode
       .getComponent(UITransform)
@@ -757,7 +761,7 @@ export class DicesGameGameTable_Component extends ComponentController {
         )
         .call(() => {
           const effectList = ["result_open"];
-          results.forEach((result) => {
+          (this._currentOpenResults || []).forEach((result) => {
             effectList.push(`result_0_${result}`);
           });
           // 播放音效列表
