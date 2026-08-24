@@ -83,9 +83,14 @@ export class CircleLoadingUI_Component extends ComponentController {
   private _circleLoadingNode: Node = null;
 
   /**
-   * 等待队列
+   * 等待队列（真实 loading：需要显示蒙版/旋转动画）
    */
   private _waitings: Set<WAITING_TYPE> = new Set<WAITING_TYPE>();
+
+  /**
+   * 静默等待集合（silent loading：仅记账，不参与蒙版显隐决策）
+   */
+  private _silentWaitings: Set<WAITING_TYPE> = new Set<WAITING_TYPE>();
 
   /**
    * 旋转动画实例
@@ -134,15 +139,17 @@ export class CircleLoadingUI_Component extends ComponentController {
    * @param silent 静默模式：仅入队记账，不显示蒙版/旋转动画（用于极短耗时请求避免一闪而过）
    */
   public show(waiting: WAITING_TYPE, callback?: Function, silent?: boolean) {
-    this._waitings.add(waiting as WAITING_TYPE);
-    // console.log(`show-->`, this._waitings, waiting);
-
     if (silent) {
+      this._silentWaitings.add(waiting as WAITING_TYPE);
+      // console.log(`show(silent)-->`, this._silentWaitings, waiting);
       if (callback) {
         callback();
       }
       return;
     }
+
+    this._waitings.add(waiting as WAITING_TYPE);
+    // console.log(`show-->`, this._waitings, waiting);
 
     this.node.active = true;
 
@@ -157,13 +164,24 @@ export class CircleLoadingUI_Component extends ComponentController {
   }
 
   /**
+   * 获取当前等待队列长度（调试/测试用）
+   * @param includeSilent 是否包含静默项，默认仅统计真实 loading
+   */
+  public getWaitingCount(includeSilent?: boolean): number {
+    return includeSilent
+      ? this._waitings.size + this._silentWaitings.size
+      : this._waitings.size;
+  }
+
+  /**
    * 隐藏
    * @param callback
    */
   public hide(waiting: WAITING_TYPE, callback?: Function) {
+    this._silentWaitings.delete(waiting as WAITING_TYPE);
     this._waitings.delete(waiting as WAITING_TYPE);
     // console.log(`hide-->`, this._waitings, waiting);
-
+    // 仅当真实 loading 队列清空时才关闭蒙版（silent 项不影响显隐）
     if (this._waitings.size == 0) {
       this.stopRotateAnimation();
       this.node.active = false;
