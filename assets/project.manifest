@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "packageUrl": "https://xbxj.hotupdate.cj33.cn",
   "remoteVersionUrl": "https://xbxj.hotupdate.cj33.cn/version.manifest",
   "remoteManifestUrl": "https://xbxj.hotupdate.cj33.cn/project.manifest",
@@ -4720,8 +4720,8 @@
       "compressed": false
     },
     "assets/Prefabs/import/07/07e5aca6d.json": {
-      "size": 92406,
-      "md5": "ae9831a3083136415bb65b5be2a6088f",
+      "size": 92413,
+      "md5": "7044202fd851d008b88b6c44206f6030",
       "compressed": false
     },
     "assets/Prefabs/import/07/07fb53969.json": {
@@ -7560,8 +7560,8 @@
       "compressed": false
     },
     "assets/main/index.js": {
-      "size": 349706,
-      "md5": "ddc6f62680da7d614dd15a45d77cdc39",
+      "size": 353344,
+      "md5": "f37b2edb1359a814ee0e870113223007",
       "compressed": false
     },
     "assets/main/native/02/02c082cb-9974-4627-a276-5047678eb19e/FZLanTingYuanS-DB1-GB.ttf": {
@@ -7595,8 +7595,8 @@
       "compressed": false
     },
     "assets/main/native/9b/9be31f2e-d184-41c0-a60c-7219d5aa23c8.manifest": {
-      "size": 267582,
-      "md5": "b0c0d764bdef60ae768a91e6104e7251",
+      "size": 267584,
+      "md5": "8505f51f1fcab199e8f0426ff731833f",
       "compressed": false
     },
     "assets/main/native/9f/9fd900dd-221b-4f89-8f2c-fba34243c835.png": {

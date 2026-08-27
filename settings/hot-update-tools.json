@@ -1,5 +1,5 @@
 {
-    "version": "1.0.0",
+    "version": "1.0.1",
     "serverUrl": "https://xbxj.hotupdate.cj33.cn",
     "resourceRootDir": "/Users/xdd/ProjectCode/Games/seafood-game-client-v2/build/android/data",
     "genManifestDir": "/Users/xdd/ProjectCode/Games/seafood-game-client-v2/hot-update-tools/manifest",
