@@ -43,14 +43,36 @@ export class GlobalData extends Singleton {
   }
   //#endregion
 
+  //#region 热更新域名
+  /**
+   * 热更新域名（资源下载根域名 packageUrl），游戏开始后从本地 manifest 读取并存入
+   */
+  private _hotUpdateDomain: string = "";
+  /**
+   * 设置热更新域名
+   * @param domain
+   */
+  public setHotUpdateDomain(domain: string) {
+    this._hotUpdateDomain = domain || "";
+  }
+  /**
+   * 获取热更新域名
+   * @returns
+   */
+  public getHotUpdateDomain() {
+    return this._hotUpdateDomain;
+  }
+  //#endregion
+
   //#region 服务器配置信息
   private _serverConfig: Gateway.Returned.Common.ServerConfig | null = null;
   /**
-   * 设置服务器配置信息
+   * 设置服务器配置信息，并自动派生热更新域名（gateway_server_url 的 .gateway. 替换为 .hotupdate.）
    * @param serverConfig
    */
   public setServerConfig(serverConfig: Gateway.Returned.Common.ServerConfig) {
     this._serverConfig = serverConfig;
+    this.setHotUpdateDomain(this.deriveHotUpdateDomain(serverConfig?.gateway_server_url));
   }
   /**
    * 获取服务器配置信息
@@ -58,6 +80,24 @@ export class GlobalData extends Singleton {
    */
   public getServerConfig() {
     return this._serverConfig;
+  }
+  /**
+   * 由 gateway_server_url 派生热更新域名：将首个 ".gateway." 替换为 ".hotupdate."，并将协议升级为 https
+   * 例：https://xbxj.gateway.cj33.cn -> https://xbxj.hotupdate.cj33.cn
+   *     http://xbxj.gateway.cj33.cn -> https://xbxj.hotupdate.cj33.cn
+   * 若不含 ".gateway." 则原样返回（如本地开发 http://localhost，不强制 https）
+   * @param gatewayUrl
+   */
+  public deriveHotUpdateDomain(gatewayUrl?: string): string {
+    if (!gatewayUrl) {
+      return "";
+    }
+    const replaced = gatewayUrl.replace(/\.gateway\./, ".hotupdate.");
+    // 含 .hotupdate. 的才视为热更域名，协议统一升级为 https
+    if (replaced.includes(".hotupdate.")) {
+      return replaced.replace(/^http:/, "https:");
+    }
+    return replaced;
   }
   //#endregion
 

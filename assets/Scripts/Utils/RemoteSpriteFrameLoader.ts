@@ -1,5 +1,6 @@
 import { assetManager, ImageAsset, SpriteFrame, Texture2D } from "cc";
 import { ResourceManager } from "../Runtime/ResourceManager";
+import { GlobalData } from "../Runtime/GlobalData";
 
 /**
  * 获取微信图片精灵
@@ -49,6 +50,23 @@ export async function getAvatarSpriteFrame(
   url: string,
   prefix: string = "custom_",
 ): Promise<SpriteFrame> {
+  // 机器人头像（bot_ 开头）：拼接热更域名 + /avatars/{原始文件名}.jpeg 远程加载
+  if (url.startsWith("bot_")) {
+    const domain = GlobalData.Instance.getHotUpdateDomain();
+    if (domain) {
+      const botUrl = `${domain}/avatars/${url}.jpeg`;
+      const spriteFrame = await wechatSpriteFrameLoader(botUrl);
+      if (spriteFrame) {
+        return spriteFrame;
+      }
+    }
+    // 域名缺失或加载失败时回退默认头像
+    return ResourceManager.Instance.getSpriteFrame(
+      "Images",
+      `Common/default_avatar_01`,
+    );
+  }
+
   // 分别处理微信头像和自定义头像
   if (url.startsWith(prefix)) {
     return ResourceManager.Instance.getSpriteFrame(
