@@ -20,7 +20,7 @@ export class GlobalData extends Singleton {
    * 是否是本地开发环境
    * //NOTE - 切换是否本地开发环境
    */
-  public isLocalDev: boolean = false;
+  public isLocalDev: boolean = true;
 
   //#region 版本号信息
   /**
@@ -72,7 +72,9 @@ export class GlobalData extends Singleton {
    */
   public setServerConfig(serverConfig: Gateway.Returned.Common.ServerConfig) {
     this._serverConfig = serverConfig;
-    this.setHotUpdateDomain(this.deriveHotUpdateDomain(serverConfig?.gateway_server_url));
+    this.setHotUpdateDomain(
+      this.deriveHotUpdateDomain(serverConfig?.gateway_server_url),
+    );
   }
   /**
    * 获取服务器配置信息

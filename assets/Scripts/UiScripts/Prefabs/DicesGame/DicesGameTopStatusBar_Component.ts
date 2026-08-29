@@ -31,6 +31,9 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
   // 解散房间按钮节点
   private _dissolveBtnNode: Node = null;
 
+  // 机器人按钮节点
+  private _botBtnNode: Node = null;
+
   // 信号类型节点
   private _signalTypeNode: Node = null;
 
@@ -206,6 +209,18 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
       "onResultHistoryBtnClick",
       this.getClassName(),
     );
+
+    // 按权限显示或隐藏机器人按钮（仅管理员/副管理员可见可点击）
+    this._botBtnNode = this.getNode("BotBtn");
+    if (
+      role === CLUB_PLAYER_ROLE.ADMIN ||
+      role === CLUB_PLAYER_ROLE.SUB_ADMIN
+    ) {
+      this.setButtonClickEvent("BotBtn", 0, "onBotBtnClick", this.getClassName());
+      this._botBtnNode.active = true;
+    } else {
+      this._botBtnNode.active = false;
+    }
   }
 
   /**
@@ -578,6 +593,14 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
       );
 
     component && component.setData(this._mainComponent.getResultsHistoryData());
+  }
+
+  /**
+   * 机器人按钮点击事件
+   * @param event
+   */
+  private onBotBtnClick(event: Event) {
+    console.log(`onBotBtnClick--->`);
   }
 
   /**
