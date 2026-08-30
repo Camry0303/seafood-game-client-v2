@@ -189,6 +189,62 @@ export interface GamePlayerData {
 }
 
 /**
+ * 房间内机器人数据（当前正在该房间游戏中的机器人）
+ */
+export interface RoomRobotData {
+  /**
+   * 机器人玩家id
+   */
+  player_id: number;
+  /**
+   * 俱乐部id
+   */
+  club_id: number;
+  /**
+   * 所在房间id
+   */
+  room_id: number;
+  /**
+   * 昵称
+   */
+  nickname: string;
+  /**
+   * 头像
+   */
+  avatar: string;
+  /**
+   * 俱乐部积分
+   */
+  club_score: number;
+  /**
+   * 是否在房间内游戏中
+   */
+  in_game: boolean;
+}
+
+/**
+ * 随机加入机器人结果数据
+ */
+export interface AddRandomRobotToRoomResultData {
+  /**
+   * 俱乐部id
+   */
+  club_id: number;
+  /**
+   * 房间id
+   */
+  room_id: number;
+  /**
+   * 实际入房的机器人玩家id（失败时为 0）
+   */
+  player_id: number;
+  /**
+   * 是否成功入房
+   */
+  success: boolean;
+}
+
+/**
  * 游戏座位数据
  */
 export interface GameSeatData {

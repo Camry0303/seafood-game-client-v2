@@ -71,6 +71,11 @@ export enum WAITING_TYPE {
   DEBUG_MODE = "正在进入调试模式",
   SET_DEBUG_RESULT = "正在设置调试结果",
 
+  GET_ROOM_ROBOT_LIST = "正在获取房间机器人列表",
+  ADD_RANDOM_ROBOT_TO_ROOM = "正在添加机器人",
+  ADD_ROBOT_TO_ROOM = "正在添加机器人",
+  REMOVE_ROBOT_FROM_ROOM = "正在移除机器人",
+
   GAME_RECONNECT = "正在重连游戏",
 }
 

@@ -12,6 +12,7 @@ import { DicesGameMainUI_Component } from "../../UiScripts/Prefabs/DicesGame/Dic
 import { DicesGameOrderDetailsUI_Component } from "../../UiScripts/Prefabs/DicesGame/DicesGameOrderDetailsUI_Component";
 import { DicesGameSettlementUI_Component } from "../../UiScripts/Prefabs/DicesGame/DicesGameSettlementUI_Component";
 import { DicesGameFinalSettlementUI_Component } from "../../UiScripts/Prefabs/DicesGame/DicesGameFinalSettlementUI_Component";
+import { DicesGameRobotUI_Component } from "../../UiScripts/Prefabs/DicesGame/DicesGameRobotUI_Component";
 import sleep from "../../Utils/Sleep";
 
 /**
@@ -86,6 +87,22 @@ export default class DicesGameEvents {
     [
       CLUB_DICES_GAME_EVENT.SET_DEBUG_RESULT_RESULT,
       this.onSetDebugResultResult,
+    ],
+    [
+      CLUB_DICES_GAME_EVENT.GET_ROOM_ROBOT_LIST_RESULT,
+      this.onGetRoomRobotListResult,
+    ],
+    [
+      CLUB_DICES_GAME_EVENT.ADD_RANDOM_ROBOT_TO_ROOM_RESULT,
+      this.onAddRandomRobotToRoomResult,
+    ],
+    [
+      CLUB_DICES_GAME_EVENT.ADD_ROBOT_TO_ROOM_RESULT,
+      this.onAddRobotToRoomResult,
+    ],
+    [
+      CLUB_DICES_GAME_EVENT.REMOVE_ROBOT_FROM_ROOM_RESULT,
+      this.onRemoveRobotFromRoomResult,
     ],
   ]);
 
@@ -459,6 +476,12 @@ export default class DicesGameEvents {
       if (room) {
         room.game_room_data.status = GAME_ROOM_STATUS.DISMISS;
       }
+      // 房间已解散，机器人面板已无意义，若还开着则关闭
+      const [rnode, rcomponent] = ComponentManager.Instance.getNodeComponent(
+        "DicesGameRobotUI",
+        DicesGameRobotUI_Component,
+      );
+      rcomponent && rcomponent.close();
     }
   }
   //#endregion
@@ -775,6 +798,13 @@ export default class DicesGameEvents {
       );
       component && component.setGameStart(data);
 
+      // 游戏开始后机器人不可退出：若机器人界面正打开，同步置灰其退出按钮
+      const [rnode, rcomponent] = ComponentManager.Instance.getNodeComponent(
+        "DicesGameRobotUI",
+        DicesGameRobotUI_Component,
+      );
+      rcomponent && rcomponent.updateQuitBtnsState();
+
       // 关闭结算界面
       const [snode, scomponent] = ComponentManager.Instance.getNodeComponent(
         "DicesGameSettlementUI",
@@ -915,6 +945,189 @@ export default class DicesGameEvents {
       );
       scomponent && scomponent.close();
     }
+  }
+  //#endregion
+
+  //#region 房间内机器人管理
+  /**
+   * 获取房间内机器人列表（响应到达后会挂载机器人管理界面）
+   * @param params
+   */
+  public static getRoomRobotList(
+    params: Gateway.Requested.Games.DicesGame.GetRoomRobotListParams,
+  ) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.GET_ROOM_ROBOT_LIST);
+      socket.emit(CLUB_DICES_GAME_EVENT.GET_ROOM_ROBOT_LIST, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.GET_ROOM_ROBOT_LIST);
+    }
+  }
+
+  /**
+   * 处理获取房间内机器人列表结果：挂载机器人管理界面并渲染
+   * @param returnData
+   */
+  private static onGetRoomRobotListResult(
+    returnData: Gateway.Returned.Common.Result<
+      Gateway.Returned.Games.DicesGame.RoomRobotData[]
+    >,
+  ) {
+    console.log(
+      "<DicesGameEvent> onGetRoomRobotListResult called --->",
+      returnData,
+    );
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      // 挂载机器人管理界面（若已打开则复用，仅刷新数据）
+      const [, component] =
+        ComponentManager.Instance.renderUiNode<DicesGameRobotUI_Component>(
+          "DicesGameRobotUI",
+          "Prefabs",
+          "DicesGame/DicesGameRobotUI",
+          DicesGameRobotUI_Component,
+        );
+      component && component.setData(data || []);
+    } else {
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.GET_ROOM_ROBOT_LIST);
+  }
+
+  /**
+   * 随机加入一个机器人到房间（不指定 player_id）
+   * @param params
+   */
+  public static addRandomRobotToRoom(
+    params: Gateway.Requested.Games.DicesGame.AddRandomRobotToRoomParams,
+  ) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(
+        WAITING_TYPE.ADD_RANDOM_ROBOT_TO_ROOM,
+      );
+      socket.emit(CLUB_DICES_GAME_EVENT.ADD_RANDOM_ROBOT_TO_ROOM, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(
+        WAITING_TYPE.ADD_RANDOM_ROBOT_TO_ROOM,
+      );
+    }
+  }
+
+  /**
+   * 处理随机加入机器人结果：刷新机器人列表
+   * @param returnData
+   */
+  private static onAddRandomRobotToRoomResult(
+    returnData: Gateway.Returned.Common.Result<Gateway.Returned.Games.DicesGame.AddRandomRobotToRoomResultData>,
+  ) {
+    console.log(
+      "<DicesGameEvent> onAddRandomRobotToRoomResult called --->",
+      returnData,
+    );
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      CommonDailogHandler.showBubbleMessage(`添加成功！`);
+      // 重新拉取房间内机器人列表，更新界面
+      if (data?.room_id) {
+        this.getRoomRobotList({ room_id: data.room_id });
+      }
+    } else {
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.ADD_RANDOM_ROBOT_TO_ROOM);
+  }
+
+  /**
+   * 让指定机器人加入房间
+   * @param params
+   */
+  public static addRobotToRoom(
+    params: Gateway.Requested.Games.DicesGame.AddRobotToRoomParams,
+  ) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.ADD_ROBOT_TO_ROOM);
+      socket.emit(CLUB_DICES_GAME_EVENT.ADD_ROBOT_TO_ROOM, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.ADD_ROBOT_TO_ROOM);
+    }
+  }
+
+  /**
+   * 处理指定机器人加入房间结果
+   * @param returnData
+   */
+  private static onAddRobotToRoomResult(
+    returnData: Gateway.Returned.Common.Result<{
+      club_id: number;
+      room_id: number;
+      player_id: number;
+      success: boolean;
+    }>,
+  ) {
+    console.log(
+      "<DicesGameEvent> onAddRobotToRoomResult called --->",
+      returnData,
+    );
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      if (data?.room_id) {
+        this.getRoomRobotList({ room_id: data.room_id });
+      }
+    } else {
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.ADD_ROBOT_TO_ROOM);
+  }
+
+  /**
+   * 让指定机器人退出房间
+   * @param params
+   */
+  public static removeRobotFromRoom(
+    params: Gateway.Requested.Games.DicesGame.RemoveRobotFromRoomParams,
+  ) {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.REMOVE_ROBOT_FROM_ROOM);
+      socket.emit(CLUB_DICES_GAME_EVENT.REMOVE_ROBOT_FROM_ROOM, params);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.REMOVE_ROBOT_FROM_ROOM);
+    }
+  }
+
+  /**
+   * 处理指定机器人退出房间结果：刷新机器人列表
+   * @param returnData
+   */
+  private static onRemoveRobotFromRoomResult(
+    returnData: Gateway.Returned.Common.Result<{
+      club_id: number;
+      room_id: number;
+      player_id: number;
+      success: boolean;
+    }>,
+  ) {
+    console.log(
+      "<DicesGameEvent> onRemoveRobotFromRoomResult called --->",
+      returnData,
+    );
+    const { code, data, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      CommonDailogHandler.showBubbleMessage(`已退出！`);
+      if (data?.room_id) {
+        this.getRoomRobotList({ room_id: data.room_id });
+      }
+    } else {
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.REMOVE_ROBOT_FROM_ROOM);
   }
   //#endregion
 }

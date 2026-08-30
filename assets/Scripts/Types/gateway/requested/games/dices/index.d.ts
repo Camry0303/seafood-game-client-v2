@@ -64,6 +64,54 @@ export type SpectateClubDicesGameRoomParams = {
 };
 
 /**
+ * 让指定机器人加入房间参数
+ */
+export type AddRobotToRoomParams = {
+  /**
+   * 房间ID
+   */
+  room_id: number;
+  /**
+   * 机器人玩家ID
+   */
+  player_id: number;
+};
+
+/**
+ * 让指定机器人退出房间参数
+ */
+export type RemoveRobotFromRoomParams = {
+  /**
+   * 房间ID
+   */
+  room_id: number;
+  /**
+   * 机器人玩家ID
+   */
+  player_id: number;
+};
+
+/**
+ * 获取房间内机器人列表参数
+ */
+export type GetRoomRobotListParams = {
+  /**
+   * 房间ID
+   */
+  room_id: number;
+};
+
+/**
+ * 随机加入一个机器人到房间参数（不指定 player_id）
+ */
+export type AddRandomRobotToRoomParams = {
+  /**
+   * 房间ID
+   */
+  room_id: number;
+};
+
+/**
  * 设置庄家参数
  */
 export type SetDealerParams = {

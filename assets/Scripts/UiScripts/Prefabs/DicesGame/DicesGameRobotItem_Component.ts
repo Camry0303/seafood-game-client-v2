@@ -1,7 +1,8 @@
-import { _decorator, Label, Node, Sprite } from "cc";
+import { _decorator, Button, Label, Node, Sprite } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import { getAvatarSpriteFrame } from "../../../Utils/RemoteSpriteFrameLoader";
 import { Gateway } from "../../../Types/gateway";
+import DicesGameEvents from "../../../Network/SocketIo/DicesGameEvents";
 const { ccclass, menu } = _decorator;
 
 /**
@@ -19,8 +20,11 @@ export class DicesGameRobotItem_Component extends ComponentController {
   // ID 标签
   private _idLabel: Label = null;
 
+  // 退出按钮
+  private _quitBtn: Button = null;
+
   // 机器人数据
-  private _robotData: Gateway.Returned.Games.DicesGame.GamePlayerData = null;
+  private _robotData: Gateway.Returned.Games.DicesGame.RoomRobotData = null;
 
   start() {}
 
@@ -42,13 +46,28 @@ export class DicesGameRobotItem_Component extends ComponentController {
     );
     // 获取 ID 标签
     [, this._idLabel] = this.getNodeComponent("DicesGameRobotItem/ID", Label);
+
+    // 获取退出按钮
+    const [, quitBtn] = this.getNodeComponent(
+      "DicesGameRobotItem/Options/QuitBtn",
+      Button,
+    );
+    this._quitBtn = quitBtn;
+
+    // 设置退出按钮点击事件
+    this.setButtonClickEvent(
+      "DicesGameRobotItem/Options/QuitBtn",
+      0,
+      "onQuitBtnClick",
+      this.getClassName(),
+    );
   }
 
   /**
    * 设置数据
    * @param data
    */
-  public setData(data: Gateway.Returned.Games.DicesGame.GamePlayerData) {
+  public setData(data: Gateway.Returned.Games.DicesGame.RoomRobotData) {
     this._robotData = data;
     this.render();
   }
@@ -76,5 +95,31 @@ export class DicesGameRobotItem_Component extends ComponentController {
     if (this._idLabel) {
       this._idLabel.string = this._robotData.player_id.toString();
     }
+  }
+
+  /**
+   * 设置退出按钮是否可点击
+   * 游戏已开始（非等待阶段）时不可退出，按钮置灰不可点。
+   * @param interactable
+   */
+  public setQuitBtnInteractable(interactable: boolean) {
+    if (this._quitBtn) {
+      this._quitBtn.interactable = interactable;
+    }
+  }
+
+  /**
+   * 退出按钮点击事件
+   * @param event
+   */
+  private onQuitBtnClick(event: Event) {
+    console.log(`onQuitBtnClick--->`, this._robotData);
+    if (!this._robotData) {
+      return;
+    }
+    DicesGameEvents.removeRobotFromRoom({
+      room_id: this._robotData.room_id,
+      player_id: this._robotData.player_id,
+    });
   }
 }

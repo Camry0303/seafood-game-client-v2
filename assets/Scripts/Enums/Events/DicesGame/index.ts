@@ -51,6 +51,18 @@ export enum CLUB_DICES_GAME_EVENT {
 
   SET_DEBUG_RESULT = "ClubDicesGame.SetDebugResult",
   SET_DEBUG_RESULT_RESULT = "ClubDicesGame.SetDebugResult.Result",
+
+  ADD_ROBOT_TO_ROOM = "ClubDicesGame.AddRobotToRoom",
+  ADD_ROBOT_TO_ROOM_RESULT = "ClubDicesGame.AddRobotToRoom.Result",
+
+  REMOVE_ROBOT_FROM_ROOM = "ClubDicesGame.RemoveRobotFromRoom",
+  REMOVE_ROBOT_FROM_ROOM_RESULT = "ClubDicesGame.RemoveRobotFromRoom.Result",
+
+  GET_ROOM_ROBOT_LIST = "ClubDicesGame.GetRoomRobotList",
+  GET_ROOM_ROBOT_LIST_RESULT = "ClubDicesGame.GetRoomRobotList.Result",
+
+  ADD_RANDOM_ROBOT_TO_ROOM = "ClubDicesGame.AddRandomRobotToRoom",
+  ADD_RANDOM_ROBOT_TO_ROOM_RESULT = "ClubDicesGame.AddRandomRobotToRoom.Result",
 }
 
 /**

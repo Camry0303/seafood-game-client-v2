@@ -13,6 +13,7 @@ import { DicesGameHistoryUI_Component } from "./DicesGameHistoryUI_Component";
 import sleep from "../../../Utils/Sleep";
 import CryptoUtils from "../../../Utils/CryptoUtils";
 import DicesGameEvents from "../../../Network/SocketIo/DicesGameEvents";
+import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
 import { Gateway } from "../../../Types/typing";
 import { DICES_GAME_SEAT_STATUS } from "../../../Enums/Events/DicesGame";
 import { DicesGameSettlementUI_Component } from "./DicesGameSettlementUI_Component";
@@ -601,6 +602,15 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
    */
   private onBotBtnClick(event: Event) {
     console.log(`onBotBtnClick--->`);
+    const roomData =
+      GlobalData.Instance.getCurrentGameInfo<Gateway.Returned.Games.DicesGame.ClubDicesGameRoomData>()
+        ?.game_room_data;
+    if (!roomData?.room_id) {
+      CommonDailogHandler.showBubbleMessage(`房间信息不存在!`);
+      return;
+    }
+    // 先请求房间内机器人列表，响应到达后由 DicesGameEvents 挂载机器人管理界面
+    DicesGameEvents.getRoomRobotList({ room_id: roomData.room_id });
   }
 
   /**
