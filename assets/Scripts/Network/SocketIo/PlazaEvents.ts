@@ -223,6 +223,13 @@ export default class PlazaEvents {
     if (code === RESPONE_RESULT.SUCCESS) {
       // 保存玩家信息到全局数据管理触发更新相关信息
       GlobalData.Instance.setCurrentPlayerInfo(data);
+      // 重新渲染大厅左上角玩家信息（含房卡数量）
+      const [plazaMainUiNode, plazaMainUiComponent] =
+        ComponentManager.Instance.getNodeComponent(
+          "PlazaMainUI",
+          PlazaMainUI_Component,
+        );
+      plazaMainUiComponent && plazaMainUiComponent.renderPlayerInformation(data);
     } else {
       // 连接失败，弹出提示框
       CommonDailogHandler.showBubbleMessage(`${msg}`);

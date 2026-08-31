@@ -19,6 +19,7 @@ import { GameSettingUI_Component } from "../GameSetting/GameSettingUI_Component"
 import { GlobalData } from "../../../Runtime/GlobalData";
 import { ClubSettingUI_Component } from "./ClubSettingUI_Component";
 import ClubEvents from "../../../Network/SocketIo/ClubEvents";
+import PlazaEvents from "../../../Network/SocketIo/PlazaEvents";
 import { Gateway } from "../../../Types/gateway";
 import { ResourceManager } from "../../../Runtime/ResourceManager";
 import { ClubToggle_Component } from "./ClubToggle_Component";
@@ -230,6 +231,8 @@ export class ClubMainUI_Component extends ComponentController {
     this._bubbleWindow.close(() => {
       // 销毁节点
       ComponentManager.Instance.destroyNode(this.node);
+      // 返回主界面后刷新当前玩家信息（含房卡数量）
+      PlazaEvents.getCurrentPlayer();
     });
   }
 

@@ -157,6 +157,8 @@ const PREFAB_DICES_GAME: ResourceGroup = {
     "DicesGame/DicesGameSettlementItem",
     "DicesGame/DicesGameFinalSettlementUI",
     "DicesGame/DicesGameFinalSettlementItem",
+    "DicesGame/DicesGameRobotUI",
+    "DicesGame/DicesGameRobotItem",
   ],
 };
 
