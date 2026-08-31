@@ -54,6 +54,9 @@ export class DicesGameMainUI_Component extends ComponentController {
   // 是否可以下单
   private _can_order: boolean = false;
 
+  // 当前局数（缓存最近一次游戏状态/开始游戏推送的 current_round）
+  private _currentRound: number = 0;
+
   start() {
     // 获取游戏状态
     DicesGameEvents.getClubGamingStatus();
@@ -150,6 +153,14 @@ export class DicesGameMainUI_Component extends ComponentController {
   }
 
   /**
+   * 获取当前局数
+   * @returns
+   */
+  public getCurrentRound(): number {
+    return this._currentRound;
+  }
+
+  /**
    * 更新游戏状态
    * @param data
    */
@@ -160,6 +171,8 @@ export class DicesGameMainUI_Component extends ComponentController {
     // 更新数据
     this._results_history_data = data.results_history;
     this._players_orders_grouped_data = data.players_orders_grouped;
+    // 缓存当前局数
+    this._currentRound = data.current_round;
 
     // 更新顶部状态栏UI
     this._topStatusBarComponent.updateTopStatusBarUI(data.current_round);
@@ -301,6 +314,8 @@ export class DicesGameMainUI_Component extends ComponentController {
    * @param current_round
    */
   public setGameStart(data: Gateway.Returned.Games.DicesGame.GameStartedData) {
+    // 缓存当前局数
+    this._currentRound = data.current_round;
     // 更新顶部状态栏UI
     this._topStatusBarComponent.updateTopStatusBarUI(data.current_round);
     // 更新桌面区域UI计时器UI

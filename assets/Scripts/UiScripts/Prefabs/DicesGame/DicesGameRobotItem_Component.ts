@@ -26,7 +26,9 @@ export class DicesGameRobotItem_Component extends ComponentController {
   // 机器人数据
   private _robotData: Gateway.Returned.Games.DicesGame.RoomRobotData = null;
 
-  start() {}
+  start() {
+    this.render();
+  }
 
   update(deltaTime: number) {}
 
@@ -36,27 +38,21 @@ export class DicesGameRobotItem_Component extends ComponentController {
 
     // 获取头像图像精灵
     [, this._avatarSprite] = this.getNodeComponent(
-      "DicesGameRobotItem/Avatar/Mask/AvatarSprite",
+      "Avatar/Avatar/Mask/AvatarSprite",
       Sprite,
     );
     // 获取昵称标签
-    [, this._nickNameLabel] = this.getNodeComponent(
-      "DicesGameRobotItem/Nickname",
-      Label,
-    );
+    [, this._nickNameLabel] = this.getNodeComponent("Nickname", Label);
     // 获取 ID 标签
-    [, this._idLabel] = this.getNodeComponent("DicesGameRobotItem/ID", Label);
+    [, this._idLabel] = this.getNodeComponent("ID", Label);
 
     // 获取退出按钮
-    const [, quitBtn] = this.getNodeComponent(
-      "DicesGameRobotItem/Options/QuitBtn",
-      Button,
-    );
+    const [, quitBtn] = this.getNodeComponent("Options/QuitBtn", Button);
     this._quitBtn = quitBtn;
 
     // 设置退出按钮点击事件
     this.setButtonClickEvent(
-      "DicesGameRobotItem/Options/QuitBtn",
+      "Options/QuitBtn",
       0,
       "onQuitBtnClick",
       this.getClassName(),
@@ -69,7 +65,6 @@ export class DicesGameRobotItem_Component extends ComponentController {
    */
   public setData(data: Gateway.Returned.Games.DicesGame.RoomRobotData) {
     this._robotData = data;
-    this.render();
   }
 
   /**

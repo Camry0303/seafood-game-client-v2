@@ -1,4 +1,4 @@
-import { _decorator, instantiate, Node, Prefab } from "cc";
+import { _decorator, instantiate, Label, Node, Prefab } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import BubbleWindow from "../../../Common/BubbleWindow";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
@@ -27,6 +27,9 @@ export class DicesGameOrderDetailsUI_Component extends ComponentController {
     Gateway.Returned.Games.DicesGame.GameSeatData
   > = null;
 
+  // 当前局数标签
+  private _currentRoundLabel: Label = null;
+
   start() {}
 
   update(deltaTime: number) {}
@@ -38,6 +41,12 @@ export class DicesGameOrderDetailsUI_Component extends ComponentController {
     // 获取订单详情容器
     this._orderDetailsItemContainer = this.getNode(
       "MainView/Content/ScrollView/view/content",
+    );
+
+    // 获取当前局数标签
+    [, this._currentRoundLabel] = this.getNodeComponent(
+      "MainView/Content/CurrentRoundLabel",
+      Label,
     );
 
     // 挂载气泡弹窗组件
@@ -77,6 +86,15 @@ export class DicesGameOrderDetailsUI_Component extends ComponentController {
     this._data = data;
     this._seatsData = seatsData;
 
+    // 渲染当前局数（取自主界面缓存的 current_round，与 TopBar 同源）
+    const [mainNode, mainComponent] = ComponentManager.Instance.getNodeComponent(
+      "DicesGameMainUI",
+      DicesGameMainUI_Component,
+    );
+    if (this._currentRoundLabel && mainComponent) {
+      this._currentRoundLabel.string = `第${mainComponent.getCurrentRound()}局`;
+    }
+
     // 清空列表项
     this._orderDetailsItemContainer.removeAllChildren();
 
@@ -93,6 +111,8 @@ export class DicesGameOrderDetailsUI_Component extends ComponentController {
       const seat_code = keys[0];
       const player_id = keys[1];
       const seat = seatsData[seat_code];
+      // 座位数据缺失（如 seats 未同步）时跳过，避免 seat.player 崩溃导致整面板无渲染
+      if (!seat || !seat.player) continue;
       const player = seat.player;
       const gameOrders = data[key];
       const node = instantiate(prefab);
@@ -140,6 +160,8 @@ export class DicesGameOrderDetailsUI_Component extends ComponentController {
         "DicesGame/DicesGameOrderDetailsItem",
       );
       const seat = this._seatsData[data.seat_code];
+      // 座位数据缺失时跳过，避免 seat.player 崩溃
+      if (!seat || !seat.player) return;
       const player = seat.player;
       const node = instantiate(prefab);
       const component = node.addComponent(DicesGameOrderDetailsItem_Component);

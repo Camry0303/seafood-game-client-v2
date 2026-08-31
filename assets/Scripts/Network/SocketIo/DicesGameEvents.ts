@@ -1033,7 +1033,7 @@ export default class DicesGameEvents {
       CommonDailogHandler.showBubbleMessage(`添加成功！`);
       // 重新拉取房间内机器人列表，更新界面
       if (data?.room_id) {
-        this.getRoomRobotList({ room_id: data.room_id });
+        DicesGameEvents.getRoomRobotList({ room_id: data.room_id });
       }
     } else {
       CommonDailogHandler.showBubbleMessage(`${msg}`);
@@ -1077,7 +1077,7 @@ export default class DicesGameEvents {
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       if (data?.room_id) {
-        this.getRoomRobotList({ room_id: data.room_id });
+        DicesGameEvents.getRoomRobotList({ room_id: data.room_id });
       }
     } else {
       CommonDailogHandler.showBubbleMessage(`${msg}`);
@@ -1122,7 +1122,7 @@ export default class DicesGameEvents {
     if (code === RESPONE_RESULT.SUCCESS) {
       CommonDailogHandler.showBubbleMessage(`已退出！`);
       if (data?.room_id) {
-        this.getRoomRobotList({ room_id: data.room_id });
+        DicesGameEvents.getRoomRobotList({ room_id: data.room_id });
       }
     } else {
       CommonDailogHandler.showBubbleMessage(`${msg}`);
