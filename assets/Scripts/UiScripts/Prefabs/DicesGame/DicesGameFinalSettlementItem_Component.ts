@@ -96,7 +96,7 @@ export class DicesGameFinalSettlementItem_Component extends ComponentController 
     let scoreListLabel = "";
     for (let i = 0; i < data.score_list.length; i++) {
       const scoreValue = data.score_list[i];
-      const score = `第${i + 1}局：${scoreValue < 0 ? "-" : "+"}${scoreValue}    `;
+      const score = `第${i + 1}局：${scoreValue < 0 ? "-" : "+"}${Math.abs(scoreValue)}    `;
       scoreListLabel += score;
     }
     this._scoreListLabel.string = scoreListLabel;

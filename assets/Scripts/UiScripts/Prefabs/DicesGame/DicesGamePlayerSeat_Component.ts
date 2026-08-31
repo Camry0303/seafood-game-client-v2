@@ -156,9 +156,9 @@ export class DicesGamePlayerSeat_Component extends ComponentController {
 
     scoreBubbleOpacity.opacity = 0;
     scoreBubbleNode.setPosition(0, -45, 0);
-    // 设置飘分分数
+    // 设置飘分分数（负数已自带符号，使用绝对值避免双负号）
     this._scoreBubbleLabel.string =
-      score < 0 ? "-" + score.toString() : "+" + score.toString();
+      score < 0 ? "-" + Math.abs(score).toString() : "+" + score.toString();
 
     this._scoreBubbleTween.start();
   }
