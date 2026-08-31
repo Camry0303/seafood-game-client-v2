@@ -13,6 +13,7 @@ import { DicesGameOrderDetailsUI_Component } from "../../UiScripts/Prefabs/Dices
 import { DicesGameSettlementUI_Component } from "../../UiScripts/Prefabs/DicesGame/DicesGameSettlementUI_Component";
 import { DicesGameFinalSettlementUI_Component } from "../../UiScripts/Prefabs/DicesGame/DicesGameFinalSettlementUI_Component";
 import { DicesGameRobotUI_Component } from "../../UiScripts/Prefabs/DicesGame/DicesGameRobotUI_Component";
+import { BubbleMessageUI_Component } from "../../UiScripts/Prefabs/Common/BubbleMessageUI_Component";
 import sleep from "../../Utils/Sleep";
 
 /**
@@ -990,6 +991,12 @@ export default class DicesGameEvents {
           DicesGameRobotUI_Component,
         );
       component && component.setData(data || []);
+      // 渲染机器人界面后重新置顶气泡提示，避免"添加成功"等提示被遮挡
+      const [bubbleNode] = ComponentManager.Instance.getNodeComponent(
+        "BubbleMessageUI",
+        BubbleMessageUI_Component,
+      );
+      bubbleNode && ComponentManager.Instance.setNodeSiblingTop(bubbleNode);
     } else {
       CommonDailogHandler.showBubbleMessage(`${msg}`);
     }

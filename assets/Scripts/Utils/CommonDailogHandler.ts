@@ -21,13 +21,17 @@ export default class CommonDailogHandler {
    * @param message
    */
   public static showBubbleMessage(message: string, callback?: Function) {
-    const [, uiComponent] =
+    const [uiNode, uiComponent] =
       ComponentManager.Instance.renderUiNode<BubbleMessageUI_Component>(
         "BubbleMessageUI",
         "Prefabs",
         "Common/BubbleMessageUI",
         BubbleMessageUI_Component,
       );
+    // 强制置顶，避免被其他 UI（如机器人管理界面）遮挡
+    if (uiNode) {
+      ComponentManager.Instance.setNodeSiblingTop(uiNode);
+    }
     // 播放气泡弹窗动效
     uiComponent.playBubbleMessageUI(message, callback);
   }
