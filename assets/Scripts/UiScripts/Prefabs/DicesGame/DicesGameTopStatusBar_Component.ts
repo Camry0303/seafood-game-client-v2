@@ -211,12 +211,24 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
       this.getClassName(),
     );
 
-    // 按权限显示或隐藏机器人按钮（仅管理员/副管理员可见可点击）
+    // 获取机器人按钮节点（可见性需结合 has_robots 与角色，在收到游戏状态后判定）
     this._botBtnNode = this.getNode("BotBtn");
-    if (
-      role === CLUB_PLAYER_ROLE.ADMIN ||
-      role === CLUB_PLAYER_ROLE.SUB_ADMIN
-    ) {
+    this._botBtnNode.active = false;
+  }
+
+  /**
+   * 根据俱乐部是否有机器人 + 玩家角色，更新机器人按钮可见性与点击事件
+   * @param hasRobots 俱乐部是否已入房机器人（按俱乐部维度判断）
+   */
+  private updateBotBtnVisibility(hasRobots: boolean): void {
+    if (!this._botBtnNode) {
+      return;
+    }
+    const role = GlobalData.Instance.getCurrentClubPlayerInfo()?.role;
+    const isAdminOrSubAdmin =
+      role === CLUB_PLAYER_ROLE.ADMIN || role === CLUB_PLAYER_ROLE.SUB_ADMIN;
+    // 仅当俱乐部有机器人且当前玩家为管理员/副管理员时才显示并可点击
+    if (hasRobots && isAdminOrSubAdmin) {
       this.setButtonClickEvent("BotBtn", 0, "onBotBtnClick", this.getClassName());
       this._botBtnNode.active = true;
     } else {
@@ -615,9 +627,13 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
 
   /**
    * 更新状态栏
-   * @param current_round
+   * @param current_round 当前局数
+   * @param hasRobots 俱乐部是否有已入房机器人（有值时据此刷新机器人按钮可见性）
    */
-  public updateTopStatusBarUI(current_round: number) {
+  public updateTopStatusBarUI(
+    current_round: number,
+    hasRobots?: boolean,
+  ) {
     const roomData =
       GlobalData.Instance.getCurrentGameInfo<Gateway.Returned.Games.DicesGame.ClubDicesGameRoomData>()
         ?.game_room_data;
@@ -626,5 +642,10 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
     this._scoreModeLabel.string = `${roomData?.game_config?.score_mode === 0 ? "不可负分" : "可负分"}`;
     this._totalRoundsLabel.string = `共${roomData?.game_config?.total_game_rounds}局`;
     this._currentRoundLabel.string = `第${current_round}局`;
+
+    // 收到游戏状态时刷新机器人按钮可见性
+    if (hasRobots !== undefined) {
+      this.updateBotBtnVisibility(hasRobots);
+    }
   }
 }

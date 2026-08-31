@@ -394,6 +394,10 @@ export interface GamingStatusgData {
    * 座位列表
    */
   seats: Record<string, GameSeatData>;
+  /**
+   * 俱乐部是否有机器人（已入房的机器人实例，按俱乐部维度判断）
+   */
+  has_robots: boolean;
 }
 
 /**

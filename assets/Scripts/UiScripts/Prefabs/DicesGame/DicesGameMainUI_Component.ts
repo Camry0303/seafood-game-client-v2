@@ -175,7 +175,10 @@ export class DicesGameMainUI_Component extends ComponentController {
     this._currentRound = data.current_round;
 
     // 更新顶部状态栏UI
-    this._topStatusBarComponent.updateTopStatusBarUI(data.current_round);
+    this._topStatusBarComponent.updateTopStatusBarUI(
+      data.current_round,
+      data.has_robots,
+    );
 
     // 更新底部状态栏玩家信息UI
     this._bottomStatusBarComponent.updatePlayerUI(data.dealer_id);
