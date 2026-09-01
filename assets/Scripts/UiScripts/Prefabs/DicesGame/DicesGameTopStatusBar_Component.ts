@@ -599,7 +599,7 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
     console.log(`onResultHistoryBtnClick--->`);
     const [node, component] =
       ComponentManager.Instance.renderUiNode<DicesGameHistoryUI_Component>(
-        "DicesGameHistoryUI_Component",
+        "DicesGameHistoryUI",
         "Prefabs",
         "DicesGame/DicesGameHistoryUI",
         DicesGameHistoryUI_Component,

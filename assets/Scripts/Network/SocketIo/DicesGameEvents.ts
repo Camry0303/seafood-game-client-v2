@@ -701,7 +701,7 @@ export default class DicesGameEvents {
       component && component.onOrderCreated(data);
 
       const [dNode, dComponent] = ComponentManager.Instance.getNodeComponent(
-        "DicesGameOrderDetailsUI_Component",
+        "DicesGameOrderDetailsUI",
         DicesGameOrderDetailsUI_Component,
       );
       dComponent && dComponent.onOrderCreated(data);
@@ -805,6 +805,13 @@ export default class DicesGameEvents {
         DicesGameRobotUI_Component,
       );
       rcomponent && rcomponent.updateQuitBtnsState();
+
+      // 新一局开始：若下注详情界面正打开，清空残留的上局内容
+      const [onode, ocomponent] = ComponentManager.Instance.getNodeComponent(
+        "DicesGameOrderDetailsUI",
+        DicesGameOrderDetailsUI_Component,
+      );
+      ocomponent && ocomponent.clearContent();
 
       // 关闭结算界面
       const [snode, scomponent] = ComponentManager.Instance.getNodeComponent(

@@ -76,6 +76,19 @@ export class DicesGameOrderDetailsUI_Component extends ComponentController {
   }
 
   /**
+   * 清空下注详情内容（新一局开始时调用，避免残留上一局订单）
+   * 仅清空展示，保留 _data / _seatsData 以便新一局订单回执到达时能即时按座位渲染。
+   */
+  public clearContent() {
+    if (this._orderDetailsItemContainer) {
+      this._orderDetailsItemContainer.removeAllChildren();
+    }
+    if (this._currentRoundLabel) {
+      this._currentRoundLabel.string = "";
+    }
+  }
+
+  /**
    * 设置数据
    * @param data
    */
@@ -155,6 +168,9 @@ export class DicesGameOrderDetailsUI_Component extends ComponentController {
       };
       component.onOrderCreated(order);
     } else {
+      // 座位数据未就绪（如新一局刚清空、尚未重新 setData）时跳过，
+      // 避免访问 null 的 _seatsData 或 seat.player 导致崩溃
+      if (!this._seatsData) return;
       const prefab: Prefab = ResourceManager.Instance.getAsset<Prefab>(
         "Prefabs",
         "DicesGame/DicesGameOrderDetailsItem",
