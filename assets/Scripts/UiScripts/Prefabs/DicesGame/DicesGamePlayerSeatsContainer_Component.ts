@@ -164,16 +164,16 @@ export class DicesGamePlayerSeatsContainer_Component extends ComponentController
    * @param seat_code 座位编码
    */
   public getSeatWorldPosition(seat_code: string): Vec3 {
-    // 1. 遍历查找座位
-    const seatsContainer = this.node.children;
-    const seatNode = seatsContainer.find((seat) => {
-      const component = seat.getComponent(DicesGamePlayerSeat_Component);
-      // 修改点：返回 boolean 而不是对象
-      return !!component && component.getData()?.seat_code === seat_code;
-    });
+    // 1. 遍历已初始化的座位组件，按 seat_code 匹配
+    // 注意：DicesGamePlayerSeat_Component 挂在 SeatX/PlayerSeat 子节点上，
+    // 不能用 this.node.children.find + getComponent 直接取（拿不到组件），
+    // 这里直接用 _seats 组件数组匹配，并从组件所属节点取世界坐标。
+    const targetSeat = this._seats.find(
+      (seat) => String(seat.getData()?.seat_code) === String(seat_code),
+    );
 
     // 2. 确定最终要获取位置的节点
-    const targetNode = seatNode || this._morePlayersNode;
+    const targetNode = targetSeat?.node || this._morePlayersNode;
 
     // 3. 安全获取位置
     if (!targetNode) {
