@@ -806,12 +806,12 @@ export default class DicesGameEvents {
       );
       rcomponent && rcomponent.updateQuitBtnsState();
 
-      // 新一局开始：若下注详情界面正打开，清空残留的上局内容
+      // 新一局开始：若下注详情界面正打开，清空残留的上局内容，并同步更新局数标签
       const [onode, ocomponent] = ComponentManager.Instance.getNodeComponent(
         "DicesGameOrderDetailsUI",
         DicesGameOrderDetailsUI_Component,
       );
-      ocomponent && ocomponent.clearContent();
+      ocomponent && ocomponent.clearContent(data.current_round);
 
       // 关闭结算界面
       const [snode, scomponent] = ComponentManager.Instance.getNodeComponent(

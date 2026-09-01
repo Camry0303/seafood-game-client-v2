@@ -2,9 +2,9 @@ import {
   _decorator,
   instantiate,
   Label,
+  Layout,
   Node,
   Prefab,
-  Size,
   Sprite,
   UITransform,
 } from "cc";
@@ -26,6 +26,15 @@ export class DicesGameOrderDetailsItem_Component extends ComponentController {
 
   // 订单项容器
   private _orderItemContainerNode: Node = null;
+
+  // 顶部区域（头像+昵称）节点，用于计算 Item 根节点固定顶部高度
+  private _topRegionNode: Node = null;
+
+  // Item 根节点 UITransform（随订单容器撑高）
+  private _rootUITransform: UITransform = null;
+
+  // 订单容器 Layout（RESIZE_CONTAINER 完成后派发 resize 事件）
+  private _orderContainerLayout: Layout = null;
 
   // 玩家信息
   private _playerData: Gateway.Returned.Games.DicesGame.GamePlayerData;
@@ -51,10 +60,22 @@ export class DicesGameOrderDetailsItem_Component extends ComponentController {
     [, this._nickNameLabel] = this.getNodeComponent("PlayerUI/Nickname", Label);
     // 获取订单容器节点
     this._orderItemContainerNode = this.getNode("OrderItemContainer");
+    // 顶部区域（头像+昵称）
+    this._topRegionNode = this.getNode("PlayerUI");
+    // Item 根 UITransform
+    this._rootUITransform = this.node.getComponent(UITransform);
+    // 订单容器 Layout（RESIZE_CONTAINER）
+    this._orderContainerLayout = this._orderItemContainerNode.getComponent(
+      Layout,
+    );
   }
 
   /**
    * 渲染
+   * 订单项容器 OrderItemContainer 已挂载 GRID Layout（RESIZE_CONTAINER），
+   * 由 Layout 自动按行列排布并撑开容器高度，脚本只负责增删子节点，不再手动 setContentSize。
+   * 容器撑高后，需在 resize 回调里同步 Item 根节点高度，否则外层 content 的
+   * VERTICAL Layout 读到的仍是固定高度，导致 content 不随 Item 撑高。
    */
   public async render() {
     // 清空列表项
@@ -64,12 +85,6 @@ export class DicesGameOrderDetailsItem_Component extends ComponentController {
       "Prefabs",
       "DicesGame/DicesGameOrderItem",
     );
-    const prefabTransform = prefab.data.getComponent(UITransform);
-    const itemHeight = prefabTransform ? prefabTransform.height : 0;
-    const itemWidth = prefabTransform ? prefabTransform.width : 0;
-
-    const rowSpacing = 5; // 行间距
-    const itemsPerRow = 3; // 每行项数
 
     // 渲染订单项
     this._gameOrdersData.forEach((order) => {
@@ -80,32 +95,43 @@ export class DicesGameOrderDetailsItem_Component extends ComponentController {
       this._orderItemContainerNode.addChild(node);
     });
 
-    // 根据订单项数量调整容器大小
-    if (itemHeight > 0 && this._gameOrdersData.length > 0) {
-      const totalItems = this._gameOrdersData.length;
-      const totalRows = Math.ceil(totalItems / itemsPerRow); // 计算总行数
-
-      // 总高度 = 所有行高度 + 所有行间距 (间距数量为 总行数 - 1)+ 底部各10偏移量
-      const totalHeight =
-        itemHeight * totalRows + rowSpacing * (totalRows - 1) + 10;
-
-      this._orderItemContainerNode
-        .getComponent(UITransform)
-        .setContentSize(new Size(itemWidth, totalHeight));
-
-      // 如果当前节点也需要自适应撑开，则也设置当前节点的高度
-      this.node
-        .getComponent(UITransform)
-        .setContentSize(
-          new Size(itemWidth, totalRows === 1 ? totalHeight + 20 : totalHeight),
-        );
-    }
-
     // 渲染头像和昵称
     getAvatarSpriteFrame(this._playerData.avatar).then((spriteFrame) => {
       this._avatarSprite.spriteFrame = spriteFrame;
     });
     this._nickNameLabel.string = this._playerData.nickname;
+
+    // 订单容器 GRID Layout 在下一帧 update 才会完成排布并撑高自身，
+    // 延迟一帧同步 Item 根节点高度，使外层 content 的 VERTICAL Layout 能读到正确高度。
+    this.scheduleOnce(this.syncRootHeight, 0);
+    // 立即同步一次（应对无子项或 Layout 当帧未触发的情况）
+    this.syncRootHeight();
+  }
+
+  /**
+   * 同步 Item 根节点高度。
+   * PlayerUI（头像+昵称）与 OrderItemContainer 在 Item 根坐标系下均从顶部起（lpos.y=0），
+   * 二者垂直方向同起点、横向并排，因此根高度应取两者底部最大者，而非简单相加，
+   * 否则会在中间多出一段空白（原 bug：topHeight + containerHeight 导致空一行）。
+   * Item 根高度正确后，外层 content 的 VERTICAL Layout(RESIZE_CONTAINER) 会在
+   * 下一次 update 自动跟随重排，从而整体随订单数撑高。
+   */
+  private syncRootHeight() {
+    if (!this._rootUITransform || !this._orderItemContainerNode) return;
+
+    const topHeight = this._topRegionNode
+      ? this._topRegionNode.getComponent(UITransform)?.height ?? 0
+      : 0;
+    const containerHeight =
+      this._orderItemContainerNode.getComponent(UITransform)?.height ?? 0;
+    const bottomPadding = 10;
+
+    const usedHeight = Math.max(topHeight, containerHeight);
+    const totalHeight = usedHeight + bottomPadding;
+    this._rootUITransform.setContentSize(
+      this._rootUITransform.width,
+      totalHeight,
+    );
   }
 
   /**

@@ -78,13 +78,15 @@ export class DicesGameOrderDetailsUI_Component extends ComponentController {
   /**
    * 清空下注详情内容（新一局开始时调用，避免残留上一局订单）
    * 仅清空展示，保留 _data / _seatsData 以便新一局订单回执到达时能即时按座位渲染。
+   * @param currentRound 新一局的局数，用于同步更新局数标签；不传则仅清空标签。
    */
-  public clearContent() {
+  public clearContent(currentRound?: number) {
     if (this._orderDetailsItemContainer) {
       this._orderDetailsItemContainer.removeAllChildren();
     }
     if (this._currentRoundLabel) {
-      this._currentRoundLabel.string = "";
+      this._currentRoundLabel.string =
+        currentRound != null ? `第${currentRound}局` : "";
     }
   }
 
