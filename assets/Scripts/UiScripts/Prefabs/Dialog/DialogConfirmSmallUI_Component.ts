@@ -1,4 +1,5 @@
 import { _decorator, Event, Label, Node } from "cc";
+import { Logger } from "../../../Utils/Logger";
 import { ComponentController } from "../../../Common/ComponentController";
 import BubbleWindow from "../../../Common/BubbleWindow";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
@@ -93,7 +94,7 @@ export class DialogConfirmSmallUI_Component extends ComponentController {
    * 确定按钮点击事件
    */
   private onConfirmBtnClick(event: Event) {
-    console.log(`DialogConfirmSmallUI_Component onConfirmBtnClick`);
+    Logger.log(`DialogConfirmSmallUI_Component onConfirmBtnClick`);
     if (this._confirmCallback) {
       this._confirmCallback();
       this.close();
@@ -106,7 +107,7 @@ export class DialogConfirmSmallUI_Component extends ComponentController {
    * 取消按钮点击事件
    */
   private onCancelBtnClick(event: Event) {
-    console.log(`DialogConfirmSmallUI_Component onCancelBtnClick`);
+    Logger.log(`DialogConfirmSmallUI_Component onCancelBtnClick`);
     if (this._cancelCallback) {
       this._cancelCallback();
       this.close();

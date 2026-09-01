@@ -1,4 +1,5 @@
 import { Socket } from "socket.io-client";
+import { Logger } from "../../Utils/Logger";
 import { ComponentManager } from "../../Runtime/ComponentManager";
 import { Gateway } from "../../Types/typing";
 import { GlobalData } from "../../Runtime/GlobalData";
@@ -72,7 +73,7 @@ export default class PlazaEvents {
       playerInfo: Gateway.Returned.Player.Player;
     }>,
   ) {
-    console.log("<PlazaEvent> onMainConnectedResult called!", returnData);
+    Logger.log("<PlazaEvent> onMainConnectedResult called!", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       // 连接成功，保存token
@@ -105,7 +106,7 @@ export default class PlazaEvents {
         if (currentClub) {
           // 处理进入俱乐部
           ClubEvents.enterClub(currentClub.club_id);
-          console.log(`当前俱乐部记录存在，处理进入俱乐部`);
+          Logger.log(`当前俱乐部记录存在，处理进入俱乐部`);
         }
       }
       // 隐藏加载动画
@@ -129,7 +130,7 @@ export default class PlazaEvents {
       quitCount: number;
     }>,
   ) {
-    console.log("<PlazaEvent> onIncomingClubHintResult called!");
+    Logger.log("<PlazaEvent> onIncomingClubHintResult called!");
     const { code, data, msg } = returnData;
     // PlazaEvents.getClubHasHint();
     // 判断如果在俱乐部界面，则更新相应的toggle上的申请标记
@@ -147,7 +148,7 @@ export default class PlazaEvents {
   private static onApplyClubJoinResult(
     returnData: Gateway.Returned.Common.Result<boolean>,
   ) {
-    console.log("<PlazaEvent> onApplyClubJoinResult called!");
+    Logger.log("<PlazaEvent> onApplyClubJoinResult called!");
     const [node, component] = ComponentManager.Instance.getNodeComponent(
       "ClubMainUI",
       ClubMainUI_Component,
@@ -176,7 +177,7 @@ export default class PlazaEvents {
   private static onApplyClubQuitResult(
     returnData: Gateway.Returned.Common.Result<boolean>,
   ) {
-    console.log("<PlazaEvent> onApplyClubQuitResult called!");
+    Logger.log("<PlazaEvent> onApplyClubQuitResult called!");
     const [clubMainUi, clubMainUiComponent] =
       ComponentManager.Instance.getNodeComponent(
         "ClubMainUI",
@@ -218,7 +219,7 @@ export default class PlazaEvents {
   private static onGetCurrentPlayerResult(
     returnData: Gateway.Returned.Common.Result<Gateway.Returned.Player.Player>,
   ) {
-    console.log("<PlazaEvent> onGetCurrentPlayer called!");
+    Logger.log("<PlazaEvent> onGetCurrentPlayer called!");
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       // 保存玩家信息到全局数据管理触发更新相关信息
@@ -262,7 +263,7 @@ export default class PlazaEvents {
   private static onChangeNicknameResult(
     returnData: Gateway.Returned.Common.Result<Gateway.Returned.Player.Player>,
   ) {
-    console.log("<PlazaEvent> onChangeNicknameResult called!");
+    Logger.log("<PlazaEvent> onChangeNicknameResult called!");
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       // 保存玩家信息到全局数据管理触发更新相关信息
@@ -299,7 +300,7 @@ export default class PlazaEvents {
   private static onSetCustomAvatarResult(
     returnData: Gateway.Returned.Common.Result<Gateway.Returned.Player.Player>,
   ) {
-    console.log("<PlazaEvent> onSetCustomAvatarResult called!");
+    Logger.log("<PlazaEvent> onSetCustomAvatarResult called!");
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       // 保存玩家信息到全局数据管理触发更新相关信息
@@ -335,7 +336,7 @@ export default class PlazaEvents {
   private static onBindAgentResult(
     returnData: Gateway.Returned.Common.Result<Gateway.Returned.Player.Player>,
   ) {
-    console.log("<PlazaEvent> onSetCustomAvatarResult called!");
+    Logger.log("<PlazaEvent> onSetCustomAvatarResult called!");
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       // 保存玩家信息到全局数据管理触发更新相关信息
@@ -487,18 +488,18 @@ export default class PlazaEvents {
       Gateway.Returned.Common.GameReconnectResultData<Gateway.Returned.Games.DicesGame.ClubDicesGameRoomData>
     >,
   ) {
-    console.log("<PlazaEvent> onGameReconnectResult called!");
+    Logger.log("<PlazaEvent> onGameReconnectResult called!");
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       // 处理重连成功逻辑
-      console.log(`<PlazaEvent> onGameReconnectResult data--->`, data);
+      Logger.log(`<PlazaEvent> onGameReconnectResult data--->`, data);
       // 保存游戏信息
       GlobalData.Instance.setCurrentGameInfo(data);
 
       // TODO - 根据游戏类型进入不同的游戏界面（需要判断一下是不是已经在游戏场景中）
       switch (data.in_game_type) {
         case IN_GAME_TYPE.PUBLIC_DICES_GAME:
-          console.log(`处理重连进入大厅骰子游戏`);
+          Logger.log(`处理重连进入大厅骰子游戏`);
           break;
         case IN_GAME_TYPE.CLUB_DICES_GAME:
           // 根据游戏类型进入不同的游戏界面
@@ -510,7 +511,7 @@ export default class PlazaEvents {
               DicesGameMainUI_Component,
             );
           if (!created) {
-            console.log(`已在游戏界面，手动获取游戏状态！`);
+            Logger.log(`已在游戏界面，手动获取游戏状态！`);
             // 已在游戏界面，手动获取游戏状态！
             // dicesGameRoomUiComponent.getGamingStatus();
           }

@@ -1,4 +1,5 @@
 import { __private, _decorator, Event, EditBox, Button, Sprite } from "cc";
+import { Logger } from "../../../Utils/Logger";
 import { ComponentController } from "../../../Common/ComponentController";
 import BubbleWindow from "../../../Common/BubbleWindow";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
@@ -142,7 +143,7 @@ export class PhoneLoginUI_Component extends ComponentController {
    * 注册账号按钮点击事件
    */
   private onToRegisterBtnClick(event: Event) {
-    console.log("打开注册界面UI");
+    Logger.log("打开注册界面UI");
     // 挂载注册账号界面
     ComponentManager.Instance.renderUiNode<PhoneRegisterUI_Component>(
       "PhoneRegisterUI",
@@ -158,7 +159,7 @@ export class PhoneLoginUI_Component extends ComponentController {
    * 忘记密码按钮点击事件
    */
   private onToResetPasswordBtnClick(event: Event) {
-    console.log("打开忘记密码界面UI");
+    Logger.log("打开忘记密码界面UI");
     // 挂载忘记密码界面
     ComponentManager.Instance.renderUiNode<ResetPasswordUI_Component>(
       "ResetPasswordUI",
@@ -175,7 +176,7 @@ export class PhoneLoginUI_Component extends ComponentController {
    */
   private async onLoginBtnClick(event: Event) {
     try {
-      console.log("点击了登录按钮");
+      Logger.log("点击了登录按钮");
       const phoneNumber = this._phoneNumberEditBox.string;
       const password = this._passwordEditBox.string;
       const captcha = this._captchaEditBox.string;
@@ -236,7 +237,7 @@ export class PhoneLoginUI_Component extends ComponentController {
    */
   private async getCaptcha() {
     // 获取验证码图片逻辑
-    console.log("获取验证码图片");
+    Logger.log("获取验证码图片");
     try {
       const result = await HttpApiServices.getCaptcha();
 

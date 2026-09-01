@@ -1,4 +1,5 @@
 import { native, game } from "cc";
+import { Logger } from "./Logger";
 import WeChatLoginService from "./WeChatLoginService";
 import {
   ANDROID_LOCATION_STATUS,
@@ -22,7 +23,7 @@ export default class NativeAPI {
       "getSignDomain",
       "()Ljava/lang/String;",
     );
-    console.log("getSignCodeAndroid--->", signDomain);
+    Logger.log("getSignCodeAndroid--->", signDomain);
     return signDomain;
   }
 
@@ -35,7 +36,7 @@ export default class NativeAPI {
       "AppDelegate",
       "getSignDomain",
     );
-    console.log(`getSignCodeIOS--->`, signDomain);
+    Logger.log(`getSignCodeIOS--->`, signDomain);
     return signDomain;
   }
 
@@ -96,7 +97,7 @@ export default class NativeAPI {
       batteryPct: Number(batteryInfoArray[0]) * 100,
       batteryStatus: Number(batteryInfoArray[1]),
     };
-    console.log("getBatteryInfoAndroid--->", JSON.stringify(batteryInfo));
+    Logger.log("getBatteryInfoAndroid--->", JSON.stringify(batteryInfo));
     return batteryInfo;
   }
 
@@ -119,7 +120,7 @@ export default class NativeAPI {
       batteryPct: Number(batteryInfoArray[0]) * 100,
       batteryStatus: Number(batteryInfoArray[1]),
     };
-    console.log(`getBatteryInfoIOS--->`, JSON.stringify(batteryInfo));
+    Logger.log(`getBatteryInfoIOS--->`, JSON.stringify(batteryInfo));
     return batteryInfo;
   }
 
@@ -178,7 +179,7 @@ export default class NativeAPI {
     CommonDailogHandler.showDialogMessage(
       `batteryPct:${batteryInfo.batteryPct},batteryStatus:${batteryInfo.batteryStatus}`,
     );
-    console.log("receiveBatteryInfo batteryInfo--->", batteryInfo);
+    Logger.log("receiveBatteryInfo batteryInfo--->", batteryInfo);
   }
 
   /**
@@ -209,7 +210,7 @@ export default class NativeAPI {
    * @param result
    */
   public static onLocationPermissionIsGranted(result: string) {
-    console.log("onLocationPermissionIsGranted--->", result);
+    Logger.log("onLocationPermissionIsGranted--->", result);
     const resultObj = JSON.parse(result) as {
       isGranted: boolean;
       system: "IOS" | "ANDROID";
@@ -268,7 +269,7 @@ export default class NativeAPI {
       "getLastLocation",
       "()Ljava/lang/String;",
     );
-    console.log("getLastLocationAndroid--->", locationString);
+    Logger.log("getLastLocationAndroid--->", locationString);
     const location = JSON.parse(locationString) as {
       error: ANDROID_LOCATION_STATUS | undefined;
       latitude: number; // 纬度
@@ -307,7 +308,7 @@ export default class NativeAPI {
       latitude,
       longitude,
     };
-    console.log("onLocationChanged--->", location);
+    Logger.log("onLocationChanged--->", location);
     // 更新位置信息
     GlobalData.Instance.setLastKnownLocation(location);
   }

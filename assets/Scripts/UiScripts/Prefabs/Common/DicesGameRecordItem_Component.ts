@@ -1,4 +1,5 @@
 import { _decorator, Label, Node, Event } from "cc";
+import { Logger } from "../../../Utils/Logger";
 import { ComponentController } from "../../../Common/ComponentController";
 import { Gateway } from "../../../Types/gateway";
 import moment from "moment";
@@ -79,7 +80,7 @@ export class DicesGameRecordItem_Component extends ComponentController {
    * @param event
    */
   private onReviewBtnClick(event: Event) {
-    console.log(`onReviewBtnClick--->`, this._data);
+    Logger.log(`onReviewBtnClick--->`, this._data);
     ClubEvents.getRoomClubDicesGameSettlement({
       current: 1,
       pageSize: 1000,

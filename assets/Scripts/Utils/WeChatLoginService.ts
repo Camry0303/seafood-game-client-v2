@@ -1,4 +1,5 @@
 import { native, sys } from "cc";
+import { Logger } from "./Logger";
 import { ComponentManager } from "../Runtime/ComponentManager";
 import CryptoUtils from "./CryptoUtils";
 import moment from "moment";
@@ -58,13 +59,13 @@ export default class WeChatLoginService {
     CommonDailogHandler.showCircleLoading(WAITING_TYPE.WECHAT_AUTH);
 
     if (WeChatLoginService.isAndroid) {
-      console.log("Android--点击了微信登录");
+      Logger.log("Android--点击了微信登录");
       NativeAPI.WeChatLoginAndroid();
     } else if (WeChatLoginService.isIOS) {
-      console.log("IOS--点击了微信登录");
+      Logger.log("IOS--点击了微信登录");
       NativeAPI.WeChatLoginIOS();
     } else {
-      console.log(`${sys.os}--点击了微信登录`);
+      Logger.log(`${sys.os}--点击了微信登录`);
       this.getWeChatUserTest();
     }
   }
@@ -221,7 +222,7 @@ export default class WeChatLoginService {
       try {
         data = JSON.parse(cached) as WechatUserInfo;
       } catch (e) {
-        console.warn(`解析缓存的测试微信用户失败: ${e}`);
+        Logger.warn(`解析缓存的测试微信用户失败: ${e}`);
       }
     }
 

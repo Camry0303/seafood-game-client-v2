@@ -1,4 +1,5 @@
 import { _decorator, sys, Event, Toggle, Node } from "cc";
+import { Logger } from "../../../Utils/Logger";
 import { ComponentController } from "../../../Common/ComponentController";
 import { SoundsManager } from "../../../Runtime/SoundsManager";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
@@ -29,11 +30,11 @@ export class LoginRegisterMainUI_Component extends ComponentController {
       "token",
     ) as string;
     if (token?.trim().length > 0) {
-      console.log("有token，尝试自动登录");
+      Logger.log("有token，尝试自动登录");
       // 连接网关服务器，进行登录
       SocketManager.Instance.connect();
     } else {
-      console.log("没有token，请手动登录");
+      Logger.log("没有token，请手动登录");
     }
   }
 
@@ -83,16 +84,16 @@ export class LoginRegisterMainUI_Component extends ComponentController {
    * 微信登录按钮点击事件
    */
   private onLoginWeChatBtnClick(event: Event) {
-    console.log("微信登录按钮点击事件");
+    Logger.log("微信登录按钮点击事件");
     const isAgree = this._isAgreeToggle.isChecked;
 
     if (!isAgree) {
-      console.log("请先认真阅读并同意协议！");
+      Logger.log("请先认真阅读并同意协议！");
       CommonDailogHandler.showBubbleMessage("请先认真阅读并同意协议！");
       return;
     } else {
       // 调用微信登陆工具
-      console.log("微信登陆逻辑");
+      Logger.log("微信登陆逻辑");
       WeChatLoginService.Login();
     }
   }
@@ -101,11 +102,11 @@ export class LoginRegisterMainUI_Component extends ComponentController {
    * 手机登录按钮点击事件
    */
   private onPhoneLoginBtnClick(event: Event) {
-    console.log("手机登录按钮点击事件");
+    Logger.log("手机登录按钮点击事件");
     const isAgree = this._isAgreeToggle.isChecked;
 
     if (!isAgree) {
-      console.log("请先认真阅读并同意协议！");
+      Logger.log("请先认真阅读并同意协议！");
       CommonDailogHandler.showBubbleMessage("请先认真阅读并同意协议！");
       return;
     } else {
@@ -118,7 +119,7 @@ export class LoginRegisterMainUI_Component extends ComponentController {
         true,
         this.node,
       );
-      console.log("打开手机登录界面UI");
+      Logger.log("打开手机登录界面UI");
     }
   }
 
@@ -127,7 +128,7 @@ export class LoginRegisterMainUI_Component extends ComponentController {
    */
   private onAgreementToggleClick(event: Event) {
     const agree = !this._isAgreeToggle.isChecked;
-    // console.log("协议按钮点击事件", agree);
+    // Logger.log("协议按钮点击事件", agree);
     ComponentManager.Instance.setDataToStorage("isAgree", agree);
   }
 
@@ -135,7 +136,7 @@ export class LoginRegisterMainUI_Component extends ComponentController {
    * 协议详情按钮点击事件
    */
   private onAgreementDetailBtnClick(event: Event) {
-    console.log("协议详情按钮点击事件");
+    Logger.log("协议详情按钮点击事件");
     // 挂载协议详情界面
     ComponentManager.Instance.renderUiNode<AgreementUI_Component>(
       "AgreementUI",

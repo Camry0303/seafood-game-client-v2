@@ -1,3 +1,4 @@
+import { Logger } from "../../../Utils/Logger";
 import {
   _decorator,
   Asset,
@@ -81,7 +82,7 @@ export class HotUpdateUI_Component extends ComponentController {
 
     // 初始化热更新工具
     this._initHotUpdateTools();
-    console.log(`热更新工具初始化完成！`);
+    Logger.log(`热更新工具初始化完成！`);
 
     // 热更新界面运行，检查是否需要更新
     if (this._hotUpdateTools) {
@@ -96,7 +97,7 @@ export class HotUpdateUI_Component extends ComponentController {
           this.setLoadingDetailsText("");
         }
       } else {
-        console.log("web 平台不需要热更新,直接进入游戏！");
+        Logger.log("web 平台不需要热更新,直接进入游戏！");
         // 不需要热更新进入游戏
         Game.Instance.startGame(this);
       }
@@ -196,7 +197,7 @@ export class HotUpdateUI_Component extends ComponentController {
     hotUpdateOptions.OnUpdateFailed = (event: native.EventAssetsManager) => {
       const code: number = event.getEventCode();
       const detail = (event.getMessage && event.getMessage()) || "";
-      console.error(`[HotUpdate] 更新失败 code=${code}, msg=${detail}`);
+      Logger.error(`[HotUpdate] 更新失败 code=${code}, msg=${detail}`);
       const msg = `更新失败:${code}[${detail}]`;
       this.setLoadingText(msg);
       this.setLoadingDetailsText(`游戏更新失败，请点击确定重试！`);
@@ -216,7 +217,7 @@ export class HotUpdateUI_Component extends ComponentController {
     hotUpdateOptions.OnUpdateSucceed = () => {
       this.setLoadingText("更新成功！");
       this.setLoadingDetailsText(``);
-      console.log(`更新成功重启游戏！`);
+      Logger.log(`更新成功重启游戏！`);
       game.restart();
       // DialogMgr.showTipsWithOkBtn("更新成功,点击确定重启游戏", () => {
       //   cc.audioEngine.stopAll();
@@ -240,7 +241,7 @@ export class HotUpdateUI_Component extends ComponentController {
     if (versionLabel) {
       versionLabel.string = version;
     } else {
-      console.error(`[HotUpdateUI_Component] versionLabel is null!`);
+      Logger.error(`[HotUpdateUI_Component] versionLabel is null!`);
     }
   }
 
@@ -253,7 +254,7 @@ export class HotUpdateUI_Component extends ComponentController {
     if (progressBarComp) {
       progressBarComp.progress = progress;
     } else {
-      console.error(`[HotUpdateUI_Component] progressBarComp is null!`);
+      Logger.error(`[HotUpdateUI_Component] progressBarComp is null!`);
     }
   }
 
@@ -266,7 +267,7 @@ export class HotUpdateUI_Component extends ComponentController {
     if (loadingTextLabel) {
       loadingTextLabel.string = text;
     } else {
-      console.error(`[HotUpdateUI_Component] loadingTextLabel is null!`);
+      Logger.error(`[HotUpdateUI_Component] loadingTextLabel is null!`);
     }
   }
 
@@ -280,7 +281,7 @@ export class HotUpdateUI_Component extends ComponentController {
     if (loadingDetailsTextLabel) {
       loadingDetailsTextLabel.string = text;
     } else {
-      console.error(`[HotUpdateUI_Component] loadingDetailsTextLabel is null!`);
+      Logger.error(`[HotUpdateUI_Component] loadingDetailsTextLabel is null!`);
     }
   }
 

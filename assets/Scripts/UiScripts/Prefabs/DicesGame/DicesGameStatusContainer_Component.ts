@@ -1,3 +1,4 @@
+import { Logger } from "../../../Utils/Logger";
 import {
   _decorator,
   Component,
@@ -103,7 +104,7 @@ export class DicesGameStatusContainer_Component extends ComponentController {
    * @param event
    */
   private onSetDealerBtnClick(event: Event) {
-    console.log("onSetDealerBtnClick");
+    Logger.log("onSetDealerBtnClick");
     CommonDailogHandler.showDialogMiniKeyboard(
       "SetDealerToggle",
       6,
@@ -120,7 +121,7 @@ export class DicesGameStatusContainer_Component extends ComponentController {
    * @param event
    */
   private onStartGameBtnClick(event: Event) {
-    console.log("onStartGameBtnClick");
+    Logger.log("onStartGameBtnClick");
     DicesGameEvents.startClubGame();
   }
 

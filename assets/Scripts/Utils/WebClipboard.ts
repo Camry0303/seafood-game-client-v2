@@ -1,3 +1,4 @@
+import { Logger } from "./Logger";
 /**
  * 网页剪切板
  */
@@ -21,7 +22,7 @@ export default class WebClipboard {
       // 尝试执行复制操作
       await navigator.clipboard.writeText(text);
     } catch (err) {
-      console.error("Unable to copy text to clipboard");
+      Logger.error("Unable to copy text to clipboard");
     }
     // 移除临时元素
     document.body.removeChild(textarea);

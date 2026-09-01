@@ -1,4 +1,5 @@
 import { Asset, assetManager, native, sys } from "cc";
+import { Logger } from "./Logger";
 import { HotOptions } from "./HotUpdateOptions";
 
 export default class HotUpdateTools {
@@ -47,7 +48,7 @@ export default class HotUpdateTools {
       storagePath,
       (versionA, versionB) => {
         // 比较版本
-        console.log("客户端版本: " + versionA + ", 当前最新版本: " + versionB);
+        Logger.log("客户端版本: " + versionA + ", 当前最新版本: " + versionB);
         this._options.OnVersionInfo({ local: versionA, server: versionB });
         let vA = versionA.split(".");
         let vB = versionB.split(".");
@@ -79,16 +80,16 @@ export default class HotUpdateTools {
     }
 
     let localManifest = this._assetsMgr.getLocalManifest();
-    console.log("[HotUpdate] 热更新资源存放路径: " + storagePath);
-    console.log("[HotUpdate] 本地manifest路径: " + url);
-    console.log(
+    Logger.log("[HotUpdate] 热更新资源存放路径: " + storagePath);
+    Logger.log("[HotUpdate] 本地manifest路径: " + url);
+    Logger.log(
       "[HotUpdate] local packageUrl: " + localManifest.getPackageUrl()
     );
-    console.log(
+    Logger.log(
       "[HotUpdate] project.manifest remote url: " +
         localManifest.getManifestFileUrl()
     );
-    console.log(
+    Logger.log(
       "[HotUpdate] version.manifest remote url: " +
         localManifest.getVersionFileUrl()
     );
@@ -100,16 +101,16 @@ export default class HotUpdateTools {
    */
   public checkUpdate() {
     if (!this._assetsMgr) {
-      console.error("请先初始化");
+      Logger.error("请先初始化");
       return;
     }
 
     if (this._assetsMgr.getState() === native.AssetsManager.State.UNINITED) {
-      console.error("未初始化");
+      Logger.error("未初始化");
       return;
     }
     if (!this._assetsMgr.getLocalManifest().isLoaded()) {
-      console.error("加载本地 manifest 失败 ...");
+      Logger.error("加载本地 manifest 失败 ...");
       return;
     }
     this._assetsMgr.setEventCallback(this._hotUpdateCallBack.bind(this));
@@ -124,7 +125,7 @@ export default class HotUpdateTools {
    */
   public hotUpdate() {
     if (!this._assetsMgr) {
-      console.error("请先初始化");
+      Logger.error("请先初始化");
       return;
     }
     this._assetsMgr.setEventCallback(this._hotUpdateCallBack.bind(this));
@@ -138,7 +139,7 @@ export default class HotUpdateTools {
    */
   private _hotUpdateCallBack(event: native.EventAssetsManager) {
     let code = event.getEventCode();
-    console.log(`hotUpdate Code: ${code}`);
+    Logger.log(`hotUpdate Code: ${code}`);
     const {
       ERROR_NO_LOCAL_MANIFEST,
       NEW_VERSION_FOUND,
@@ -161,15 +162,15 @@ export default class HotUpdateTools {
 
     switch (code) {
       case native.EventAssetsManager.ALREADY_UP_TO_DATE:
-        console.log("已经和远程版本一致，无须更新");
+        Logger.log("已经和远程版本一致，无须更新");
         this._options.OnNoNeedToUpdate && this._options.OnNoNeedToUpdate(event);
         break;
       case native.EventAssetsManager.NEW_VERSION_FOUND:
-        console.log("发现新版本,请更新");
+        Logger.log("发现新版本,请更新");
         this._options.OnNeedToUpdate && this._options.OnNeedToUpdate(event);
         break;
       case native.EventAssetsManager.UPDATE_PROGRESSION:
-        console.log("更新中...");
+        Logger.log("更新中...");
         if (this._state === HotUpdateTools.State.Update) {
           this._options.OnUpdateProgress &&
             this._options.OnUpdateProgress(event);
@@ -178,14 +179,14 @@ export default class HotUpdateTools {
         }
         break;
       case native.EventAssetsManager.UPDATE_FINISHED:
-        console.log("更新成功");
+        Logger.log("更新成功");
         this._onUpdateFinished(event);
         break;
       case native.EventAssetsManager.ASSET_UPDATED:
         // 不予理会的消息事件
         break;
       default:
-        console.log(`error code msg: ${codeMsg[code.toString()]}`);
+        Logger.log(`error code msg: ${codeMsg[code.toString()]}`);
         this._onUpdateFailed(event);
         break;
     }
@@ -208,7 +209,7 @@ export default class HotUpdateTools {
     this._assetsMgr.setEventCallback(null);
     let searchPaths = native.fileUtils.getSearchPaths();
     let newPaths = this._assetsMgr.getLocalManifest().getSearchPaths();
-    console.log("[HotUpdate] 搜索路径: " + JSON.stringify(newPaths));
+    Logger.log("[HotUpdate] 搜索路径: " + JSON.stringify(newPaths));
     Array.prototype.unshift(searchPaths, newPaths);
     sys.localStorage.setItem(
       "HotUpdateSearchPaths",
@@ -222,11 +223,11 @@ export default class HotUpdateTools {
    * 显示输出路径
    */
   private showSearchPath() {
-    console.log("========================搜索路径========================");
+    Logger.log("========================搜索路径========================");
     let searchPaths = native.fileUtils.getSearchPaths();
     for (let i = 0; i < searchPaths.length; i++) {
-      console.log("[" + i + "]: " + searchPaths[i]);
+      Logger.log("[" + i + "]: " + searchPaths[i]);
     }
-    console.log("======================================================");
+    Logger.log("======================================================");
   }
 }

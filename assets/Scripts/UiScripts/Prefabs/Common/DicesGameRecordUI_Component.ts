@@ -1,4 +1,5 @@
 import { _decorator, instantiate, Node, Prefab, Toggle } from "cc";
+import { Logger } from "../../../Utils/Logger";
 import { ComponentController } from "../../../Common/ComponentController";
 import BubbleWindow from "../../../Common/BubbleWindow";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
@@ -95,7 +96,7 @@ export class DicesGameRecordUI_Component extends ComponentController {
    * 普通房间Toggle点击事件
    */
   private onPublicRoomToggleClick() {
-    console.log(`onClubRoomToggleClick--->`);
+    Logger.log(`onClubRoomToggleClick--->`);
     // TODO 获取普通房间战绩
     // PlazaEvents.getMyPublicDicesGameSettlement({
     //   current: 1,
@@ -107,7 +108,7 @@ export class DicesGameRecordUI_Component extends ComponentController {
    * 俱乐部房间Toggle点击事件
    */
   private onClubRoomToggleClick() {
-    console.log(`onClubRoomToggleClick--->`);
+    Logger.log(`onClubRoomToggleClick--->`);
     const club = GlobalData.Instance.getCurrentClubInfoDetail();
     let params: Gateway.Requested.ClubPlayer.GetMyClubDicesGameSettlementParams =
       {

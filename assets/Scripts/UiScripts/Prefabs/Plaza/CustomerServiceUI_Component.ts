@@ -1,4 +1,5 @@
 import { _decorator, Label, Sprite } from "cc";
+import { Logger } from "../../../Utils/Logger";
 import { ComponentController } from "../../../Common/ComponentController";
 import BubbleWindow from "../../../Common/BubbleWindow";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
@@ -79,7 +80,7 @@ export class CustomerServiceUI_Component extends ComponentController {
             this._customerServiceQRCodeSprite.spriteFrame = spriteFrame;
           })
           .catch((err) => {
-            console.warn(`加载客服微信二维码失败: ${err}`);
+            Logger.warn(`加载客服微信二维码失败: ${err}`);
           });
       }
     } else {

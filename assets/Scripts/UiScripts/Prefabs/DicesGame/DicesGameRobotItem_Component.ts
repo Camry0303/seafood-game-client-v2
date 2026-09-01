@@ -1,4 +1,5 @@
 import { _decorator, Button, Label, Node, Sprite } from "cc";
+import { Logger } from "../../../Utils/Logger";
 import { ComponentController } from "../../../Common/ComponentController";
 import { getAvatarSpriteFrame } from "../../../Utils/RemoteSpriteFrameLoader";
 import { Gateway } from "../../../Types/gateway";
@@ -108,7 +109,7 @@ export class DicesGameRobotItem_Component extends ComponentController {
    * @param event
    */
   private onQuitBtnClick(event: Event) {
-    console.log(`onQuitBtnClick--->`, this._robotData);
+    Logger.log(`onQuitBtnClick--->`, this._robotData);
     if (!this._robotData) {
       return;
     }

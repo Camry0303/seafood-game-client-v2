@@ -1,4 +1,5 @@
 import { _decorator, Button, EditBox, Event, Label, Sprite } from "cc";
+import { Logger } from "../../../Utils/Logger";
 import BubbleWindow from "../../../Common/BubbleWindow";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
 import { ComponentController } from "../../../Common/ComponentController";
@@ -159,7 +160,7 @@ export class ResetPasswordUI_Component extends ComponentController {
    */
   private async onGetCodeBtnClick(event: Event) {
     try {
-      console.log(`获取短信验证码`);
+      Logger.log(`获取短信验证码`);
       const phoneNumber = this._phoneNumberEditBox.string;
       if (phoneNumber.trim() === "") {
         CommonDailogHandler.showBubbleMessage("请输入手机号！");
@@ -193,7 +194,7 @@ export class ResetPasswordUI_Component extends ComponentController {
    */
   private async onResetBtnClick(event: Event) {
     try {
-      console.log(`点击了重置确定按钮`);
+      Logger.log(`点击了重置确定按钮`);
       const phoneNumber = this._phoneNumberEditBox.string;
       const captcha = this._captchaEditBox.string;
       const verificationCode = this._verificationCodeEditBox.string;
@@ -269,7 +270,7 @@ export class ResetPasswordUI_Component extends ComponentController {
    */
   private async getCaptcha() {
     // 获取验证码图片逻辑
-    console.log("获取验证码图片");
+    Logger.log("获取验证码图片");
     try {
       const result = await HttpApiServices.getCaptcha();
       if (result.code === RESPONE_RESULT.SUCCESS) {
@@ -295,7 +296,7 @@ export class ResetPasswordUI_Component extends ComponentController {
    * @param repeat
    */
   private setCountDown(repeat: number) {
-    console.log(`按钮开始倒计时逻辑`);
+    Logger.log(`按钮开始倒计时逻辑`);
 
     const btnSprite = this._getCodeBtn.node.getComponent(Sprite);
     const labelNode = this._getCodeBtn.node.getChildByName("Label");

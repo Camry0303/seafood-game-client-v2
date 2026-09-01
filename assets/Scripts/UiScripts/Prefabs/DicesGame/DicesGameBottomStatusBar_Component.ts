@@ -1,3 +1,4 @@
+import { Logger } from "../../../Utils/Logger";
 import {
   _decorator,
   Button,
@@ -161,7 +162,7 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    * @param event
    */
   private onAvatarClick(event: Event) {
-    console.log(`onAvatarClick`);
+    Logger.log(`onAvatarClick`);
     // 请求进入调试
     DicesGameEvents.debugMode();
   }
@@ -233,7 +234,7 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    * @param event
    */
   private onMoveBtnClick(event: Event) {
-    console.log(`onMoveBtnClick`);
+    Logger.log(`onMoveBtnClick`);
     // 判断当前是否可以下单
     const canOrder = this._mainComponent.getCanOrder();
     if (!canOrder) {
@@ -248,7 +249,7 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    * @param event
    */
   private onLeopardBtnClick(event: Event) {
-    console.log(`onLeopardBtnClick`);
+    Logger.log(`onLeopardBtnClick`);
     // 判断当前是否可以下单
     const canOrder = this._mainComponent.getCanOrder();
     if (!canOrder) {
@@ -263,7 +264,7 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    * @param event
    */
   private onComboBtnClick(event: Event) {
-    console.log(`onComboBtnClick`);
+    Logger.log(`onComboBtnClick`);
     // 判断当前是否可以下单
     const canOrder = this._mainComponent.getCanOrder();
     if (!canOrder) {
@@ -406,7 +407,7 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    * @param event
    */
   private onSubScoreBtnClick(event: Event) {
-    console.log(`onSubScoreBtnClick`);
+    Logger.log(`onSubScoreBtnClick`);
     if (this._sliderOrderMaxScore <= 0) {
       return;
     }
@@ -425,7 +426,7 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    * @param event
    */
   private onAddScoreBtnClick(event: Event) {
-    console.log(`onAddScoreBtnClick`);
+    Logger.log(`onAddScoreBtnClick`);
     if (this._sliderOrderScore + 1 > this._sliderOrderMaxScore) {
       return;
     }
@@ -444,7 +445,7 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    * @param event
    */
   private onSliderOrderPanelConfirmBtnClick(event: Event) {
-    console.log(`onSliderOrderPanelConfirmBtnClick--->`);
+    Logger.log(`onSliderOrderPanelConfirmBtnClick--->`);
 
     if (this._sliderOrderSelectedResult.some((item) => item === null)) {
       CommonDailogHandler.showBubbleMessage(`请选择图案`);
@@ -489,7 +490,7 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    * @param event
    */
   private onSliderOrderPanelCloseBtnClick(event: Event) {
-    console.log(`onSliderOrderPanelCloseBtnClick`);
+    Logger.log(`onSliderOrderPanelCloseBtnClick`);
     // 显示普通下单面板
     this.showChipsOrderPanel();
   }
@@ -592,7 +593,7 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    * @param event
    */
   private onDebugResultPanelResetBtnClick(event: Event) {
-    console.log(`onDebugResultPanelResetBtnClick`);
+    Logger.log(`onDebugResultPanelResetBtnClick`);
     this.setDebugResultSelectedResult([null, null]);
     this._gameTableComponent.resetOrderCheckBoxPanel();
   }
@@ -602,7 +603,7 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    * @param event
    */
   private onDebugResultPanelConfirmBtnClick(event: Event) {
-    console.log(`onDebugResultPanelConfirmBtnClick--->`);
+    Logger.log(`onDebugResultPanelConfirmBtnClick--->`);
 
     if (this._debugResultSelectedResult.some((item) => item === null)) {
       CommonDailogHandler.showBubbleMessage(`请选择图案`);
@@ -623,7 +624,7 @@ export class DicesGameBottomStatusBar_Component extends ComponentController {
    * @param event
    */
   private onDebugResultPanelCloseBtnClick(event: Event) {
-    console.log(`onDebugResultPanelCloseBtnClick`);
+    Logger.log(`onDebugResultPanelCloseBtnClick`);
     // 显示普通下单面板
     this.showChipsOrderPanel();
   }

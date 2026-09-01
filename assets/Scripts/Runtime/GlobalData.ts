@@ -22,6 +22,13 @@ export class GlobalData extends Singleton {
    */
   public isLocalDev: boolean = false;
 
+  /**
+   * 是否打印日志（console.log/info/warn/error/debug 统一受控）
+   * 生产环境设为 false 关闭全部日志，避免刷屏与信息泄露。
+   * //NOTE - 切换是否打印日志
+   */
+  public enableConsoleLog: boolean = false;
+
   //#region 版本号信息
   /**
    * 版本号信息

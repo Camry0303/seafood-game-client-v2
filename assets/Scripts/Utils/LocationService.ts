@@ -1,4 +1,5 @@
 import { native, sys } from "cc";
+import { Logger } from "./Logger";
 import { Common } from "../Types/typing";
 import NativeAPI from "./NativeAPI";
 import { ANDROID_LOCATION_STATUS, IOS_LOCATION_STATUS } from "../Enums";
@@ -59,7 +60,7 @@ export default class LocationService {
     if (this.isAndroid) {
       // TODO
       const location_Android = NativeAPI.getLastLocationAndroid();
-      console.log(
+      Logger.log(
         `location from android--->`,
         JSON.stringify(location_Android),
       );
@@ -94,7 +95,7 @@ export default class LocationService {
         latitude: number; // 纬度
         longitude: number; // 经度
       } = NativeAPI.getLastLocationIOS();
-      console.log(`location from iOS--->`, JSON.stringify(location_iOS));
+      Logger.log(`location from iOS--->`, JSON.stringify(location_iOS));
       if (!location_iOS.error) {
         return;
       }

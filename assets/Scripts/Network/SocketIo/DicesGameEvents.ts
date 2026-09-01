@@ -1,4 +1,5 @@
 import { Socket } from "socket.io-client";
+import { Logger } from "../../Utils/Logger";
 import { CLUB_DICES_GAME_EVENT } from "../../Enums/Events/DicesGame";
 import { Gateway } from "../../Types/gateway";
 import SocketManager from "./SocketManager";
@@ -155,7 +156,7 @@ export default class DicesGameEvents {
   private static onCreateClubDicesGameRoomResult(
     returnData: Gateway.Returned.Common.Result<Gateway.Returned.Games.DicesGame.ClubDicesGameRoomData>,
   ) {
-    console.log(
+    Logger.log(
       "<DicesGameEvent> onCreateClubDicesGameRoomResult called --->",
       returnData,
     );
@@ -217,7 +218,7 @@ export default class DicesGameEvents {
   private static onJoinClubDicesGameRoomResult(
     returnData: Gateway.Returned.Common.Result<Gateway.Returned.Games.DicesGame.ClubDicesGameRoomData>,
   ) {
-    console.log(
+    Logger.log(
       "<DicesGameEvent> onJoinClubDicesGameRoomResult called --->",
       returnData,
     );
@@ -253,7 +254,7 @@ export default class DicesGameEvents {
   private static onPlayerJoinedClubDicesGameRoomResult(
     returnData: Gateway.Returned.Common.Result<Gateway.Returned.Games.DicesGame.GameSeatData>,
   ) {
-    console.log(
+    Logger.log(
       "<DicesGameEvent> onPlayerJoinedClubDicesGameRoomResult called --->",
       returnData,
     );
@@ -293,7 +294,7 @@ export default class DicesGameEvents {
   private static onSpectateClubDicesGameRoomResult(
     returnData: Gateway.Returned.Common.Result<Gateway.Returned.Games.DicesGame.ClubDicesGameRoomData>,
   ) {
-    console.log(
+    Logger.log(
       "<DicesGameEvent> onSpectateClubDicesGameRoomResult called --->",
       returnData,
     );
@@ -345,7 +346,7 @@ export default class DicesGameEvents {
   private static onLeaveClubDicesGameRoomResult(
     returnData: Gateway.Returned.Common.Result<boolean>,
   ) {
-    console.log(
+    Logger.log(
       "<DicesGameEvent> onLeaveClubDicesGameRoomResult called --->",
       returnData,
     );
@@ -371,7 +372,7 @@ export default class DicesGameEvents {
   private static onPlayerLeftClubDicesGameRoomResult(
     returnData: Gateway.Returned.Common.Result<Gateway.Returned.Games.DicesGame.GameSeatData>,
   ) {
-    console.log(
+    Logger.log(
       "<DicesGameEvent> onPlayerLeftClubDicesGameRoomResult called --->",
       returnData,
     );
@@ -398,7 +399,7 @@ export default class DicesGameEvents {
       score: number;
     }>,
   ) {
-    console.log(
+    Logger.log(
       "<DicesGameEvent> onPlayerScoreChangedClubDicesGameRoomResult called --->",
       returnData,
     );
@@ -443,7 +444,7 @@ export default class DicesGameEvents {
   private static onAdminDissolveClubDicesGameRoomResult(
     returnData: Gateway.Returned.Common.Result<boolean>,
   ) {
-    console.log(
+    Logger.log(
       "<DicesGameEvent> onAdminDissolveClubDicesGameRoomResult called --->",
       returnData,
     );
@@ -467,7 +468,7 @@ export default class DicesGameEvents {
   private static onClubDicesGameRoomDissolvedResult(
     returnData: Gateway.Returned.Common.Result<boolean>,
   ) {
-    console.log(
+    Logger.log(
       "<DicesGameEvent> onClubDicesGameRoomDissolvedResult called --->",
       returnData,
     );
@@ -509,7 +510,7 @@ export default class DicesGameEvents {
   private static onGetClubGamingStatusResult(
     returnData: Gateway.Returned.Common.Result<Gateway.Returned.Games.DicesGame.GamingStatusgData>,
   ) {
-    console.log(
+    Logger.log(
       "<DicesGameEvent> onGetClubGamingStatusResult called --->",
       returnData,
     );
@@ -584,7 +585,7 @@ export default class DicesGameEvents {
   private static onSetDealerResult(
     returnData: Gateway.Returned.Common.Result<boolean>,
   ) {
-    console.log("<DicesGameEvent> onSetDealerResult called --->", returnData);
+    Logger.log("<DicesGameEvent> onSetDealerResult called --->", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
     } else {
@@ -601,7 +602,7 @@ export default class DicesGameEvents {
   private static onDealerSettedResult(
     returnData: Gateway.Returned.Common.Result<Gateway.Returned.Games.DicesGame.GameSeatData>,
   ) {
-    console.log(
+    Logger.log(
       "<DicesGameEvent> onDealerSettedResult called --->",
       returnData,
     );
@@ -633,7 +634,7 @@ export default class DicesGameEvents {
   private static onStartGameResult(
     returnData: Gateway.Returned.Common.Result<boolean>,
   ) {
-    console.log("<DicesGameEvent> onStartGameResult called --->", returnData);
+    Logger.log("<DicesGameEvent> onStartGameResult called --->", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
     } else {
@@ -671,7 +672,7 @@ export default class DicesGameEvents {
   private static onCreateOrderResult(
     returnData: Gateway.Returned.Common.Result<boolean>,
   ) {
-    console.log("<DicesGameEvent> onCreateOrderResult called --->", returnData);
+    Logger.log("<DicesGameEvent> onCreateOrderResult called --->", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
     } else {
@@ -688,7 +689,7 @@ export default class DicesGameEvents {
   private static onOrderCreatedResult(
     returnData: Gateway.Returned.Common.Result<Gateway.Returned.Games.DicesGame.CreatedOrderResultData>,
   ) {
-    console.log(
+    Logger.log(
       "<DicesGameEvent> onOrderCreatedResult called --->",
       returnData,
     );
@@ -731,7 +732,7 @@ export default class DicesGameEvents {
   private static onDebugModeResult(
     returnData: Gateway.Returned.Common.Result<boolean>,
   ) {
-    console.log("<DicesGameEvent> onDebugModeResult called --->", returnData);
+    Logger.log("<DicesGameEvent> onDebugModeResult called --->", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       // 进入调试模式
@@ -770,7 +771,7 @@ export default class DicesGameEvents {
   private static onSetDebugResultResult(
     returnData: Gateway.Returned.Common.Result<boolean>,
   ) {
-    console.log(
+    Logger.log(
       "<DicesGameEvent> onSetDebugResultResult called --->",
       returnData,
     );
@@ -790,7 +791,7 @@ export default class DicesGameEvents {
   private static onGameStartedResult(
     returnData: Gateway.Returned.Common.Result<Gateway.Returned.Games.DicesGame.GameStartedData>,
   ) {
-    console.log("<DicesGameEvent> onGameStartedResult called --->", returnData);
+    Logger.log("<DicesGameEvent> onGameStartedResult called --->", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       const [node, component] = ComponentManager.Instance.getNodeComponent(
@@ -829,7 +830,7 @@ export default class DicesGameEvents {
   private static onStartOrderResult(
     returnData: Gateway.Returned.Common.Result<{ remaining_time: number }>,
   ) {
-    console.log("<DicesGameEvent> onStartOrderResult called --->", returnData);
+    Logger.log("<DicesGameEvent> onStartOrderResult called --->", returnData);
 
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
@@ -851,7 +852,7 @@ export default class DicesGameEvents {
       remaining_time: number;
     }>,
   ) {
-    console.log("<DicesGameEvent> onStopOrderResult called --->", returnData);
+    Logger.log("<DicesGameEvent> onStopOrderResult called --->", returnData);
 
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
@@ -873,7 +874,7 @@ export default class DicesGameEvents {
       results: number[];
     }>,
   ) {
-    console.log("<DicesGameEvent> onOpenResultsResult called --->", returnData);
+    Logger.log("<DicesGameEvent> onOpenResultsResult called --->", returnData);
 
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
@@ -895,7 +896,7 @@ export default class DicesGameEvents {
       settlements: Gateway.Returned.Games.DicesGame.PlayerSettlementData[];
     }>,
   ) {
-    console.log("<DicesGameEvent> onSettlementResult called --->", returnData);
+    Logger.log("<DicesGameEvent> onSettlementResult called --->", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       // 先做飘分动画
@@ -930,7 +931,7 @@ export default class DicesGameEvents {
       Gateway.Returned.Games.DicesGame.PlayerFinalSettlementData[]
     >,
   ) {
-    console.log(
+    Logger.log(
       "<DicesGameEvent> onFinalSettlementResult called --->",
       returnData,
     );
@@ -983,7 +984,7 @@ export default class DicesGameEvents {
       Gateway.Returned.Games.DicesGame.RoomRobotData[]
     >,
   ) {
-    console.log(
+    Logger.log(
       "<DicesGameEvent> onGetRoomRobotListResult called --->",
       returnData,
     );
@@ -1038,7 +1039,7 @@ export default class DicesGameEvents {
   private static onAddRandomRobotToRoomResult(
     returnData: Gateway.Returned.Common.Result<Gateway.Returned.Games.DicesGame.AddRandomRobotToRoomResultData>,
   ) {
-    console.log(
+    Logger.log(
       "<DicesGameEvent> onAddRandomRobotToRoomResult called --->",
       returnData,
     );
@@ -1084,7 +1085,7 @@ export default class DicesGameEvents {
       success: boolean;
     }>,
   ) {
-    console.log(
+    Logger.log(
       "<DicesGameEvent> onAddRobotToRoomResult called --->",
       returnData,
     );
@@ -1128,7 +1129,7 @@ export default class DicesGameEvents {
       success: boolean;
     }>,
   ) {
-    console.log(
+    Logger.log(
       "<DicesGameEvent> onRemoveRobotFromRoomResult called --->",
       returnData,
     );

@@ -1,3 +1,4 @@
+import { Logger } from "../../../Utils/Logger";
 import {
   _decorator,
   Button,
@@ -295,7 +296,7 @@ export class DicesGameGameTable_Component extends ComponentController {
       this._chipsContainerPanelNode.children[result - 1];
 
     if (!chipsContainerNode) {
-      console.error(`未找到筹码容器节点，索引: ${result - 1}`);
+      Logger.error(`未找到筹码容器节点，索引: ${result - 1}`);
       return;
     }
 
@@ -304,7 +305,7 @@ export class DicesGameGameTable_Component extends ComponentController {
     const transform = chipsContainerNode.getComponent(UITransform);
 
     if (!transform) {
-      console.error("目标节点缺少 UITransform 组件");
+      Logger.error("目标节点缺少 UITransform 组件");
       return;
     }
 
@@ -348,7 +349,7 @@ export class DicesGameGameTable_Component extends ComponentController {
       this._chipsContainerPanelNode.children[result - 1];
 
     if (!chipsContainerNode) {
-      console.error(`未找到筹码容器节点，索引: ${result - 1}`);
+      Logger.error(`未找到筹码容器节点，索引: ${result - 1}`);
       return;
     }
 
@@ -357,7 +358,7 @@ export class DicesGameGameTable_Component extends ComponentController {
     const transform = chipsContainerNode.getComponent(UITransform);
 
     if (!transform) {
-      console.error("目标节点缺少 UITransform 组件");
+      Logger.error("目标节点缺少 UITransform 组件");
       return;
     }
 
@@ -488,11 +489,11 @@ export class DicesGameGameTable_Component extends ComponentController {
    */
   private onOrderCheckBoxcheck(event: Event, customData: string) {
     const orderResult = parseInt(customData);
-    console.log(`onOrderCheckBoxClick orderResult--->`, orderResult);
+    Logger.log(`onOrderCheckBoxClick orderResult--->`, orderResult);
     const toggle = (event.target as Node).getComponent(Toggle);
     // 设置下单勾选框取反（设置取反，更改无效）
     toggle.setIsCheckedWithoutNotify(!toggle.isChecked);
-    console.log(`orderType--->`, this._checkBoxOrderType);
+    Logger.log(`orderType--->`, this._checkBoxOrderType);
 
     const toggleNodes = this._orderCheckBoxPanelNode.children;
 
@@ -771,7 +772,7 @@ export class DicesGameGameTable_Component extends ComponentController {
         .call(() => {
           // 必须重新获取节点
           const resultsNode = this._dicesContainerNode.children[0];
-          console.log(`callback--->`, resultsNode);
+          Logger.log(`callback--->`, resultsNode);
 
           // 1. 获取当前世界位置
           const worldPos = new Vec3();

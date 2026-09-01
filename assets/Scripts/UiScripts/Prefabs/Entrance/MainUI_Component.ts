@@ -1,4 +1,5 @@
 import { _decorator, Event, native, sys } from "cc";
+import { Logger } from "../../../Utils/Logger";
 import { ComponentController } from "../../../Common/ComponentController";
 import { SoundsManager } from "../../../Runtime/SoundsManager";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
@@ -58,7 +59,7 @@ export class MainUI_Component extends ComponentController {
    * 测试按钮点击事件
    */
   private async onTestBtnClick(event: Event) {
-    console.log(`onTestBtnClick`);
+    Logger.log(`onTestBtnClick`);
     // this.testDiceGameMain();
     // this.testDicesGameRecordUI();
     // this.testMemberScoreLogList();
@@ -76,7 +77,7 @@ export class MainUI_Component extends ComponentController {
    */
   private async testGetLatestLocation() {
     const location = await LocationService.getLatestLocation();
-    console.log(`testGetLatestLocation--->`, location);
+    Logger.log(`testGetLatestLocation--->`, location);
     if (location) {
       CommonDailogHandler.showDialogMessage(
         `纬度:${location.latitude},经度:${location.longitude}`,
@@ -106,7 +107,7 @@ export class MainUI_Component extends ComponentController {
         NativeAPI.stopBatteryMonitoringIOS();
       }
     } else {
-      console.log("当前平台不支持获取电量");
+      Logger.log("当前平台不支持获取电量");
     }
     this.clickTime++;
   }
@@ -119,7 +120,7 @@ export class MainUI_Component extends ComponentController {
       "InvitePlayerToggle",
       6,
       (value: string) => {
-        console.log("玩家ID--->", value);
+        Logger.log("玩家ID--->", value);
       },
     );
   }
@@ -145,7 +146,7 @@ export class MainUI_Component extends ComponentController {
         CircleLoadingUI_Component,
       );
     const log = (tag: string, pass: boolean, extra?: string) => {
-      console.log(`[CircleLoadingSilent][${tag}]`, pass ? "PASS" : "FAIL", extra ?? "");
+      Logger.log(`[CircleLoadingSilent][${tag}]`, pass ? "PASS" : "FAIL", extra ?? "");
     };
 
     // 1) 对照组：非 silent 的 LOADING 应使节点 active，且计入真实队列
@@ -254,7 +255,7 @@ export class MainUI_Component extends ComponentController {
       // 3) 下注结果回来 hide(CREATE_ORDER)；legacy 下队列空 -> 强制关蒙版（闪一下，停留 STEP 可见）
       CommonDailogHandler.hideCircleLoading(WAITING_TYPE.CREATE_ORDER);
       sample("A.after-hide-CREATE_ORDER");
-      console.log(`[FlashRepro][LEGACY] 此刻蒙版应被强制关闭（闪一下），观察转圈是否中断`);
+      Logger.log(`[FlashRepro][LEGACY] 此刻蒙版应被强制关闭（闪一下），观察转圈是否中断`);
       await sleep(STEP);
 
       CommonDailogHandler.hideCircleLoading(WAITING_TYPE.LOADING); // 4) 真实 loading 结束
@@ -262,9 +263,9 @@ export class MainUI_Component extends ComponentController {
       await sleep(STEP);
 
       trace.push(`init active=${uiComponent.node.active}`);
-      console.log(`[FlashRepro][LEGACY] ${trace.join(" | ")}`);
+      Logger.log(`[FlashRepro][LEGACY] ${trace.join(" | ")}`);
       const legacyChanges = trace.filter((t) => t.includes("[CHANGE")).length;
-      console.log(`[FlashRepro][LEGACY] active 跳变次数=${legacyChanges}（>1 即出现闪）`);
+      Logger.log(`[FlashRepro][LEGACY] active 跳变次数=${legacyChanges}（>1 即出现闪）`);
 
       // ---- 段 B：当前修复后（silent），验证不闪 ----
       trace.length = 0;
@@ -280,7 +281,7 @@ export class MainUI_Component extends ComponentController {
 
       CommonDailogHandler.hideCircleLoading(WAITING_TYPE.CREATE_ORDER); // 3) silent 不影响蒙版
       sample("B.after-hide-CREATE_ORDER");
-      console.log(`[FlashRepro][FIXED] 此刻蒙版应保持显示（未闪），持续 STEP`);
+      Logger.log(`[FlashRepro][FIXED] 此刻蒙版应保持显示（未闪），持续 STEP`);
       await sleep(STEP);
 
       CommonDailogHandler.hideCircleLoading(WAITING_TYPE.LOADING); // 4) 真实 loading 结束才关
@@ -288,9 +289,9 @@ export class MainUI_Component extends ComponentController {
       await sleep(STEP);
 
       trace.push(`init active=${uiComponent.node.active}`);
-      console.log(`[FlashRepro][FIXED] ${trace.join(" | ")}`);
+      Logger.log(`[FlashRepro][FIXED] ${trace.join(" | ")}`);
       const fixedChanges = trace.filter((t) => t.includes("[CHANGE")).length;
-      console.log(`[FlashRepro][FIXED] active 跳变次数=${fixedChanges}（1 即平滑无闪）`);
+      Logger.log(`[FlashRepro][FIXED] active 跳变次数=${fixedChanges}（1 即平滑无闪）`);
     };
 
     run();
@@ -325,7 +326,7 @@ export class MainUI_Component extends ComponentController {
         showLimitInfo: true,
       },
       (inputValue: string) => {
-        console.log(`确认回调--->`, inputValue);
+        Logger.log(`确认回调--->`, inputValue);
       },
     );
   }
@@ -358,10 +359,10 @@ export class MainUI_Component extends ComponentController {
     CommonDailogHandler.showSmallDialogConfirm(
       "确定吗？",
       () => {
-        console.log("确定");
+        Logger.log("确定");
       },
       () => {
-        console.log("取消");
+        Logger.log("取消");
       },
     );
   }
@@ -377,7 +378,7 @@ export class MainUI_Component extends ComponentController {
         "Dialog/DialogSettingUI",
         DialogSettingUI_Component,
       );
-    console.log("挂载设置界面成功！");
+    Logger.log("挂载设置界面成功！");
   }
 
   /**
@@ -454,7 +455,7 @@ export class MainUI_Component extends ComponentController {
       d: true,
     };
     const data = await HttpApiServices.testCSWRequest(params);
-    console.log(`testCSWRequest response data--->`, data);
+    Logger.log(`testCSWRequest response data--->`, data);
 
     for (let index = 0; index < 9; index++) {
       const nickname = `空菌No.${index + 1}`;
@@ -468,7 +469,7 @@ export class MainUI_Component extends ComponentController {
         d: false,
       };
       const data = await HttpApiServices.testCSWRequest(params);
-      console.log(`【${index + 1}】testCSWRequest response data --->`, data);
+      Logger.log(`【${index + 1}】testCSWRequest response data --->`, data);
       await this.testCSWSaveAccount({
         id: data.data.user.id,
         nickname,
@@ -492,6 +493,6 @@ export class MainUI_Component extends ComponentController {
     time: number;
   }) {
     const data = await HttpApiServices.testSaveAccount(params);
-    console.log(`testCSWSaveAccount response data --->`, data);
+    Logger.log(`testCSWSaveAccount response data --->`, data);
   }
 }

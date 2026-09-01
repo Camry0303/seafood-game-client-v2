@@ -1,4 +1,5 @@
 import { assetManager, ImageAsset, SpriteFrame, Texture2D } from "cc";
+import { Logger } from "./Logger";
 import { ResourceManager } from "../Runtime/ResourceManager";
 import { GlobalData } from "../Runtime/GlobalData";
 
@@ -36,7 +37,7 @@ export async function wechatSpriteFrameLoader(
 
     return spriteFrame;
   } catch (error) {
-    console.error("加载远程图片失败:", error);
+    Logger.error("加载远程图片失败:", error);
     return null;
   }
 }
@@ -125,7 +126,7 @@ export async function getSpriteFrameFromBase64(
 
     return spriteFrame;
   } catch (error) {
-    console.error("加载 base64 图片失败:", error);
+    Logger.error("加载 base64 图片失败:", error);
     return null;
   }
 }

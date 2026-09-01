@@ -1,4 +1,5 @@
 import { _decorator, EditBox, Label, Node } from "cc";
+import { Logger } from "../../../Utils/Logger";
 import { ComponentController } from "../../../Common/ComponentController";
 import BubbleWindow from "../../../Common/BubbleWindow";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
@@ -110,14 +111,14 @@ export class InviteUI_Component extends ComponentController {
    * @param event
    */
   public onBindAgentBtnClick(event: Event) {
-    console.log(`onBindAgentBtnClick--->`, this._agentCodeEditBox.string);
+    Logger.log(`onBindAgentBtnClick--->`, this._agentCodeEditBox.string);
     try {
       if (this._agentCodeEditBox.string.trim() === "") {
         return;
       }
       CommonDailogHandler.showCircleLoading(WAITING_TYPE.BINDING_AGENT);
       // TODO - 调用绑定代理接口
-      console.log(
+      Logger.log(
         ` 调用绑定代理接口，代理邀请码：${this._agentCodeEditBox.string}`,
       );
       PlazaEvents.bindAgent(Number(this._agentCodeEditBox.string));

@@ -1,3 +1,4 @@
+import { Logger } from "../../../Utils/Logger";
 import {
   _decorator,
   Event,
@@ -342,7 +343,7 @@ export class ClubMainUI_Component extends ComponentController {
    * @param event
    */
   private onClubMemberManagementBtnClick(event: Event) {
-    console.log(`onClubMemberManagementBtnClick--->`);
+    Logger.log(`onClubMemberManagementBtnClick--->`);
 
     const params: GetMemberManagementListParams = {
       current: 1,
@@ -356,7 +357,7 @@ export class ClubMainUI_Component extends ComponentController {
    * @param event
    */
   private onClubMemberBtnClick(event: Event) {
-    console.log(`onClubMemberBtnClick--->`);
+    Logger.log(`onClubMemberBtnClick--->`);
 
     const params: GetMemberListParams = {
       current: 1,
@@ -370,7 +371,7 @@ export class ClubMainUI_Component extends ComponentController {
    * @param event
    */
   private onClubPartnerBtnClick(event: Event) {
-    console.log(`onClubPartnerBtnClick--->`);
+    Logger.log(`onClubPartnerBtnClick--->`);
 
     const params: GetMemberListParams = {
       current: 1,
@@ -385,7 +386,7 @@ export class ClubMainUI_Component extends ComponentController {
    */
   private onClubMyMemberBtnClick(event: Event) {
     // 俱乐部我的成员
-    console.log(`onClubMyMemberBtnClick--->`);
+    Logger.log(`onClubMyMemberBtnClick--->`);
     const params: GetMyMemberListParams = {
       current: 1,
       pageSize: 1000,
@@ -399,7 +400,7 @@ export class ClubMainUI_Component extends ComponentController {
    */
   private onClubScoreRankBtnClick(event: Event) {
     // 俱乐部积分排行
-    console.log(`onClubScoreRankBtnClick--->`);
+    Logger.log(`onClubScoreRankBtnClick--->`);
     ClubEvents.getClubPlayerScoreRankList({
       current: 1,
       pageSize: 1000,
@@ -411,7 +412,7 @@ export class ClubMainUI_Component extends ComponentController {
    * @param event
    */
   private onClubGameRecordBtnClick(event: Event) {
-    console.log(`onClubGameRecordBtnClick--->`);
+    Logger.log(`onClubGameRecordBtnClick--->`);
     const club = GlobalData.Instance.getCurrentClubInfoDetail();
     if (!club) {
       return;
@@ -440,7 +441,7 @@ export class ClubMainUI_Component extends ComponentController {
    */
   private onClubScoreOperateLogBtnClick(event: Event) {
     // 俱乐部上下分记录日志
-    console.log(`onClubScoreOperateLogBtnClick--->`);
+    Logger.log(`onClubScoreOperateLogBtnClick--->`);
     ClubEvents.getClubPlayerScoreLogList({
       current: 1,
       pageSize: 1000,

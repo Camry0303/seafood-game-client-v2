@@ -1,3 +1,4 @@
+import { Logger } from "../../../Utils/Logger";
 import {
   _decorator,
   ToggleContainer,
@@ -109,7 +110,7 @@ export class ClubSettingUI_Component extends ComponentController {
   private onMenuToggleCheck(event: Event) {
     const toggle: Toggle = event.target.getComponent(Toggle);
     const contentNodeName = toggle.node.name.replace("Toggle", "Content");
-    console.log(`contentNodeName--->`, contentNodeName);
+    Logger.log(`contentNodeName--->`, contentNodeName);
     this._manageContent.active = this._manageContent.name === contentNodeName;
     this._changeNameContent.active =
       this._changeNameContent.name === contentNodeName;
@@ -196,7 +197,7 @@ export class ClubSettingUI_Component extends ComponentController {
       const inputstring = this._transferClubEditbox.string;
       if (inputstring.trim()) {
         const player_id = parseInt(inputstring);
-        console.log(`onTransferClubBtnClick player_id--->`, player_id);
+        Logger.log(`onTransferClubBtnClick player_id--->`, player_id);
       } else {
         throw new Error("缺少用户id");
       }
@@ -215,7 +216,7 @@ export class ClubSettingUI_Component extends ComponentController {
       const inputstring = this._setSubAdminEditbox.string;
       if (inputstring.trim()) {
         const player_id = parseInt(inputstring);
-        console.log(`onSetSubAdminBtnClick player_id--->`, player_id);
+        Logger.log(`onSetSubAdminBtnClick player_id--->`, player_id);
         ClubEvents.setSubAdmin({ player_id });
         this._setSubAdminEditbox.string = "";
       } else {
@@ -262,7 +263,7 @@ export class ClubSettingUI_Component extends ComponentController {
    * @param event
    */
   private onChangeNameBtnClick(event: Event) {
-    console.log(`onChangeNameBtnClick--->`);
+    Logger.log(`onChangeNameBtnClick--->`);
     try {
       const inputstring = this._changeNameEditbox.string;
       if (inputstring.trim()) {
@@ -351,7 +352,7 @@ export class ClubSettingUI_Component extends ComponentController {
    * @param event
    */
   private onQuitBtnClick(event: Event) {
-    console.log(`onQuitBtnClick--->`);
+    Logger.log(`onQuitBtnClick--->`);
   }
   //#endregion
 
@@ -373,7 +374,7 @@ export class ClubSettingUI_Component extends ComponentController {
    * @param event
    */
   private onDissolveBtnClick(event: Event) {
-    console.log(`onDissolveBtnClick--->`);
+    Logger.log(`onDissolveBtnClick--->`);
   }
   //#endregion
 }

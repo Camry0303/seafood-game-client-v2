@@ -1,4 +1,5 @@
 import { _decorator, Event, Label, native, Node, sys } from "cc";
+import { Logger } from "../../../Utils/Logger";
 import { SoundsManager } from "../../../Runtime/SoundsManager";
 import { ComponentController } from "../../../Common/ComponentController";
 import { GlobalData } from "../../../Runtime/GlobalData";
@@ -205,9 +206,9 @@ export class PlazaMainUI_Component extends ComponentController {
       "JoinRoomToggle",
       6,
       (value: string) => {
-        console.log("房间ID--->", value);
+        Logger.log("房间ID--->", value);
         // TODO - 加入游戏
-        console.log("加入游戏");
+        Logger.log("加入游戏");
         CommonDailogHandler.showBubbleMessage(`房间不存在`);
       },
     );

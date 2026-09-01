@@ -1,4 +1,5 @@
 import { _decorator, Node } from "cc";
+import { Logger } from "../../../Utils/Logger";
 import { ComponentController } from "../../../Common/ComponentController";
 import { DicesGameTopStatusBar_Component } from "./DicesGameTopStatusBar_Component";
 import { DicesGameBottomStatusBar_Component } from "./DicesGameBottomStatusBar_Component";
@@ -167,7 +168,7 @@ export class DicesGameMainUI_Component extends ComponentController {
   public updateGameStatus(
     data: Gateway.Returned.Games.DicesGame.GamingStatusgData,
   ) {
-    console.log(`updateGameStatus--->`, data);
+    Logger.log(`updateGameStatus--->`, data);
     // 更新数据
     this._results_history_data = data.results_history;
     this._players_orders_grouped_data = data.players_orders_grouped;

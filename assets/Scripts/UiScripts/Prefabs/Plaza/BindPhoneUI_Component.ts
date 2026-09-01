@@ -1,4 +1,5 @@
 import { _decorator, Button, EditBox, Label, Sprite } from "cc";
+import { Logger } from "../../../Utils/Logger";
 import { ComponentController } from "../../../Common/ComponentController";
 import BubbleWindow from "../../../Common/BubbleWindow";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
@@ -109,7 +110,7 @@ export class BindPhoneUI_Component extends ComponentController {
    */
   private async onGetCodeBtnClick(event: Event) {
     try {
-      console.log(`获取短信验证码`);
+      Logger.log(`获取短信验证码`);
       const phoneNumber = this._phoneNumberEditBox.string;
       if (phoneNumber.trim() === "") {
         CommonDailogHandler.showBubbleMessage("请输入手机号！");
@@ -144,7 +145,7 @@ export class BindPhoneUI_Component extends ComponentController {
    */
   private async onBindBtnClick(event: Event) {
     try {
-      console.log(`点击了绑定按钮`);
+      Logger.log(`点击了绑定按钮`);
       const phoneNumber = this._phoneNumberEditBox.string;
       const verificationCode = this._verificationCodeEditBox.string;
       const password = this._passwordEditBox.string;
@@ -200,7 +201,7 @@ export class BindPhoneUI_Component extends ComponentController {
    * @param repeat
    */
   private setCountDown(repeat: number) {
-    console.log(`按钮开始倒计时逻辑`);
+    Logger.log(`按钮开始倒计时逻辑`);
 
     const btnSprite = this._getCodeBtn.node.getComponent(Sprite);
     const labelNode = this._getCodeBtn.node.getChildByName("Label");

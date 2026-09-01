@@ -1,4 +1,5 @@
 import { _decorator, Node, Tween, tween } from "cc";
+import { Logger } from "../../../Utils/Logger";
 import { ComponentController } from "../../../Common/ComponentController";
 import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
 const { ccclass, menu } = _decorator;
@@ -129,7 +130,7 @@ export class CircleLoadingUI_Component extends ComponentController {
    */
   private onTouchEnd() {
     if (this._waitings.size > 0) {
-      // console.log(`onTouchEnd--->`, this._waitings);
+      // Logger.log(`onTouchEnd--->`, this._waitings);
       const [firstWaiting] = this._waitings;
       CommonDailogHandler.showBubbleMessage(firstWaiting);
     } else {
@@ -146,7 +147,7 @@ export class CircleLoadingUI_Component extends ComponentController {
   public show(waiting: WAITING_TYPE, callback?: Function, silent?: boolean) {
     if (silent) {
       this._silentWaitings.add(waiting as WAITING_TYPE);
-      // console.log(`show(silent)-->`, this._silentWaitings, waiting);
+      // Logger.log(`show(silent)-->`, this._silentWaitings, waiting);
       if (callback) {
         callback();
       }
@@ -154,7 +155,7 @@ export class CircleLoadingUI_Component extends ComponentController {
     }
 
     this._waitings.add(waiting as WAITING_TYPE);
-    // console.log(`show-->`, this._waitings, waiting);
+    // Logger.log(`show-->`, this._waitings, waiting);
 
     this.node.active = true;
 
@@ -185,7 +186,7 @@ export class CircleLoadingUI_Component extends ComponentController {
   public hide(waiting: WAITING_TYPE, callback?: Function) {
     this._silentWaitings.delete(waiting as WAITING_TYPE);
     this._waitings.delete(waiting as WAITING_TYPE);
-    // console.log(`hide-->`, this._waitings, waiting);
+    // Logger.log(`hide-->`, this._waitings, waiting);
     // 仅当真实 loading 队列清空时才关闭蒙版（silent 项不影响显隐）
     if (this._waitings.size == 0) {
       this.stopRotateAnimation();

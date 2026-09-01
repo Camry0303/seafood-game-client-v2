@@ -1,4 +1,5 @@
 import { _decorator, Label, Node, Toggle, ToggleContainer, Event } from "cc";
+import { Logger } from "../../../Utils/Logger";
 import { ComponentController } from "../../../Common/ComponentController";
 import BubbleWindow from "../../../Common/BubbleWindow";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
@@ -318,7 +319,7 @@ export class GameSettingUI_Component extends ComponentController {
    * @param event
    */
   private onCreateBtnClick(event: Event) {
-    console.log(`onCreateBtnClick--->`, this._gameSettingParams, this._type);
+    Logger.log(`onCreateBtnClick--->`, this._gameSettingParams, this._type);
     if (this._type === "CLUB") {
       // 持久化俱乐部建房配置，供下次打开默认填充
       GlobalData.Instance.defaultClubDicesConfig = this._gameSettingParams;

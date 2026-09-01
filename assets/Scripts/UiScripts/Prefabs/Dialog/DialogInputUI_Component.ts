@@ -1,4 +1,5 @@
 import {
+import { Logger } from "../../../Utils/Logger";
   _decorator,
   Event,
   EditBox,
@@ -149,7 +150,7 @@ export class DialogInputUI_Component extends ComponentController {
    * 确定按钮点击事件
    */
   private onConfirmBtnClick(event: Event) {
-    console.log(`DialogInputUI_Component onConfirmBtnClick`);
+    Logger.log(`DialogInputUI_Component onConfirmBtnClick`);
     if (this._isRequired && this._editBoxComponent.string.trim().length === 0) {
       CommonDailogHandler.showBubbleMessage("输入内容不能为空！");
       return;

@@ -1,4 +1,5 @@
 import { _decorator, Slider, UITransform, Node } from "cc";
+import { Logger } from "../../../Utils/Logger";
 import { ComponentController } from "../../../Common/ComponentController";
 import BubbleWindow from "../../../Common/BubbleWindow";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
@@ -159,7 +160,7 @@ export class PlazaSettingUI_Component extends ComponentController {
    * @param event
    */
   private onLogoutBtnClick(event: Event) {
-    console.log(`onLogoutBtnClick--->`);
+    Logger.log(`onLogoutBtnClick--->`);
     // 挂载登录注册界面
     ComponentManager.Instance.renderUiNode<LoginRegisterMainUI_Component>(
       "LoginRegisterMainUI",

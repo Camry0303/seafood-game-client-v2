@@ -1,4 +1,5 @@
 import { _decorator, Component, game, Game as CCGame, Asset } from "cc";
+import { Logger } from "./Utils/Logger";
 import { ResourceManager } from "./Runtime/ResourceManager";
 import { ComponentManager } from "./Runtime/ComponentManager";
 import { Game } from "./UiScripts/Game";
@@ -49,7 +50,7 @@ export class GameLanch extends Component {
 
     // 初始化游戏入口模块
     this.node.addComponent(Game);
-    console.log(`初始化模块完成！`);
+    Logger.log(`初始化模块完成！`);
   }
 
   /**
@@ -57,7 +58,7 @@ export class GameLanch extends Component {
    */
   protected start(): void {
     // 游戏初始化热更新组件
-    console.log("处理热更新界面，挂载热更新界面组件！");
+    Logger.log("处理热更新界面，挂载热更新界面组件！");
     const hotUpdateUiNode = this.node.getChildByName("HotUpdateUI");
     let hotUpdateUiComponent: HotUpdateUI_Component;
     if (hotUpdateUiNode) {
@@ -73,7 +74,7 @@ export class GameLanch extends Component {
    */
   private listenGameHideEvent() {
     game.on(CCGame.EVENT_HIDE, function () {
-      console.log(`游戏进入后台！`);
+      Logger.log(`游戏进入后台！`);
       // 暂停游戏
       game.pause();
     });
@@ -84,7 +85,7 @@ export class GameLanch extends Component {
    */
   private listenGameShowEvent() {
     game.on(CCGame.EVENT_SHOW, () => {
-      console.log("游戏回到前台");
+      Logger.log("游戏回到前台");
       // 恢复游戏
       game.resume();
     });
@@ -97,7 +98,7 @@ export class GameLanch extends Component {
    */
   private listenGameResumeEvent() {
     game.on(CCGame.EVENT_RESUME, () => {
-      console.log("在此处理恢复逻辑（如恢复音效、动画等）");
+      Logger.log("在此处理恢复逻辑（如恢复音效、动画等）");
     });
   }
 
@@ -106,7 +107,7 @@ export class GameLanch extends Component {
    */
   private listenGamePauseEvent() {
     game.on(CCGame.EVENT_PAUSE, () => {
-      console.log("在此处理暂停逻辑（如暂停音效、动画等）");
+      Logger.log("在此处理暂停逻辑（如暂停音效、动画等）");
       // 判断socket是否连接
       if (SocketManager.Instance.SocketInstance?.connected) {
         const [dicesGameNode, dicesGameComponent] =

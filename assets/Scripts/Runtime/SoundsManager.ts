@@ -1,4 +1,5 @@
 import { AudioClip, AudioSource, Button, EventTouch, _decorator } from "cc";
+import { Logger } from "../Utils/Logger";
 import { SingletonComponent } from "../Common/SingletonComponent";
 import { Config } from "../Types/typing";
 import { ResourceManager } from "./ResourceManager";
@@ -103,7 +104,7 @@ export class SoundsManager extends SingletonComponent {
    */
   public playEffect(effectName: string) {
     if (!this._effectAudioSource) {
-      console.error(
+      Logger.error(
         `[SoundsManager] playEffect faild: effectAudioSource not exist!`,
       );
       return;
@@ -111,7 +112,7 @@ export class SoundsManager extends SingletonComponent {
     if (this._effectEnabled) {
       const audioClip = this._soundsMap[effectName];
       if (!audioClip) {
-        console.error(
+        Logger.error(
           `[SoundsManager] playEffect faild:AudioClip<${effectName}> not exist!`,
         );
         return;
@@ -126,7 +127,7 @@ export class SoundsManager extends SingletonComponent {
    */
   public playEffectList(effectNameList: string[]) {
     if (!this._effectAudioSource) {
-      console.error(
+      Logger.error(
         `[SoundsManager] playEffectList faild: effectAudioSource not exist!`,
       );
       return;
@@ -152,7 +153,7 @@ export class SoundsManager extends SingletonComponent {
       const audioClip = this._soundsMap[effectName];
 
       if (!audioClip) {
-        console.error(
+        Logger.error(
           `[SoundsManager] playEffectList faild:AudioClip<${effectName}> not exist!`,
         );
         // 即使当前音效不存在，也继续播放下一个
@@ -182,7 +183,7 @@ export class SoundsManager extends SingletonComponent {
    */
   public playMusic(bgmName: string) {
     if (!this._bgmAudioSource) {
-      console.error(
+      Logger.error(
         `[SoundsManager] playMusic faild:bgmAudioSource not exist!`,
       );
       return;
@@ -190,7 +191,7 @@ export class SoundsManager extends SingletonComponent {
     if (this._bgmEnabled) {
       const audioClip = this._soundsMap[bgmName];
       if (!audioClip) {
-        console.error(
+        Logger.error(
           `[SoundsManager] playMusic faild:AudioClip<${bgmName}> not exist!`,
         );
         return;

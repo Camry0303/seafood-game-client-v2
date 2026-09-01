@@ -1,4 +1,5 @@
 import { Socket } from "socket.io-client";
+import { Logger } from "../../Utils/Logger";
 
 import { ComponentManager } from "../../Runtime/ComponentManager";
 import { LoginRegisterMainUI_Component } from "../../UiScripts/Prefabs/LoginRegister/LoginRegisterMainUI_Component";
@@ -61,7 +62,7 @@ export default class BaseEvents {
    * 处理连接成功
    */
   private static async onConnect() {
-    console.log(`<SocketBaseEvent> onConnect--->`, `游戏网关服务连接成功！`);
+    Logger.log(`<SocketBaseEvent> onConnect--->`, `游戏网关服务连接成功！`);
     // 连接成功，证明登录成功了，关闭加载动画
     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.LOGIN);
   }
@@ -70,7 +71,7 @@ export default class BaseEvents {
    * 处理连接错误
    */
   private static async onConnectError(returnData: Error) {
-    console.log(`<SocketBaseEvent> onConnectError--->`, returnData.message);
+    Logger.log(`<SocketBaseEvent> onConnectError--->`, returnData.message);
     let msg = returnData.message;
     const cause = returnData.message.split(":")[1];
     // 是否需要显示登录注册界面
@@ -133,7 +134,7 @@ export default class BaseEvents {
    * @param returnData
    */
   private static async onDisconnect(returnData: any) {
-    console.log(`<SocketBaseEvent> onDisconnect--->`, String(returnData));
+    Logger.log(`<SocketBaseEvent> onDisconnect--->`, String(returnData));
 
     switch (String(returnData)) {
       case "io client disconnect":
@@ -190,8 +191,8 @@ export default class BaseEvents {
    * @param returnData 返回重连次数
    */
   private static async onReconnect(returnData: any) {
-    console.log(`<SocketBaseEvent> onReconnect--->`, returnData);
-    console.log("游戏网关服务重连成功！");
+    Logger.log(`<SocketBaseEvent> onReconnect--->`, returnData);
+    Logger.log("游戏网关服务重连成功！");
     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.SOCKET_RECONNECT);
   }
 
@@ -200,8 +201,8 @@ export default class BaseEvents {
    * @param returnData 返回重连次数
    */
   private static async onReconnectAttempt(returnData: any) {
-    console.log(`<SocketBaseEvent> onReconnectAttempt--->`, returnData);
-    console.log(`游戏网关服务正在尝试第${returnData}次重连！`);
+    Logger.log(`<SocketBaseEvent> onReconnectAttempt--->`, returnData);
+    Logger.log(`游戏网关服务正在尝试第${returnData}次重连！`);
     CommonDailogHandler.showCircleLoading(WAITING_TYPE.SOCKET_RECONNECT);
   }
 
@@ -209,7 +210,7 @@ export default class BaseEvents {
    * 处理重新连接错误
    */
   private static async onReconnectError(returnData: Error) {
-    console.log(`<SocketBaseEvent> onReconnectError--->`, returnData);
+    Logger.log(`<SocketBaseEvent> onReconnectError--->`, returnData);
     CommonDailogHandler.showDialogMessage(
       `游戏网关服务重连错误，\n\r${returnData.message}`,
     );
@@ -219,7 +220,7 @@ export default class BaseEvents {
    * 处理重新连接失败
    */
   private static async onReconnectFailed() {
-    console.log(`<SocketBaseEvent> onReconnectFailed--->`, "重连失败！");
+    Logger.log(`<SocketBaseEvent> onReconnectFailed--->`, "重连失败！");
     CommonDailogHandler.showBubbleMessage(
       "游戏网关服务重连失败，请检查网络设置！",
     );
@@ -230,7 +231,7 @@ export default class BaseEvents {
    * @param returnData
    */
   private static async onError(returnData: Error) {
-    console.log(`<SocketBaseEvent> onError--->`, returnData);
+    Logger.log(`<SocketBaseEvent> onError--->`, returnData);
     CommonDailogHandler.showDialogMessage(
       `游戏网关服务连接出错，\n\r${returnData.message}`,
     );

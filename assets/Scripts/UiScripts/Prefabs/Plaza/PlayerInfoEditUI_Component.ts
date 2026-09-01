@@ -1,4 +1,5 @@
 import { _decorator, EditBox, Label, Sprite } from "cc";
+import { Logger } from "../../../Utils/Logger";
 import { ComponentController } from "../../../Common/ComponentController";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
 import BubbleWindow from "../../../Common/BubbleWindow";
@@ -86,7 +87,7 @@ export class PlayerInfoEditUI_Component extends ComponentController {
    * 编辑或保存按钮点击事件
    */
   private onEditOrSaveBtnClick() {
-    console.log("onEditOrSaveBtnClick");
+    Logger.log("onEditOrSaveBtnClick");
     if (this._nicknameEditBox.enabled) {
       // 当前处于编辑状态，切换到保存状态
       this._nicknameEditBox.enabled = false;
@@ -123,7 +124,7 @@ export class PlayerInfoEditUI_Component extends ComponentController {
    * @param player
    */
   public async setPlayerInformation(player: Gateway.Returned.Player.Player) {
-    console.log(`<PlayerInfo_Component> setPlayerInformation called!`);
+    Logger.log(`<PlayerInfo_Component> setPlayerInformation called!`);
     this._idLabel.string = `${String(player?.id) || ""}`;
     this._nicknameEditBox.string = player?.nickname || "";
     this._phoneNumberLabel.string = player?.phone_number || "未绑定";

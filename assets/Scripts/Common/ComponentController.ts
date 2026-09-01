@@ -1,3 +1,4 @@
+import { Logger } from "../Utils/Logger";
 import {
   __private,
   _decorator,
@@ -43,8 +44,8 @@ export class ComponentController extends Component {
    */
   protected printNodeMap(key: boolean = false, value: boolean = false) {
     const keys = Object.keys(this._nodeMap);
-    key && console.log(`${this.getClassName()} nodeMap Keys--->`, keys);
-    value && console.log(`${this.getClassName()} nodeMap--->`, this._nodeMap);
+    key && Logger.log(`${this.getClassName()} nodeMap Keys--->`, keys);
+    value && Logger.log(`${this.getClassName()} nodeMap--->`, this._nodeMap);
   }
 
   /**

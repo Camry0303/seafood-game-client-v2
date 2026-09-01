@@ -1,4 +1,5 @@
 import { _decorator, Event, Label, Node, sys, UITransform } from "cc";
+import { Logger } from "../../../Utils/Logger";
 import { ComponentController } from "../../../Common/ComponentController";
 import { DicesGameMainUI_Component } from "./DicesGameMainUI_Component";
 import { GlobalData } from "../../../Runtime/GlobalData";
@@ -76,8 +77,8 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
       }
     }
 
-    console.log(`sys.os--->`, sys.os);
-    console.log(`sys.isNative--->`, sys.isNative);
+    Logger.log(`sys.os--->`, sys.os);
+    Logger.log(`sys.isNative--->`, sys.isNative);
   }
 
   update(deltaTime: number) {}
@@ -241,7 +242,7 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
    * @param event
    */
   private onMoreOptionsBtnClick(event: Event) {
-    console.log(`onMoreOptionsBtnClick--->`);
+    Logger.log(`onMoreOptionsBtnClick--->`);
     this._moreOptionsNode.active = !this._moreOptionsNode.active;
   }
 
@@ -250,7 +251,7 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
    * @param event
    */
   private onHelpBtnClick(event: Event) {
-    console.log(`onHelpBtnClick--->`);
+    Logger.log(`onHelpBtnClick--->`);
     ComponentManager.Instance.renderUiNode<DicesGameHelpUI_Component>(
       "DicesGameHelpUI",
       "Prefabs",
@@ -264,7 +265,7 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
    * @param event
    */
   private onSoundSettingBtnClick(event: Event) {
-    console.log(`onSoundSettingBtnClick--->`);
+    Logger.log(`onSoundSettingBtnClick--->`);
     ComponentManager.Instance.renderUiNode<DicesGameSoundSettingUI_Component>(
       "DicesGameSoundSettingUI",
       "Prefabs",
@@ -278,7 +279,7 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
    * @param event
    */
   private onExitBtnClick(event: Event) {
-    console.log(`onExitBtnClick--->`);
+    Logger.log(`onExitBtnClick--->`);
     const [node, component] =
       ComponentManager.Instance.renderUiNode<DicesGameDialogConfirmSmallUI_Component>(
         "DicesGameDialogConfirmSmallUI",
@@ -302,7 +303,7 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
    * @param event
    */
   private onDissolveBtnClick(event: Event) {
-    console.log(`onDissolveBtnClick--->`);
+    Logger.log(`onDissolveBtnClick--->`);
     const [node, component] =
       ComponentManager.Instance.renderUiNode<DicesGameDialogConfirmSmallUI_Component>(
         "DicesGameDialogConfirmSmallUI",
@@ -326,7 +327,7 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
    * @param event
    */
   private async onTestBtnClick(event: Event) {
-    console.log(`onTestBtnClick--->`);
+    Logger.log(`onTestBtnClick--->`);
     // // FIXME : 测试飘分
     // const component = this._mainComponent
     //   .getPlayerSeatsComponent()
@@ -574,7 +575,7 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
    * @param event
    */
   private onOrderDetailsBtnClick(event: Event) {
-    console.log(`onOrderDetailsBtnClick--->`);
+    Logger.log(`onOrderDetailsBtnClick--->`);
 
     const [node, component] =
       ComponentManager.Instance.renderUiNode<DicesGameOrderDetailsUI_Component>(
@@ -596,7 +597,7 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
    * @param event
    */
   private onResultHistoryBtnClick(event: Event) {
-    console.log(`onResultHistoryBtnClick--->`);
+    Logger.log(`onResultHistoryBtnClick--->`);
     const [node, component] =
       ComponentManager.Instance.renderUiNode<DicesGameHistoryUI_Component>(
         "DicesGameHistoryUI",
@@ -613,7 +614,7 @@ export class DicesGameTopStatusBar_Component extends ComponentController {
    * @param event
    */
   private onBotBtnClick(event: Event) {
-    console.log(`onBotBtnClick--->`);
+    Logger.log(`onBotBtnClick--->`);
     const roomData =
       GlobalData.Instance.getCurrentGameInfo<Gateway.Returned.Games.DicesGame.ClubDicesGameRoomData>()
         ?.game_room_data;

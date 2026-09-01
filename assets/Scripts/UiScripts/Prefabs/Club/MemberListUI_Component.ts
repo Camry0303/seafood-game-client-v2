@@ -1,3 +1,4 @@
+import { Logger } from "../../../Utils/Logger";
 import {
   _decorator,
   Button,
@@ -178,7 +179,7 @@ export class MemberListUI_Component extends ComponentController {
    * @returns
    */
   private onDemoteOrDeleteMember(event: Event) {
-    console.log(`onDemoteOrDeleteMember--->`);
+    Logger.log(`onDemoteOrDeleteMember--->`);
     if (this._checkedMemberNode) {
       const player_id = this._checkedMemberNode
         .getComponent(MemberListItem_Component)

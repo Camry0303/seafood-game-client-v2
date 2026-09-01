@@ -1,4 +1,5 @@
 import { Socket } from "socket.io-client";
+import { Logger } from "../../Utils/Logger";
 import { Gateway } from "../../Types/typing";
 import SocketManager from "./SocketManager";
 import { ComponentManager } from "../../Runtime/ComponentManager";
@@ -158,7 +159,7 @@ export default class ClubEvents {
   private static onGetPlayerClubListResult(
     returnData: Gateway.Returned.Common.Result<Gateway.Returned.Club.Club[]>,
   ) {
-    console.log(
+    Logger.log(
       "<ClubEvent> onGetPlayerClubListResult called --->",
       returnData,
     );
@@ -204,7 +205,7 @@ export default class ClubEvents {
   private static onCreateClubResult(
     returnData: Gateway.Returned.Common.Result<boolean>,
   ) {
-    console.log("<ClubEvent> onCreateClubResult called --->", returnData);
+    Logger.log("<ClubEvent> onCreateClubResult called --->", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       // 重新请求获取玩家俱乐部列表
@@ -241,7 +242,7 @@ export default class ClubEvents {
   private static onJoinClubByIdResult(
     returnData: Gateway.Returned.Common.Result<JOIN_CLUB_RESULT>,
   ) {
-    console.log("<ClubEvent> onJoinClubByIdResult called --->", returnData);
+    Logger.log("<ClubEvent> onJoinClubByIdResult called --->", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       // 判断加入情况
@@ -283,7 +284,7 @@ export default class ClubEvents {
   private static onQuitClubResult(
     returnData: Gateway.Returned.Common.Result<QUIT_CLUB_RESULT>,
   ) {
-    console.log("<ClubEvent> onQuitClubResult called --->", returnData);
+    Logger.log("<ClubEvent> onQuitClubResult called --->", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       // 判断退出情况
@@ -331,7 +332,7 @@ export default class ClubEvents {
       clubPlayerInfo: Gateway.Returned.ClubPlayer.CurrentClubPlayer;
     }>,
   ) {
-    console.log("<ClubEvent> onEnterClubResult called --->", returnData);
+    Logger.log("<ClubEvent> onEnterClubResult called --->", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       const { clubInfoDetail, clubPlayerInfo } = data;
@@ -379,11 +380,11 @@ export default class ClubEvents {
   private static onLeaveClubResult(
     returnData: Gateway.Returned.Common.Result<boolean>,
   ) {
-    console.log("<ClubEvent> onLeaveClubResult called --->", returnData);
+    Logger.log("<ClubEvent> onLeaveClubResult called --->", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       // @TODO 处理离开俱乐部成功
-      console.log("离开俱乐部成功:", data);
+      Logger.log("离开俱乐部成功:", data);
       GlobalData.Instance.setCurrentClubInfoDetail(null);
     } else {
       // 连接失败，弹出提示框
@@ -438,7 +439,7 @@ export default class ClubEvents {
       >
     >,
   ) {
-    console.log(
+    Logger.log(
       "<ClubEvent> onQueryClubPlayrUnreviewedApplicationListResult called --->",
       returnData,
     );
@@ -499,7 +500,7 @@ export default class ClubEvents {
   private static onReviewClubPlayerApplicationResult(
     returnData: Gateway.Returned.Common.Result<boolean>,
   ) {
-    console.log(
+    Logger.log(
       "<ClubEvent> onReviewClubPlayerApplicationResult called --->",
       returnData,
     );
@@ -555,7 +556,7 @@ export default class ClubEvents {
   private static onInvitePlayerToClubResult(
     returnData: Gateway.Returned.Common.Result<boolean>,
   ) {
-    console.log(
+    Logger.log(
       "<ClubEvent> onInvitePlayerToClubResult called --->",
       returnData,
     );
@@ -601,7 +602,7 @@ export default class ClubEvents {
   private static onChangeClubNameResult(
     returnData: Gateway.Returned.Common.Result<{ newClubName: string }>,
   ) {
-    console.log("<ClubEvent> onChangeClubNameResult called --->", returnData);
+    Logger.log("<ClubEvent> onChangeClubNameResult called --->", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       // 处理修改俱乐部名称成功结果
@@ -661,7 +662,7 @@ export default class ClubEvents {
       newAnnouncement: string;
     }>,
   ) {
-    console.log(
+    Logger.log(
       "<ClubEvent> onChangeClubAnnouncementResult called --->",
       returnData,
     );
@@ -714,7 +715,7 @@ export default class ClubEvents {
   private static onSetSubAdminResult(
     returnData: Gateway.Returned.Common.Result<boolean>,
   ) {
-    console.log("<ClubEvent> onSetSubAdminResult called --->", returnData);
+    Logger.log("<ClubEvent> onSetSubAdminResult called --->", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       // 处理设置副管理员成功结果
@@ -759,7 +760,7 @@ export default class ClubEvents {
       >
     >,
   ) {
-    console.log(
+    Logger.log(
       "<ClubEvent> onGetMemberManagementListResult called --->",
       returnData,
     );
@@ -815,7 +816,7 @@ export default class ClubEvents {
       club_score: number;
     }>,
   ) {
-    console.log(
+    Logger.log(
       "<ClubEvent> onChangeClubPlayerScoreResult called --->",
       returnData,
     );
@@ -870,7 +871,7 @@ export default class ClubEvents {
       >
     >,
   ) {
-    console.log("<ClubEvent> onGetMemberListResult called --->", returnData);
+    Logger.log("<ClubEvent> onGetMemberListResult called --->", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       //  打开成员列表界面
@@ -921,7 +922,7 @@ export default class ClubEvents {
       result_type: "demote" | "delete"; // 0降职 1踢人
     }>,
   ) {
-    console.log(
+    Logger.log(
       "<ClubEvent> onDemoteOrDeleteMemberResult called --->",
       returnData,
     );
@@ -971,7 +972,7 @@ export default class ClubEvents {
       >
     >,
   ) {
-    console.log("<ClubEvent> onGetPartnerListResult called --->", returnData);
+    Logger.log("<ClubEvent> onGetPartnerListResult called --->", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       //  打开合伙人列表界面
@@ -1014,7 +1015,7 @@ export default class ClubEvents {
   private static onAddPartnerResult(
     returnData: Gateway.Returned.Common.Result<boolean>,
   ) {
-    console.log("<ClubEvent> onAddPartnerResult called --->", returnData);
+    Logger.log("<ClubEvent> onAddPartnerResult called --->", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       //  获取合伙人列表界面
@@ -1054,7 +1055,7 @@ export default class ClubEvents {
   private static onDeletePartnerResult(
     returnData: Gateway.Returned.Common.Result<boolean>,
   ) {
-    console.log("<ClubEvent> onDeletePartnerResult called --->", returnData);
+    Logger.log("<ClubEvent> onDeletePartnerResult called --->", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       //  获取合伙人列表界面
@@ -1102,7 +1103,7 @@ export default class ClubEvents {
       >
     >,
   ) {
-    console.log(
+    Logger.log(
       "<ClubEvent> onGetPartnerMemberListResult called --->",
       returnData,
     );
@@ -1145,7 +1146,7 @@ export default class ClubEvents {
   private static onAddPartnerMemberResult(
     returnData: Gateway.Returned.Common.Result<boolean>,
   ) {
-    console.log("<ClubEvent> onAddPartnerMemberResult called --->", returnData);
+    Logger.log("<ClubEvent> onAddPartnerMemberResult called --->", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       //  获取合伙人列表界面
@@ -1185,7 +1186,7 @@ export default class ClubEvents {
   private static onDeletePartnerMemberResult(
     returnData: Gateway.Returned.Common.Result<boolean>,
   ) {
-    console.log(
+    Logger.log(
       "<ClubEvent> onDeletePartnerMemberResult called --->",
       returnData,
     );
@@ -1236,7 +1237,7 @@ export default class ClubEvents {
       >
     >,
   ) {
-    console.log(
+    Logger.log(
       "<ClubEvent> onGetClubPlayerScoreLogListResult called --->",
       returnData,
     );
@@ -1292,7 +1293,7 @@ export default class ClubEvents {
       >
     >,
   ) {
-    console.log(
+    Logger.log(
       "<ClubEvent> onGetClubPlayerScoreRankListResult called --->",
       returnData,
     );
@@ -1344,7 +1345,7 @@ export default class ClubEvents {
       >
     >,
   ) {
-    console.log("<ClubEvent> onGetMyMemberListResult called --->", returnData);
+    Logger.log("<ClubEvent> onGetMyMemberListResult called --->", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       // 打开我的成员列表界面
@@ -1390,7 +1391,7 @@ export default class ClubEvents {
       Gateway.Returned.Games.DicesGame.DicesGameRoomTableUiData[]
     >,
   ) {
-    console.log(
+    Logger.log(
       "<DicesGameEvent> onGetClubGameRoomListResult called --->",
       returnData,
     );
@@ -1418,7 +1419,7 @@ export default class ClubEvents {
       type: GAME_TYPE;
     }>,
   ) {
-    console.log("<ClubEvent> onRoomDissolvedResult called --->", returnData);
+    Logger.log("<ClubEvent> onRoomDissolvedResult called --->", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       const [node, component] = ComponentManager.Instance.getNodeComponent(
@@ -1439,7 +1440,7 @@ export default class ClubEvents {
       type: GAME_TYPE;
     }>,
   ) {
-    console.log("<ClubEvent> onRoomCreatedResult called --->", returnData);
+    Logger.log("<ClubEvent> onRoomCreatedResult called --->", returnData);
     const { code, data, msg } = returnData;
     if (code === RESPONE_RESULT.SUCCESS) {
       const [node, component] = ComponentManager.Instance.getNodeComponent(
@@ -1482,7 +1483,7 @@ export default class ClubEvents {
       >
     >,
   ) {
-    console.log(
+    Logger.log(
       "<DicesGameEvent> onGetMyClubDicesGameSettlementResult called --->",
       returnData,
     );
@@ -1537,7 +1538,7 @@ export default class ClubEvents {
       >
     >,
   ) {
-    console.log(
+    Logger.log(
       "<DicesGameEvent> onGetRoomClubDicesGameSettlementResult called --->",
       returnData,
     );

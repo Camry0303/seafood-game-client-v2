@@ -1,4 +1,5 @@
 import { _decorator, Label, Node, Sprite } from "cc";
+import { Logger } from "../../../Utils/Logger";
 import { ComponentController } from "../../../Common/ComponentController";
 import BubbleWindow from "../../../Common/BubbleWindow";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
@@ -153,7 +154,7 @@ export class MemberManagementItem_Component extends ComponentController {
    */
   private onAddScoreBtnClick(event: Event) {
     // 添加分数
-    console.log(`onAddScoreBtnClick`);
+    Logger.log(`onAddScoreBtnClick`);
     CommonDailogHandler.showDialogMiniKeyboard(
       "AddScoreToggle",
       6,
@@ -175,7 +176,7 @@ export class MemberManagementItem_Component extends ComponentController {
    */
   private onSubScoreBtnClick(event: Event) {
     // 减少分数
-    console.log(`onSubScoreBtnClick`);
+    Logger.log(`onSubScoreBtnClick`);
     CommonDailogHandler.showDialogMiniKeyboard(
       "SubScoreToggle",
       6,

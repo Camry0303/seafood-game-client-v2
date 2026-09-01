@@ -1,3 +1,4 @@
+import { Logger } from "../../../Utils/Logger";
 import {
   _decorator,
   UIRenderer,
@@ -83,7 +84,7 @@ export class Palette extends Component {
   protected onLoad() {
     this.ur = this.node.getComponent(UIRenderer);
     if (!(this.ur instanceof Sprite || this.ur instanceof Label)) {
-      console.warn("Palette只对Sprite和Label有效！");
+      Logger.warn("Palette只对Sprite和Label有效！");
       this.destroy();
       return;
     }

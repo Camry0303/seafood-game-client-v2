@@ -1,4 +1,5 @@
 import { HotUpdate } from "../Types/typing";
+import { Logger } from "./Logger";
 
 /**
  * 热更新参数类
@@ -15,7 +16,7 @@ export class HotOptions {
     for (let key in this) {
       if (key !== "check") {
         if (!this[key]) {
-          console.log(`参数HotOptions.${key}未设置！`);
+          Logger.log(`参数HotOptions.${key}未设置！`);
           return false;
         }
       }

@@ -1,4 +1,5 @@
 import { _decorator, Event, Label, native, Sprite, sys } from "cc";
+import { Logger } from "../../../Utils/Logger";
 import { ComponentController } from "../../../Common/ComponentController";
 import { getAvatarSpriteFrame } from "../../../Utils/RemoteSpriteFrameLoader";
 import { Gateway } from "../../../Types/typing";
@@ -108,7 +109,7 @@ export class PlazaPlayerInfo_Component extends ComponentController {
    * @param player
    */
   public async setPlayerInformation(player: Gateway.Returned.Player.Player) {
-    console.log(`<PlayerInfo_Component> setPlayerInformation called!`);
+    Logger.log(`<PlayerInfo_Component> setPlayerInformation called!`);
     this._idLabel.string = `ID:${String(player?.id) || ""}`;
     this._nicknameLabel.string = player?.nickname || "";
     this._roomCardLabel.string = player?.room_card.toString() || "";

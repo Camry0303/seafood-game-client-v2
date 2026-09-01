@@ -1,4 +1,5 @@
 import { _decorator, Label, Node, Vec3 } from "cc";
+import { Logger } from "../../../Utils/Logger";
 import { ComponentController } from "../../../Common/ComponentController";
 import { DicesGameMainUI_Component } from "./DicesGameMainUI_Component";
 import { DicesGamePlayerSeat_Component } from "./DicesGamePlayerSeat_Component";
@@ -176,7 +177,7 @@ export class DicesGamePlayerSeatsContainer_Component extends ComponentController
 
     // 3. 安全获取位置
     if (!targetNode) {
-      console.error(
+      Logger.error(
         `[getSeatPosition] 未找到座位 ${seat_code} 且 _morePlayersNode 不存在`,
       );
       return Vec3.ZERO;

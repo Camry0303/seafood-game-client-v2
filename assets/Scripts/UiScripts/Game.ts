@@ -1,4 +1,5 @@
 import {
+import { Logger } from "../Utils/Logger";
   Asset,
   AudioClip,
   ImageAsset,
@@ -232,7 +233,7 @@ export class Game extends SingletonComponent {
    * 进入游戏逻辑
    */
   public startGame(hotUpdateUiComponent: HotUpdateUI_Component) {
-    console.log("进入游戏逻辑！");
+    Logger.log("进入游戏逻辑！");
 
     // 配置资源包信息列表（Prefabs/Images 由模块级常量统一维护，Sounds 由 SOUND_LIST 派生）
     const resPkgs: ResMgr.ResourcePackage<Asset> = {
@@ -247,7 +248,7 @@ export class Game extends SingletonComponent {
       ],
     };
     // 预加载所有资源
-    console.log("开始加载资源包！");
+    Logger.log("开始加载资源包！");
     ResourceManager.Instance.preloadResourcePackages(
       resPkgs,
       (loadedCount: number, totalCount: number, detail: string) => {
@@ -259,7 +260,7 @@ export class Game extends SingletonComponent {
         );
       },
       async () => {
-        console.log("资源包加载完成！");
+        Logger.log("资源包加载完成！");
         hotUpdateUiComponent?.setProgress(1);
         hotUpdateUiComponent?.setLoadingText("加载完成！");
         hotUpdateUiComponent?.setLoadingDetailsText(`正在初始化游戏界面！`);
@@ -299,12 +300,12 @@ export class Game extends SingletonComponent {
               throw new Error("获取服务器配置失败！");
             }
           } catch (err) {
-            console.error("获取服务器配置失败！", err);
+            Logger.error("获取服务器配置失败！", err);
             CommonDailogHandler.showDialogMessage(
               "获取服务器配置失败！\n请退出重试或联系管理员！",
               () => {
                 // game.restart();
-                console.log(`重启游戏`);
+                Logger.log(`重启游戏`);
               },
             );
             // 默认配置
@@ -322,9 +323,9 @@ export class Game extends SingletonComponent {
    * 进入游戏场景
    */
   public enterGameScene(): void {
-    console.log("进入游戏场景");
+    Logger.log("进入游戏场景");
     ComponentManager.Instance.destroyNodeByName("HotUpdateUI");
-    console.log("热更新界面销毁成功！");
+    Logger.log("热更新界面销毁成功！");
 
     // 正式：挂载登录注册界面
     ComponentManager.Instance.renderUiNode<LoginRegisterMainUI_Component>(
@@ -342,6 +343,6 @@ export class Game extends SingletonComponent {
     //   MainUI_Component,
     // );
 
-    console.log("挂载登陆界面成功！");
+    Logger.log("挂载登陆界面成功！");
   }
 }

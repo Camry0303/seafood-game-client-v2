@@ -1,3 +1,4 @@
+import { Logger } from "../Utils/Logger";
 import {
   __private,
   _decorator,
@@ -75,13 +76,13 @@ export class ComponentManager extends SingletonComponent {
       siblingTop &&
         (this.setNodeSiblingTop(this._uiMap[absUiName], parentNode),
         (this._uiMap[absUiName].active = true));
-      // console.log(
+      // Logger.log(
       //   `已有相同名称<${absUiName}>的UI节点！${
       //     siblingTop ? "已" : "不"
       //   }处理渲染层级到最顶层!`
       // );
       // // 打印信息
-      // console.log(`uiMap-->`, this._uiMap);
+      // Logger.log(`uiMap-->`, this._uiMap);
       return [
         this._uiMap[absUiName],
         this._uiMap[absUiName].getComponent(constructor) as T,
@@ -95,7 +96,7 @@ export class ComponentManager extends SingletonComponent {
       // 实例化预制体
       const node: Node = (this._uiMap[absUiName] = instantiate(prefab));
       // // NOTE: 直接用类引用添加组件（避免 release 构建类名被混淆导致找不到组件）
-      // console.log(
+      // Logger.log(
       //   `TEST [ComponentManager] Add component:${js.getClassName(constructor)}`,
       // );
       try {
@@ -106,23 +107,23 @@ export class ComponentManager extends SingletonComponent {
         // 挂载到父节点
         parentNode.addChild(node);
         // // 打印信息
-        // console.log(`uiMap-->`, this.UIMap);
+        // Logger.log(`uiMap-->`, this.UIMap);
         return [node, component, true];
       } catch (error) {
         const err = error as Error;
-        console.error(`[ComponentManager] Add component failed:${err.message}`);
+        Logger.error(`[ComponentManager] Add component failed:${err.message}`);
         // 挂载到父节点
         parentNode.addChild(node);
         // // 打印信息
-        // console.log(`uiMap-->`, this._uiMap);
+        // Logger.log(`uiMap-->`, this._uiMap);
         return [null, null, null];
       }
     } else {
-      console.error(
+      Logger.error(
         `[ComponentManager] Prefab not exist, pkgName: ${pkgName}, path: ${path}`,
       );
       // // 打印信息
-      // console.log(`uiMap-->`, this._uiMap);
+      // Logger.log(`uiMap-->`, this._uiMap);
       return [null, null, null];
     }
   }

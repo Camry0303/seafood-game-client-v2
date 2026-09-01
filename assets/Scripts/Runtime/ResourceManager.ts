@@ -1,3 +1,4 @@
+import { Logger } from "../Utils/Logger";
 import {
   __private,
   _decorator,
@@ -26,7 +27,7 @@ export class ResourceManager extends SingletonComponent {
   /** 详细日志输出（受 verboseLog 开关控制） */
   private static log(...args: unknown[]): void {
     if (ResourceManager.verboseLog) {
-      console.log(...args);
+      Logger.log(...args);
     }
   }
 
@@ -66,7 +67,7 @@ export class ResourceManager extends SingletonComponent {
   private loadAssetsBundle(abName: string, completeFunc: Function): void {
     assetManager.loadBundle(abName, (err, bundle) => {
       if (err) {
-        console.error(
+        Logger.error(
           `[ResourceManager] loadAssetsBundle <${abName}> failed: ${err}`
         );
         this._assetsBundle[abName] = null;
@@ -116,7 +117,7 @@ export class ResourceManager extends SingletonComponent {
     assetsBundle.load(url, typeClass, (error, asset) => {
       this._loaded++;
       if (error) {
-        console.error(`[ResourceManager] loadAsset <${url}> failed: ${error}`);
+        Logger.error(`[ResourceManager] loadAsset <${url}> failed: ${error}`);
       } else {
         const clazz = asset.constructor;
         ResourceManager.log(
@@ -191,7 +192,7 @@ export class ResourceManager extends SingletonComponent {
     if (bundle) {
       return bundle.get(url) as T;
     } else {
-      console.error(
+      Logger.error(
         `[ResourceManager] getAsset <${url}> failed: bundle <${abName}> is null`
       );
     }

@@ -1,4 +1,5 @@
 import { _decorator, instantiate, Node, Prefab } from "cc";
+import { Logger } from "../../../Utils/Logger";
 import { ComponentController } from "../../../Common/ComponentController";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
 import { ResourceManager } from "../../../Runtime/ResourceManager";
@@ -118,7 +119,7 @@ export class DicesGameRobotUI_Component extends ComponentController {
    * @param event
    */
   private onAddBtnClick(event: Event) {
-    console.log(`onAddBtnClick--->`);
+    Logger.log(`onAddBtnClick--->`);
     const roomData =
       GlobalData.Instance.getCurrentGameInfo<Gateway.Returned.Games.DicesGame.ClubDicesGameRoomData>()
         ?.game_room_data;
