@@ -1,5 +1,5 @@
-import { Socket } from "socket.io-client";
 import { Logger } from "../../Utils/Logger";
+import { Socket } from "socket.io-client";
 import { Gateway } from "../../Types/typing";
 import SocketManager from "./SocketManager";
 import { ComponentManager } from "../../Runtime/ComponentManager";

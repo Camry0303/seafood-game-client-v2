@@ -1,5 +1,5 @@
-import { _decorator, Label, Node, Event } from "cc";
 import { Logger } from "../../../Utils/Logger";
+import { _decorator, Label, Node, Event } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import { Gateway } from "../../../Types/gateway";
 import moment from "moment";

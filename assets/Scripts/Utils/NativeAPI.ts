@@ -1,5 +1,5 @@
-import { native, game } from "cc";
 import { Logger } from "./Logger";
+import { native, game } from "cc";
 import WeChatLoginService from "./WeChatLoginService";
 import {
   ANDROID_LOCATION_STATUS,

@@ -1,5 +1,5 @@
-import { AudioClip, AudioSource, Button, EventTouch, _decorator } from "cc";
 import { Logger } from "../Utils/Logger";
+import { AudioClip, AudioSource, Button, EventTouch, _decorator } from "cc";
 import { SingletonComponent } from "../Common/SingletonComponent";
 import { Config } from "../Types/typing";
 import { ResourceManager } from "./ResourceManager";

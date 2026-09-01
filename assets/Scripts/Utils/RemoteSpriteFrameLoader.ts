@@ -1,5 +1,5 @@
-import { assetManager, ImageAsset, SpriteFrame, Texture2D } from "cc";
 import { Logger } from "./Logger";
+import { assetManager, ImageAsset, SpriteFrame, Texture2D } from "cc";
 import { ResourceManager } from "../Runtime/ResourceManager";
 import { GlobalData } from "../Runtime/GlobalData";
 

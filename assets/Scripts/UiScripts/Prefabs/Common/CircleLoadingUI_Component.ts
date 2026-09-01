@@ -1,5 +1,5 @@
-import { _decorator, Node, Tween, tween } from "cc";
 import { Logger } from "../../../Utils/Logger";
+import { _decorator, Node, Tween, tween } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
 const { ccclass, menu } = _decorator;

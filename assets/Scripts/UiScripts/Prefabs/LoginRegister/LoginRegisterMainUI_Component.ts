@@ -1,5 +1,5 @@
-import { _decorator, sys, Event, Toggle, Node } from "cc";
 import { Logger } from "../../../Utils/Logger";
+import { _decorator, sys, Event, Toggle, Node } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import { SoundsManager } from "../../../Runtime/SoundsManager";
 import { ComponentManager } from "../../../Runtime/ComponentManager";

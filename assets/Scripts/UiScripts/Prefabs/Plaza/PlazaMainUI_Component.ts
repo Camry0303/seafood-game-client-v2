@@ -1,5 +1,5 @@
-import { _decorator, Event, Label, native, Node, sys } from "cc";
 import { Logger } from "../../../Utils/Logger";
+import { _decorator, Event, Label, native, Node, sys } from "cc";
 import { SoundsManager } from "../../../Runtime/SoundsManager";
 import { ComponentController } from "../../../Common/ComponentController";
 import { GlobalData } from "../../../Runtime/GlobalData";

@@ -1,5 +1,5 @@
-import { _decorator, instantiate, Node, Prefab, Toggle } from "cc";
 import { Logger } from "../../../Utils/Logger";
+import { _decorator, instantiate, Node, Prefab, Toggle } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import BubbleWindow from "../../../Common/BubbleWindow";
 import { ComponentManager } from "../../../Runtime/ComponentManager";

@@ -1,5 +1,5 @@
-import { _decorator, Event, Label, Node, sys, UITransform } from "cc";
 import { Logger } from "../../../Utils/Logger";
+import { _decorator, Event, Label, Node, sys, UITransform } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import { DicesGameMainUI_Component } from "./DicesGameMainUI_Component";
 import { GlobalData } from "../../../Runtime/GlobalData";

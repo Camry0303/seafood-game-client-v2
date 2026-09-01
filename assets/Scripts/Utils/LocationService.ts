@@ -1,5 +1,5 @@
-import { native, sys } from "cc";
 import { Logger } from "./Logger";
+import { native, sys } from "cc";
 import { Common } from "../Types/typing";
 import NativeAPI from "./NativeAPI";
 import { ANDROID_LOCATION_STATUS, IOS_LOCATION_STATUS } from "../Enums";

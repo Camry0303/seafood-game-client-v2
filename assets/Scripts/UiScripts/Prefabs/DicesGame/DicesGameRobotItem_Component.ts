@@ -1,5 +1,5 @@
-import { _decorator, Button, Label, Node, Sprite } from "cc";
 import { Logger } from "../../../Utils/Logger";
+import { _decorator, Button, Label, Node, Sprite } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import { getAvatarSpriteFrame } from "../../../Utils/RemoteSpriteFrameLoader";
 import { Gateway } from "../../../Types/gateway";

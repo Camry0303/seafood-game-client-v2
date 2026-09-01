@@ -1,5 +1,5 @@
-import { Socket } from "socket.io-client";
 import { Logger } from "../../Utils/Logger";
+import { Socket } from "socket.io-client";
 import { CLUB_DICES_GAME_EVENT } from "../../Enums/Events/DicesGame";
 import { Gateway } from "../../Types/gateway";
 import SocketManager from "./SocketManager";

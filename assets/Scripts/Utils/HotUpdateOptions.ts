@@ -1,5 +1,5 @@
-import { HotUpdate } from "../Types/typing";
 import { Logger } from "./Logger";
+import { HotUpdate } from "../Types/typing";
 
 /**
  * 热更新参数类

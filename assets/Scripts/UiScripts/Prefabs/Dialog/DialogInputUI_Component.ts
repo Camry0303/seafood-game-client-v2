@@ -1,5 +1,5 @@
-import {
 import { Logger } from "../../../Utils/Logger";
+import {
   _decorator,
   Event,
   EditBox,

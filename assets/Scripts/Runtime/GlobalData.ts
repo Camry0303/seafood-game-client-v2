@@ -1,5 +1,6 @@
 import moment from "moment";
 import Singleton from "../Common/Singleton";
+import { Logger } from "../Utils/Logger";
 import { Common, Gateway } from "../Types/typing";
 import { game, sys } from "cc";
 import CommonDailogHandler from "../Utils/CommonDailogHandler";
@@ -16,6 +17,12 @@ export class GlobalData extends Singleton {
     return super.GetInstance<GlobalData>();
   }
 
+  constructor() {
+    super();
+    // 单例构造时把当前日志开关同步给 Logger（字段字面量可能已被改为 true）
+    Logger.setEnabled(this._enableConsoleLog);
+  }
+
   /**
    * 是否是本地开发环境
    * //NOTE - 切换是否本地开发环境
@@ -27,7 +34,17 @@ export class GlobalData extends Singleton {
    * 生产环境设为 false 关闭全部日志，避免刷屏与信息泄露。
    * //NOTE - 切换是否打印日志
    */
-  public enableConsoleLog: boolean = false;
+  private _enableConsoleLog: boolean = false;
+
+  public get enableConsoleLog(): boolean {
+    return this._enableConsoleLog;
+  }
+
+  public set enableConsoleLog(value: boolean) {
+    this._enableConsoleLog = value;
+    // 同步到 Logger（通过 globalThis 桥接，避免循环依赖）
+    Logger.setEnabled(value);
+  }
 
   //#region 版本号信息
   /**

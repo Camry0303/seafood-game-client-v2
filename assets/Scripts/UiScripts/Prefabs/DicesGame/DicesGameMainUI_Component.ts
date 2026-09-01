@@ -1,5 +1,5 @@
-import { _decorator, Node } from "cc";
 import { Logger } from "../../../Utils/Logger";
+import { _decorator, Node } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import { DicesGameTopStatusBar_Component } from "./DicesGameTopStatusBar_Component";
 import { DicesGameBottomStatusBar_Component } from "./DicesGameBottomStatusBar_Component";

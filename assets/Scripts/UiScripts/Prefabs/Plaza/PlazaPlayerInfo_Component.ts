@@ -1,5 +1,5 @@
-import { _decorator, Event, Label, native, Sprite, sys } from "cc";
 import { Logger } from "../../../Utils/Logger";
+import { _decorator, Event, Label, native, Sprite, sys } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import { getAvatarSpriteFrame } from "../../../Utils/RemoteSpriteFrameLoader";
 import { Gateway } from "../../../Types/typing";

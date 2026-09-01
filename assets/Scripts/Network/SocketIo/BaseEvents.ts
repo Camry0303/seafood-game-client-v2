@@ -1,5 +1,5 @@
-import { Socket } from "socket.io-client";
 import { Logger } from "../../Utils/Logger";
+import { Socket } from "socket.io-client";
 
 import { ComponentManager } from "../../Runtime/ComponentManager";
 import { LoginRegisterMainUI_Component } from "../../UiScripts/Prefabs/LoginRegister/LoginRegisterMainUI_Component";

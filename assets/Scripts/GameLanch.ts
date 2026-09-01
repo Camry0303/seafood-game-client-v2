@@ -1,5 +1,5 @@
-import { _decorator, Component, game, Game as CCGame, Asset } from "cc";
 import { Logger } from "./Utils/Logger";
+import { _decorator, Component, game, Game as CCGame, Asset } from "cc";
 import { ResourceManager } from "./Runtime/ResourceManager";
 import { ComponentManager } from "./Runtime/ComponentManager";
 import { Game } from "./UiScripts/Game";

@@ -1,5 +1,5 @@
-import { _decorator, EditBox, Label, Sprite } from "cc";
 import { Logger } from "../../../Utils/Logger";
+import { _decorator, EditBox, Label, Sprite } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
 import BubbleWindow from "../../../Common/BubbleWindow";

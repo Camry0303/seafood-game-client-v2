@@ -1,5 +1,5 @@
-import { _decorator, Label, Node, Vec3 } from "cc";
 import { Logger } from "../../../Utils/Logger";
+import { _decorator, Label, Node, Vec3 } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import { DicesGameMainUI_Component } from "./DicesGameMainUI_Component";
 import { DicesGamePlayerSeat_Component } from "./DicesGamePlayerSeat_Component";

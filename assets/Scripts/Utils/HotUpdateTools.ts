@@ -1,5 +1,5 @@
-import { Asset, assetManager, native, sys } from "cc";
 import { Logger } from "./Logger";
+import { Asset, assetManager, native, sys } from "cc";
 import { HotOptions } from "./HotUpdateOptions";
 
 export default class HotUpdateTools {

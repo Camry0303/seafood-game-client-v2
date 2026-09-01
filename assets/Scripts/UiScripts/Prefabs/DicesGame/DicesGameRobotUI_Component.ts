@@ -1,5 +1,5 @@
-import { _decorator, instantiate, Node, Prefab } from "cc";
 import { Logger } from "../../../Utils/Logger";
+import { _decorator, instantiate, Node, Prefab } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import { ComponentManager } from "../../../Runtime/ComponentManager";
 import { ResourceManager } from "../../../Runtime/ResourceManager";

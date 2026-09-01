@@ -1,5 +1,5 @@
-import { _decorator, Label, Node, Toggle, ToggleContainer, Event } from "cc";
 import { Logger } from "../../../Utils/Logger";
+import { _decorator, Label, Node, Toggle, ToggleContainer, Event } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import BubbleWindow from "../../../Common/BubbleWindow";
 import { ComponentManager } from "../../../Runtime/ComponentManager";

@@ -1,5 +1,5 @@
-import { native, sys } from "cc";
 import { Logger } from "./Logger";
+import { native, sys } from "cc";
 import { ComponentManager } from "../Runtime/ComponentManager";
 import CryptoUtils from "./CryptoUtils";
 import moment from "moment";
