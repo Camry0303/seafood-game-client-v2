@@ -188,6 +188,11 @@ export class CircleLoadingUI_Component extends ComponentController {
   private _refreshVisibility() {
     const hasRealLoading = this._waitings.size > 0;
     this.node.active = hasRealLoading;
+    // 懒加载遮罩精灵：避免 onLoad 延迟（首次 addComponent 时）导致 _maskSprite 为 null、
+    // 静默分支未能禁用遮罩而一闪。getNode 在节点已挂载时同步可用。
+    if (!this._maskSprite) {
+      this._maskSprite = this.getNode("MaskNode")?.getComponent(Sprite) || null;
+    }
     if (this._maskSprite) {
       this._maskSprite.enabled = hasRealLoading;
     }

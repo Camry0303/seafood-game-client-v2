@@ -53,6 +53,8 @@ export default class CommonDailogHandler {
         "Prefabs",
         "Common/CircleLoadingUI",
         CircleLoadingUI_Component,
+        // silent 模式下不置顶/不激活节点，避免 renderUiNode 强制 active=true 导致遮罩一闪
+        !options?.silent,
       );
     uiComponent.show(waiting, callback, options?.silent);
   }
@@ -68,6 +70,8 @@ export default class CommonDailogHandler {
         "Prefabs",
         "Common/CircleLoadingUI",
         CircleLoadingUI_Component,
+        // 取已存在节点即可，不激活（显隐由组件 _refreshVisibility 收口）
+        false,
       );
     uiComponent.hide(waiting, callback);
   }
