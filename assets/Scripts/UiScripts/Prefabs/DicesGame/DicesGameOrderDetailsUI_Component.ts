@@ -131,20 +131,25 @@ export class DicesGameOrderDetailsUI_Component extends ComponentController {
     const nodes: Node[] = [];
     let playerNode: Node = null;
 
-    // 非管理/副管理仅渲染本玩家订单
+    // 非管理/副管理仅能查看本玩家订单：循环前先过滤出可渲染的 key，统一过滤口径
     const privileged = this.isOrderViewerPrivileged();
     const currentPlayerId = GlobalData.Instance.getCurrentPlayerInfo()?.id;
-
+    const renderKeys: string[] = [];
     for (const key in data) {
       const keys = key.split("-");
+      const playerId = keys[1];
+      // 关键为 seat_code-player_id，非特权查看者仅保留本玩家订单
+      if (!privileged && playerId !== String(currentPlayerId)) continue;
+      renderKeys.push(key);
+    }
+
+    for (const key of renderKeys) {
+      const keys = key.split("-");
       const seat_code = keys[0];
-      const player_id = keys[1];
       const seat = seatsData[seat_code];
       // 座位数据缺失（如 seats 未同步）时跳过，避免 seat.player 崩溃导致整面板无渲染
       if (!seat || !seat.player) continue;
       const player = seat.player;
-      // 非特权查看者：仅渲染本玩家订单，跳过其它玩家
-      if (!privileged && player.player_id !== currentPlayerId) continue;
       const gameOrders = data[key];
       const node = instantiate(prefab);
       const component = node.addComponent(DicesGameOrderDetailsItem_Component);
