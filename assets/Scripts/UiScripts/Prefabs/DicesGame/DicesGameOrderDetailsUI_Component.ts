@@ -7,6 +7,7 @@ import { DicesGameOrderDetailsItem_Component } from "./DicesGameOrderDetailsItem
 import { GlobalData } from "../../../Runtime/GlobalData";
 import { DicesGameMainUI_Component } from "./DicesGameMainUI_Component";
 import { Gateway } from "../../../Types/gateway";
+import { CLUB_PLAYER_ROLE } from "../../../Enums";
 const { ccclass, menu } = _decorator;
 
 @ccclass("DicesGameOrderDetailsUI_Component")
@@ -67,6 +68,15 @@ export class DicesGameOrderDetailsUI_Component extends ComponentController {
   }
 
   /**
+   * 当前查看者是否有权查看全员订单（管理/副管理）
+   * 仅 ADMIN / SUB_ADMIN 可看到所有玩家的下注详情，其它角色只看本人订单。
+   */
+  private isOrderViewerPrivileged(): boolean {
+    const role = GlobalData.Instance.getCurrentClubPlayerInfo()?.role;
+    return role === CLUB_PLAYER_ROLE.ADMIN || role === CLUB_PLAYER_ROLE.SUB_ADMIN;
+  }
+
+  /**
    * 关闭弹窗
    */
   public close() {
@@ -121,6 +131,10 @@ export class DicesGameOrderDetailsUI_Component extends ComponentController {
     const nodes: Node[] = [];
     let playerNode: Node = null;
 
+    // 非管理/副管理仅渲染本玩家订单
+    const privileged = this.isOrderViewerPrivileged();
+    const currentPlayerId = GlobalData.Instance.getCurrentPlayerInfo()?.id;
+
     for (const key in data) {
       const keys = key.split("-");
       const seat_code = keys[0];
@@ -129,6 +143,8 @@ export class DicesGameOrderDetailsUI_Component extends ComponentController {
       // 座位数据缺失（如 seats 未同步）时跳过，避免 seat.player 崩溃导致整面板无渲染
       if (!seat || !seat.player) continue;
       const player = seat.player;
+      // 非特权查看者：仅渲染本玩家订单，跳过其它玩家
+      if (!privileged && player.player_id !== currentPlayerId) continue;
       const gameOrders = data[key];
       const node = instantiate(prefab);
       const component = node.addComponent(DicesGameOrderDetailsItem_Component);
@@ -170,6 +186,13 @@ export class DicesGameOrderDetailsUI_Component extends ComponentController {
       };
       component.onOrderCreated(order);
     } else {
+      // 非管理/副管理仅渲染本玩家订单：其它玩家的新订单不创建节点
+      if (
+        !this.isOrderViewerPrivileged() &&
+        data.player_id !== GlobalData.Instance.getCurrentPlayerInfo()?.id
+      ) {
+        return;
+      }
       // 座位数据未就绪（如新一局刚清空、尚未重新 setData）时跳过，
       // 避免访问 null 的 _seatsData 或 seat.player 导致崩溃
       if (!this._seatsData) return;
