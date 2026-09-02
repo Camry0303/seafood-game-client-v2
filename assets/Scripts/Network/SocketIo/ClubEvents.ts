@@ -40,6 +40,7 @@ export default class ClubEvents {
     [CLUB_EVENT.CREATE_CLUB_RESULT, this.onCreateClubResult],
     [CLUB_EVENT.JOIN_CLUB_BY_ID_RESULT, this.onJoinClubByIdResult],
     [CLUB_EVENT.QUIT_CLUB_RESULT, this.onQuitClubResult],
+    [CLUB_EVENT.DISMISS_CLUB_RESULT, this.onDismissClubResult],
     [CLUB_EVENT.ENTER_CLUB_RESULT, this.onEnterClubResult],
     [CLUB_EVENT.LEAVE_CLUB_RESULT, this.onLeaveClubResult],
 
@@ -299,6 +300,48 @@ export default class ClubEvents {
       CommonDailogHandler.showBubbleMessage(`${msg}`);
     }
     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.QUIT_CLUB);
+  }
+
+  /**
+   * 解散俱乐部
+   */
+  public static dismissClub() {
+    const socket = SocketManager.Instance.SocketInstance;
+    if (socket) {
+      CommonDailogHandler.showCircleLoading(WAITING_TYPE.DISMISS_CLUB);
+      socket.emit(CLUB_EVENT.DISMISS_CLUB);
+    } else {
+      CommonDailogHandler.showDialogMessage(`错误：Socket实例不存在!`);
+      CommonDailogHandler.hideCircleLoading(WAITING_TYPE.DISMISS_CLUB);
+    }
+  }
+
+  /**
+   * 处理解散俱乐部结果事件
+   * @param returnData
+   */
+  private static onDismissClubResult(
+    returnData: Gateway.Returned.Common.Result<any>,
+  ) {
+    Logger.log("<ClubEvent> onDismissClubResult called --->", returnData);
+    const { code, msg } = returnData;
+    if (code === RESPONE_RESULT.SUCCESS) {
+      CommonDailogHandler.showBubbleMessage(`俱乐部已解散`);
+      // 不走 ClubMainUI.close()（其会触发 leaveClub），直接销毁当前俱乐部相关界面
+      ComponentManager.Instance.destroyNodeByName("ClubSettingUI");
+      ComponentManager.Instance.destroyNodeByName("ClubMainUI");
+      // 重新进入俱乐部界面以刷新列表（onLoad 内已拉取列表）
+      ComponentManager.Instance.renderUiNode<ClubMainUI_Component>(
+        "ClubMainUI",
+        "Prefabs",
+        "Club/ClubMainUI",
+        ClubMainUI_Component,
+      );
+    } else {
+      // 连接失败，弹出提示框
+      CommonDailogHandler.showBubbleMessage(`${msg}`);
+    }
+    CommonDailogHandler.hideCircleLoading(WAITING_TYPE.DISMISS_CLUB);
   }
 
   /**

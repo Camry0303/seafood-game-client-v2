@@ -374,7 +374,17 @@ export class ClubSettingUI_Component extends ComponentController {
    * @param event
    */
   private onDissolveBtnClick(event: Event) {
-    Logger.log(`onDissolveBtnClick--->`);
+    // 危险操作，先二次确认
+    CommonDailogHandler.showSmallDialogConfirm(
+      `确定要解散该俱乐部吗？此操作不可恢复！`,
+      () => {
+        // 确认：发起解散请求
+        ClubEvents.dismissClub();
+      },
+      () => {
+        // 取消：不做处理
+      },
+    );
   }
   //#endregion
 }

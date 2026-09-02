@@ -14,6 +14,9 @@ export enum CLUB_EVENT {
   QUIT_CLUB = "Club.QuitClub",
   QUIT_CLUB_RESULT = "Club.QuitClub.Result",
 
+  DISMISS_CLUB = "Club.DismissClub",
+  DISMISS_CLUB_RESULT = "Club.DismissClub.Result",
+
   ENTER_CLUB = "Club.EnterClub",
   ENTER_CLUB_RESULT = "Club.EnterClub.Result",
 
