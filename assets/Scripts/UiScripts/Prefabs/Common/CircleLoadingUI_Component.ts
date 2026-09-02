@@ -1,5 +1,5 @@
 import { Logger } from "../../../Utils/Logger";
-import { _decorator, Node, Tween, tween } from "cc";
+import { _decorator, Node, Sprite, Tween, tween } from "cc";
 import { ComponentController } from "../../../Common/ComponentController";
 import CommonDailogHandler from "../../../Utils/CommonDailogHandler";
 const { ccclass, menu } = _decorator;
@@ -68,7 +68,7 @@ export enum WAITING_TYPE {
   GET_GAME_STATUS = "正在获取游戏状态",
   SET_DEALER = "正在设置庄家",
   START_GAME = "正在开始游戏",
-  CREATE_ORDER = "正在下注",
+  CREATE_ORDER = "太快了，请点慢一点",
   DEBUG_MODE = "正在进入调试模式",
   SET_DEBUG_RESULT = "正在设置调试结果",
 
@@ -87,6 +87,12 @@ export class CircleLoadingUI_Component extends ComponentController {
    * 圈圈节点
    */
   private _circleLoadingNode: Node = null;
+
+  /**
+   * 遮罩图片精灵（MaskNode 上的全屏遮罩，闪屏的视觉来源）
+   * silent 模式下置 enabled=false 隐藏遮罩，避免一闪而过
+   */
+  private _maskSprite: Sprite = null;
 
   /**
    * 等待队列（真实 loading：需要显示蒙版/旋转动画）
@@ -111,6 +117,7 @@ export class CircleLoadingUI_Component extends ComponentController {
     super.onLoad();
     this.printNodeMap();
     this._circleLoadingNode = this.getNode("Loading");
+    this._maskSprite = this.getNode("MaskNode").getComponent(Sprite);
     this.node.on(Node.EventType.TOUCH_END, this.onTouchEnd.bind(this));
   }
 
@@ -148,6 +155,7 @@ export class CircleLoadingUI_Component extends ComponentController {
     if (silent) {
       this._silentWaitings.add(waiting as WAITING_TYPE);
       // Logger.log(`show(silent)-->`, this._silentWaitings, waiting);
+      this._refreshVisibility();
       if (callback) {
         callback();
       }
@@ -157,7 +165,8 @@ export class CircleLoadingUI_Component extends ComponentController {
     this._waitings.add(waiting as WAITING_TYPE);
     // Logger.log(`show-->`, this._waitings, waiting);
 
-    this.node.active = true;
+    // 仅当存在真实（非 silent）loading 才显示根节点与遮罩
+    this._refreshVisibility();
 
     // 如果是第一个等待任务，开始旋转动画
     if (this._waitings.size === 1) {
@@ -166,6 +175,21 @@ export class CircleLoadingUI_Component extends ComponentController {
 
     if (callback) {
       callback();
+    }
+  }
+
+  /**
+   * 根据当前等待队列刷新根节点显隐与遮罩精灵可见性。
+   * 只有存在真实（非 silent）loading（_waitings.size > 0）时才显示蒙版，
+   * 纯 silent 场景下根节点保持隐藏，避免遮罩一闪而过。
+   * 注意：renderUiNode 在用 siblingTop 取节点时会把根节点 active 置 true，
+   * 故这里统一在 show/hide 末尾收口，确保 silent 不残留显示。
+   */
+  private _refreshVisibility() {
+    const hasRealLoading = this._waitings.size > 0;
+    this.node.active = hasRealLoading;
+    if (this._maskSprite) {
+      this._maskSprite.enabled = hasRealLoading;
     }
   }
 
@@ -190,8 +214,8 @@ export class CircleLoadingUI_Component extends ComponentController {
     // 仅当真实 loading 队列清空时才关闭蒙版（silent 项不影响显隐）
     if (this._waitings.size == 0) {
       this.stopRotateAnimation();
-      this.node.active = false;
     }
+    this._refreshVisibility();
 
     if (callback) {
       callback();
