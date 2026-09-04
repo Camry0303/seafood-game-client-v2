@@ -12,11 +12,15 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
 
   private _titleToggleContainer: ToggleContainer = null;
 
+  private _pendingTitle: string = null;
+
   private _valueNode: Node = null;
 
   private _confirmCallback: Function = null;
 
   private _numDigits: number = 0;
+
+  private _isConfirmed: boolean = false;
 
   private _valueString: string = "";
 
@@ -26,7 +30,6 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
 
   protected onLoad(): void {
     super.onLoad();
-    this.printNodeMap();
 
     // 挂载气泡弹窗组件
     this._bubbleWindow = this.node
@@ -39,6 +42,15 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
     );
 
     this._valueNode = this.getNode("MainView/Content/Layout/Value");
+
+    // _titleToggleContainer 已就绪，应用待处理的标题高亮（若已设置）
+    if (this._pendingTitle) {
+      this.applyTitle(this._pendingTitle);
+      this._pendingTitle = null;
+    }
+
+    // 兜底：新实例/重开时确保输入区为空
+    this.resetInput();
 
     this.initButtons();
   }
@@ -97,6 +109,23 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
   }
 
   /**
+   * 重置输入状态（清空内容并允许再次提交），作为关闭后重开的兜底。
+   * _valueNode 未就绪时只重置字段，显示清空由 onLoad 内再次调用兜底。
+   */
+  private resetInput() {
+    this._valueString = "";
+    this._isConfirmed = false;
+    if (this._valueNode) {
+      this._valueNode.children.forEach((node) => {
+        const label = node.getChildByName("Label")?.getComponent(Label);
+        if (label) {
+          label.string = "";
+        }
+      });
+    }
+  }
+
+  /**
    * 设置小键盘弹窗内容
    * @param message
    * @param callback
@@ -116,10 +145,33 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
   ) {
     this._numDigits = numDigits;
     this._confirmCallback = callback;
+    // onLoad 为延迟执行，_titleToggleContainer 此时可能尚未赋值，
+    // 先缓存标题，待 onLoad 内再应用，避免同步访问抛错。
+    this._pendingTitle = title;
+    if (this._titleToggleContainer) {
+      this.applyTitle(title);
+    }
+    // 兜底：关闭后重开清空上次输入（_valueNode 未就绪时仅重置字段，显示由 onLoad 内兜底）
+    this.resetInput();
+  }
+
+  /**
+   * 应用标题高亮（需在 _titleToggleContainer 就绪后调用）
+   */
+  private applyTitle(title: string) {
+    if (!this._titleToggleContainer) {
+      return;
+    }
     const titleNode = this._titleToggleContainer.node.children.find(
       (node) => node.name === title,
     );
+    if (!titleNode) {
+      return;
+    }
     const titleToggle = titleNode.getComponent(Toggle);
+    if (!titleToggle) {
+      return;
+    }
     titleToggle.isChecked = true;
     this._titleToggleContainer.notifyToggleCheck(titleToggle);
   }
@@ -129,14 +181,18 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
    * @param event
    * @param num
    */
-  private onNumBtnClick(event: Event, num: number) {
+  public onNumBtnClick(event: Event, num: string) {
+    if (this._isConfirmed) {
+      return;
+    }
     // 限制输入长度
     if (this._valueString.length >= this._numDigits) {
       return;
     }
+    // num 实际是 Button 的 customEventData（字符串 "0"~"9"），直接拼接即可。
+    // 不要用 "".split("")（JS 中返回 [""] 会导致首格空串、末位被裁）。
+    this._valueString += num;
     const valueArr = this._valueString.split("");
-    valueArr.push(num.toString());
-    this._valueString = valueArr.join("");
 
     const valueDigitNodes = this._valueNode.children;
 
@@ -154,7 +210,10 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
    * 清除按钮点击事件
    * @param event
    */
-  private onClearBtnClick(event: Event) {
+  public onClearBtnClick(event: Event) {
+    if (this._isConfirmed) {
+      return;
+    }
     this._valueString = "";
     const valueDigitNodes = this._valueNode.children;
     valueDigitNodes.forEach((node) => {
@@ -165,7 +224,15 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
   /**
    * 完成输入
    */
-  private onInputFinish() {
+  public onInputFinish() {
+    if (this._isConfirmed) {
+      return;
+    }
+    this._isConfirmed = true;
+    if (typeof this._confirmCallback !== "function") {
+      console.error("[DialogMiniKeyboardUI] confirmCallback 未设置，无法提交输入");
+      return;
+    }
     const value = this._valueString;
     if (!value.trim()) {
       CommonDailogHandler.showBubbleMessage("请输入有效数字！");
