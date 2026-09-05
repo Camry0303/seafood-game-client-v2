@@ -9,6 +9,8 @@ export default class BubbleWindow extends Component {
   private _openTween: Tween = null;
   private _closeTween: Tween = null;
 
+  private _closeCallback: Function = null;
+
   start() {
     this.open();
   }
@@ -81,6 +83,11 @@ export default class BubbleWindow extends Component {
    * 关闭
    */
   public close(callback?: Function) {
+    // tween 只创建一次，若沿用原写法，首次之后传入的 callback 会被闭包
+    // 丢弃（闭包捕获的是创建时的值）。这里改为存字段，执行时读取最新值。
+    if (callback) {
+      this._closeCallback = callback;
+    }
     if (this._closeTween) {
       this._closeTween.stop();
     } else {
@@ -96,7 +103,10 @@ export default class BubbleWindow extends Component {
           // 停止当前动画
           this._closeTween.stop();
           this.node.active = false;
-          if (callback) callback();
+          // 取最新回调并在执行前置空，避免重复触发时回调被执行多次
+          const closeCallback = this._closeCallback;
+          this._closeCallback = null;
+          if (closeCallback) closeCallback();
         });
     }
     this._closeTween.start();

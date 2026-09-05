@@ -22,6 +22,8 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
 
   private _isConfirmed: boolean = false;
 
+  private _isClosing: boolean = false;
+
   private _valueString: string = "";
 
   start() {}
@@ -103,6 +105,12 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
    * 关闭弹窗
    */
   public close() {
+    // 幂等保护：关闭动画期间重复点 Close/Mask 会让 BubbleWindow 复用同一
+    // tween（只 stop 不重建）并丢弃新回调，导致动画反复启停，这里直接忽略。
+    if (this._isClosing) {
+      return;
+    }
+    this._isClosing = true;
     this._bubbleWindow.close(() => {
       ComponentManager.Instance.destroyNode(this.node);
     });
@@ -115,6 +123,7 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
   private resetInput() {
     this._valueString = "";
     this._isConfirmed = false;
+    this._isClosing = false;
     if (this._valueNode) {
       this._valueNode.children.forEach((node) => {
         const label = node.getChildByName("Label")?.getComponent(Label);
@@ -228,7 +237,6 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
     if (this._isConfirmed) {
       return;
     }
-    this._isConfirmed = true;
     if (typeof this._confirmCallback !== "function") {
       console.error("[DialogMiniKeyboardUI] confirmCallback 未设置，无法提交输入");
       return;
@@ -238,6 +246,9 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
       CommonDailogHandler.showBubbleMessage("请输入有效数字！");
       return;
     }
+    // 仅在校验通过、真正提交后才置位：空输入只提示，
+    // 不应锁死键盘导致用户此后无法继续输入。
+    this._isConfirmed = true;
     this._confirmCallback(value);
     this.close();
   }
