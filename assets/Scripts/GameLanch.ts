@@ -7,9 +7,8 @@ import { SoundsManager } from "./Runtime/SoundsManager";
 import { HotUpdateUI_Component } from "./UiScripts/Prefabs/Entrance/HotUpdateUI_Component";
 import SocketManager from "./Network/SocketIo/SocketManager";
 import NativeAPI from "./Utils/NativeAPI";
-import { GlobalData } from "./Runtime/GlobalData";
-import { DicesGameMainUI_Component } from "./UiScripts/Prefabs/DicesGame/DicesGameMainUI_Component";
-import DicesGameEvents from "./Network/SocketIo/DicesGameEvents";
+import BaseEvents from "./Network/SocketIo/BaseEvents";
+import PlazaEvents from "./Network/SocketIo/PlazaEvents";
 const { ccclass, property } = _decorator;
 
 /**
@@ -17,13 +16,27 @@ const { ccclass, property } = _decorator;
  */
 @ccclass("GameLanch")
 export class GameLanch extends Component {
+  /**
+   * 后台停留超过该时长（毫秒）则强制重连，用于规避"假连接"
+   */
+  private static readonly FORCE_RECONNECT_THRESHOLD = 30 * 1000;
+
   @property({ type: Asset, tooltip: "热更Manifest文件" })
   Manifest: Asset = null;
+
+  /**
+   * 进入后台的时间戳
+   */
+  private _hideTimestamp: number = 0;
 
   /**
    * 初始化游戏框架的各个模块
    */
   protected onLoad(): void {
+    // 注册"连接恢复后"的业务恢复回调（拉取房间状态等）
+    BaseEvents.setOnReconnectedCallback(() => {
+      PlazaEvents.resumeAfterReconnect();
+    });
     // 监听游戏进入后台事件
     this.listenGameHideEvent();
     // 监听游戏暂停事件
@@ -73,8 +86,11 @@ export class GameLanch extends Component {
    * 监听游戏进入后台事件
    */
   private listenGameHideEvent() {
-    game.on(CCGame.EVENT_HIDE, function () {
+    game.on(CCGame.EVENT_HIDE, () => {
       Logger.log(`游戏进入后台！`);
+      // 记录进入后台的时间，用于回前台判断是否需要强制重连
+      // NOTE - 必须用箭头函数，否则 this 不是组件实例，无法写入 _hideTimestamp
+      this._hideTimestamp = Date.now();
       // 暂停游戏
       game.pause();
     });
@@ -88,9 +104,38 @@ export class GameLanch extends Component {
       Logger.log("游戏回到前台");
       // 恢复游戏
       game.resume();
+      // 后台期间 socket.io 的心跳与重连定时器被系统挂起，
+      // 回前台需主动检测并恢复连接与业务数据
+      this.handleNetworkOnResume();
     });
+  }
 
-    CCGame.EVENT_RESUME;
+  /**
+   * 回到前台后的网络恢复处理
+   */
+  private handleNetworkOnResume() {
+    // 未登录（无 token）无需处理
+    if (!ComponentManager.Instance.getDataFromStorage("token")) {
+      return;
+    }
+    const socket = SocketManager.Instance;
+    if (!socket?.SocketInstance) {
+      return;
+    }
+
+    const duration = Date.now() - this._hideTimestamp;
+    if (
+      duration > GameLanch.FORCE_RECONNECT_THRESHOLD ||
+      !socket.isConnected()
+    ) {
+      // 后台过久或当前未连接：强制重连（"假连接"也必须走这里重建）
+      Logger.log(`回到前台，后台时长 ${duration}ms，强制重连！`);
+      socket.forceReconnect();
+      return;
+    }
+
+    // 连接仍正常：只需刷新业务数据
+    PlazaEvents.resumeAfterReconnect();
   }
 
   /**
@@ -108,26 +153,9 @@ export class GameLanch extends Component {
   private listenGamePauseEvent() {
     game.on(CCGame.EVENT_PAUSE, () => {
       Logger.log("在此处理暂停逻辑（如暂停音效、动画等）");
-      // 判断socket是否连接
-      if (SocketManager.Instance.SocketInstance?.connected) {
-        const [dicesGameNode, dicesGameComponent] =
-          ComponentManager.Instance.getNodeComponent(
-            "DicesGameMainUI",
-            DicesGameMainUI_Component,
-          );
-        // 判断是否在骰子游戏场景
-        if (dicesGameNode && dicesGameComponent) {
-          // 判断是否在俱乐部
-          const club = GlobalData.Instance.getCurrentClubInfoDetail();
-          if (club) {
-            // 请求俱乐部骰子游戏状态数据
-            DicesGameEvents.getClubGamingStatus();
-          } else {
-            // // 请求大厅骰子游戏状态数据
-            // DicesGameEvents.getHallGamingStatus();
-          }
-        }
-      }
+      // NOTE - 原先在此请求游戏状态（getClubGamingStatus），时机错误：
+      // 切后台瞬间网络即将中断，请求既发不出也收不回。
+      // 已改为回到前台且连接恢复后，由 PlazaEvents.resumeAfterReconnect() 统一拉取。
     });
   }
 }

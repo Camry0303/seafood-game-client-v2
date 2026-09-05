@@ -12,6 +12,7 @@ import { PLAZA_EVENT } from "../../Enums/Events/Plaza";
 import { ClubMainUI_Component } from "../../UiScripts/Prefabs/Club/ClubMainUI_Component";
 import { InviteUI_Component } from "../../UiScripts/Prefabs/Plaza/InviteUI_Component";
 import ClubEvents from "./ClubEvents";
+import DicesGameEvents from "./DicesGameEvents";
 import { DicesGameMainUI_Component } from "../../UiScripts/Prefabs/DicesGame/DicesGameMainUI_Component";
 
 /**
@@ -465,6 +466,33 @@ export default class PlazaEvents {
   // }
 
   /**
+   * 连接恢复后统一恢复业务数据（供重连成功 / 回到前台检测调用）
+   *
+   * NOTE - 不能用 playerInfo.in_game_type 判断是否在对局中：
+   * onGameReconnectResult 结束时会把它重置为 IN_GAME_TYPE.NONE。
+   * 以"游戏主界面是否已存在"为准最可靠。
+   */
+  public static resumeAfterReconnect() {
+    const [, dicesGameComponent] =
+      ComponentManager.Instance.getNodeComponent(
+        "DicesGameMainUI",
+        DicesGameMainUI_Component,
+      );
+
+    if (dicesGameComponent) {
+      // 已在游戏界面：直接拉取房间状态。
+      // 结果由 onGetClubGamingStatusResult 驱动 updateGameStatus 刷新界面；
+      // 若房间已不存在，服务端返回失败并自动关闭游戏界面。
+      Logger.log("<PlazaEvent> 已在游戏界面，直接获取游戏状态！");
+      DicesGameEvents.getClubGamingStatus();
+      return;
+    }
+
+    // 不在游戏界面：询问服务端当前是否在对局中，是则进入游戏界面
+    PlazaEvents.gameReconnect();
+  }
+
+  /**
    * 游戏重连
    */
   public static gameReconnect() {
@@ -512,8 +540,10 @@ export default class PlazaEvents {
             );
           if (!created) {
             Logger.log(`已在游戏界面，手动获取游戏状态！`);
-            // 已在游戏界面，手动获取游戏状态！
-            // dicesGameRoomUiComponent.getGamingStatus();
+            // 复用已有界面时 start() 不会执行，需手动拉一次房间状态。
+            // （DicesGameMainUI_Component 上并没有 getGamingStatus 方法，
+            //   正确入口是静态方法 DicesGameEvents.getClubGamingStatus）
+            DicesGameEvents.getClubGamingStatus();
           }
           break;
         default:
