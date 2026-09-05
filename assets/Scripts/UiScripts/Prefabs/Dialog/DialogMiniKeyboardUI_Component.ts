@@ -26,6 +26,9 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
 
   private _valueString: string = "";
 
+  // Value 下 6 个数字格（Digit1~Digit6）各自的 Label，按位缓存
+  private _valueLabels: Label[] = [];
+
   start() {}
 
   update(deltaTime: number) {}
@@ -44,6 +47,30 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
     );
 
     this._valueNode = this.getNode("MainView/Content/Layout/Value");
+
+    // 按 Digit1~Digit6 精确定位并缓存每一位的 Label，
+    // 不再依赖 _valueNode.children 的顺序，避免错位或漏渲染
+    this._valueLabels = [];
+    for (let i = 1; i <= 6; i++) {
+      const digitNode = this.getNode(`MainView/Content/Layout/Value/Digit${i}`);
+      const label =
+        digitNode?.getChildByName("Label")?.getComponent(Label) || null;
+      if (label) {
+        // prefab 中该 Label 为 cacheMode=CHAR(2) + overflow=SHRINK(2)。
+        // SHRINK 会基于初始空文本算出缩放，CHAR 缓存又不会在文本由空变数字时
+        // 重新排版，二者叠加会导致"值已更新但界面不显示"。
+        // 这里改为 NONE：文本变化立即重绘；数字格尺寸固定，也无需 SHRINK 缩放。
+        label.cacheMode = Label.CacheMode.NONE;
+        label.overflow = Label.Overflow.NONE;
+      }
+      this._valueLabels.push(label);
+    }
+    console.log(
+      "[MiniKeyboard] onLoad valueNode=",
+      !!this._valueNode,
+      "labels=",
+      this._valueLabels.filter(Boolean).length,
+    );
 
     // _titleToggleContainer 已就绪，应用待处理的标题高亮（若已设置）
     if (this._pendingTitle) {
@@ -124,13 +151,21 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
     this._valueString = "";
     this._isConfirmed = false;
     this._isClosing = false;
-    if (this._valueNode) {
-      this._valueNode.children.forEach((node) => {
-        const label = node.getChildByName("Label")?.getComponent(Label);
-        if (label) {
-          label.string = "";
-        }
-      });
+    this.renderValue();
+  }
+
+  /**
+   * 把当前输入按位渲染到 Value 的 6 个数字格（每位一个独立 Label）。
+   * 某位未取到 Label 时跳过，避免抛错中断整个输入流程。
+   */
+  private renderValue() {
+    const chars = this._valueString.split("");
+    for (let i = 0; i < this._valueLabels.length; i++) {
+      const label = this._valueLabels[i];
+      if (!label) {
+        continue;
+      }
+      label.string = i < chars.length ? chars[i] : "";
     }
   }
 
@@ -191,6 +226,14 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
    * @param num
    */
   public onNumBtnClick(event: Event, num: string) {
+    console.log(
+      "[MiniKeyboard] click num=",
+      JSON.stringify(num),
+      "numDigits=",
+      this._numDigits,
+      "labels=",
+      this._valueLabels.filter(Boolean).length,
+    );
     if (this._isConfirmed) {
       return;
     }
@@ -201,18 +244,7 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
     // num 实际是 Button 的 customEventData（字符串 "0"~"9"），直接拼接即可。
     // 不要用 "".split("")（JS 中返回 [""] 会导致首格空串、末位被裁）。
     this._valueString += num;
-    const valueArr = this._valueString.split("");
-
-    const valueDigitNodes = this._valueNode.children;
-
-    valueDigitNodes.forEach((node, index) => {
-      if (index >= valueArr.length) {
-        node.getChildByName("Label").getComponent(Label).string = "";
-        return;
-      }
-      node.getChildByName("Label").getComponent(Label).string =
-        valueArr[index] || "";
-    });
+    this.renderValue();
   }
 
   /**
@@ -224,10 +256,7 @@ export class DialogMiniKeyboardUI_Component extends ComponentController {
       return;
     }
     this._valueString = "";
-    const valueDigitNodes = this._valueNode.children;
-    valueDigitNodes.forEach((node) => {
-      node.getChildByName("Label").getComponent(Label).string = "";
-    });
+    this.renderValue();
   }
 
   /**
