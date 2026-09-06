@@ -11,6 +11,15 @@ import { GlobalData } from "../Runtime/GlobalData";
 export async function wechatSpriteFrameLoader(
   url: string,
 ): Promise<SpriteFrame> {
+  // 预览/非正式环境下热更域名可能解析为 localhost 或为空，这类 URL 必然加载失败。
+  // 提前拦截并返回 null，由上层回退默认头像，避免 assetManager 底层打印 Load image failed。
+  if (!url || !/^https?:\/\//i.test(url) || /localhost/i.test(url)) {
+    Logger.warn(
+      "wechatSpriteFrameLoader: 跳过无效头像 URL，将使用默认头像 ->",
+      url,
+    );
+    return null;
+  }
   try {
     // 使用 assetManager 加载远程资源
     const imageAsset = await new Promise<ImageAsset>((resolve, reject) => {
