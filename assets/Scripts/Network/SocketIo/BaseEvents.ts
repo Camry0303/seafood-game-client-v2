@@ -9,24 +9,6 @@ import { WAITING_TYPE } from "../../UiScripts/Prefabs/Common/CircleLoadingUI_Com
 
 export default class BaseEvents {
   /**
-   * 是否已经成功连接过（用于区分"首次连接"与"重连"）
-   */
-  private static _hasConnectedOnce: boolean = false;
-
-  /**
-   * 连接恢复后的业务恢复回调（由上层注册，避免基础层反向依赖业务层）
-   */
-  private static _onReconnectedCallback: Function = null;
-
-  /**
-   * 注册"连接恢复后"的业务回调
-   * @param callback
-   */
-  public static setOnReconnectedCallback(callback: Function) {
-    BaseEvents._onReconnectedCallback = callback;
-  }
-
-  /**
    * 监听基础事件
    * @param SocketInstance
    */
@@ -83,16 +65,6 @@ export default class BaseEvents {
     Logger.log(`<SocketBaseEvent> onConnect--->`, `游戏网关服务连接成功！`);
     // 连接成功，证明登录成功了，关闭加载动画
     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.LOGIN);
-
-    if (BaseEvents._hasConnectedOnce) {
-      // 非首次连接（自动重连或强制重连成功）：恢复业务数据（房间状态等）
-      // NOTE - socket.io 重连成功时 connect 与 reconnect 都会触发，
-      // 业务恢复统一放这里，onReconnect 内不再重复调用。
-      if (typeof BaseEvents._onReconnectedCallback === "function") {
-        BaseEvents._onReconnectedCallback();
-      }
-    }
-    BaseEvents._hasConnectedOnce = true;
   }
 
   /**
@@ -222,7 +194,6 @@ export default class BaseEvents {
     Logger.log(`<SocketBaseEvent> onReconnect--->`, returnData);
     Logger.log("游戏网关服务重连成功！");
     CommonDailogHandler.hideCircleLoading(WAITING_TYPE.SOCKET_RECONNECT);
-    // 业务恢复统一交给 onConnect（重连成功时二者都会触发，此处不再重复处理）
   }
 
   /**
