@@ -394,6 +394,13 @@ export default class ClubEvents {
       // 渲染俱乐部详情内容
       component.renderClubDetailContent();
 
+      // 重连场景下 ClubMainUI 可能已存在，renderUiNode(siblingTop=true) 会把它提到最顶层；
+      // 若此时游戏界面(DicesGameMainUI)正在进行中，需将其重新提到最顶，避免俱乐部界面遮挡游戏界面
+      const dicesGameNode = ComponentManager.Instance.getNode("DicesGameMainUI");
+      if (dicesGameNode && dicesGameNode.active) {
+        ComponentManager.Instance.setNodeSiblingTop(dicesGameNode);
+      }
+
       const currentPlayer = GlobalData.Instance.getCurrentPlayerInfo();
     } else {
       // 连接失败，弹出提示框
