@@ -68,10 +68,13 @@ export class DicesGamePlayerSeat_Component extends ComponentController {
   public async setData(data: Gateway.Returned.Games.DicesGame.GameSeatData) {
     this.node.active = true;
 
-    if (data === null) {
+    // null/undefined 均视为空座位：隐藏并清空数据，避免残留旧 seat_code
+    // 导致 getSeatWorldPosition 错配、筹码飞出起点位置错误（满桌时第 9 个座位槽
+    // 收不到数据会残留上一局 seat_code，命中旧值即飞错位置）
+    if (data == null) {
       this.node.active = false;
-      // 赋值
-      this._seatData = data;
+      // 赋值（置 null，不保留旧座位数据）
+      this._seatData = null;
       return;
     } else if (data.status !== DICES_GAME_SEAT_STATUS.EMPTY) {
       this.node.active = true;
