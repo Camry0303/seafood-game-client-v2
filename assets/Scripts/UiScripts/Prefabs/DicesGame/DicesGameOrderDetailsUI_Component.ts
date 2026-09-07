@@ -77,6 +77,14 @@ export class DicesGameOrderDetailsUI_Component extends ComponentController {
   }
 
   /**
+   * 判断玩家是否为机器人（机器人 player_id 区间为 100000~300000）
+   * @param playerId 玩家id
+   */
+  private isBotPlayer(playerId: number): boolean {
+    return playerId >= 100000 && playerId <= 300000;
+  }
+
+  /**
    * 关闭弹窗
    */
   public close() {
@@ -140,6 +148,8 @@ export class DicesGameOrderDetailsUI_Component extends ComponentController {
       const playerId = keys[1];
       // 关键为 seat_code-player_id，非特权查看者仅保留本玩家订单
       if (!privileged && playerId !== String(currentPlayerId)) continue;
+      // 管理/副管理查看全员订单时，默认隐藏机器人订单（机器人 player_id 区间为 100000~300000）
+      if (privileged && this.isBotPlayer(Number(playerId))) continue;
       renderKeys.push(key);
     }
 
@@ -191,10 +201,11 @@ export class DicesGameOrderDetailsUI_Component extends ComponentController {
       };
       component.onOrderCreated(order);
     } else {
-      // 非管理/副管理仅渲染本玩家订单：其它玩家的新订单不创建节点
+      // 非管理/副管理仅渲染本玩家订单；管理/副管理视图下默认隐藏机器人订单（机器人 player_id 区间为 100000~300000）
       if (
-        !this.isOrderViewerPrivileged() &&
-        data.player_id !== GlobalData.Instance.getCurrentPlayerInfo()?.id
+        (!this.isOrderViewerPrivileged() &&
+          data.player_id !== GlobalData.Instance.getCurrentPlayerInfo()?.id) ||
+        (this.isOrderViewerPrivileged() && this.isBotPlayer(data.player_id))
       ) {
         return;
       }
