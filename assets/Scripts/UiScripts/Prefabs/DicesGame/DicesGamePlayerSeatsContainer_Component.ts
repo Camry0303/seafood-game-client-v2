@@ -63,7 +63,7 @@ export class DicesGamePlayerSeatsContainer_Component extends ComponentController
   private _seatsData: Record<
     string,
     Gateway.Returned.Games.DicesGame.GameSeatData
-  > = null;
+  > = {};
 
   start() {}
 
