@@ -23,38 +23,10 @@ export class DicesGameOrderItem_Component extends ComponentController {
   private _data: Gateway.Returned.Games.DicesGame.OrderData = null;
 
   start() {
-    const orderTypeMap = {
-      1: "单",
-      2: "连串",
-      3: "豹",
-      4: "挪",
-    };
-    // 设置订单类型标签文本
-    this._orderTypeLabel.string = orderTypeMap[this._data.order_type];
-    // 设置分数标签文本
-    this._scoreLabel.string = this._data.order_score.toString();
-
-    // 从资源管理中获取图集
-    const atlas = ResourceManager.Instance.getAsset<SpriteAtlas>(
-      "Images",
-      `DicesGame/icons/small_icon0_atlas`,
-    );
-
-    // 根据订单类型设置结果精灵
-    if (this._data.order_type === 1 || this._data.order_type === 3) {
-      // 单 或 豹
-      this._result1Sprite.spriteFrame = atlas.getSpriteFrame(
-        `${this._data.order_results}`,
-      );
-    } else if (this._data.order_type === 2 || this._data.order_type === 4) {
-      // 连串 或 挪
-      const results = this._data.order_results.split(",");
-      this._result1Sprite.spriteFrame = atlas.getSpriteFrame(results[0]);
-      this._result2Sprite.spriteFrame = atlas.getSpriteFrame(results[1]);
+    // 兜底：onLoad 时图集可能尚未就绪，start 再补一次图标渲染
+    if (this._data) {
+      this.renderIcons();
     }
-
-    // 挪单标记
-    this._moveTagNode.active = this._data.order_type === 4;
   }
 
   update(deltaTime: number) {}
@@ -82,6 +54,58 @@ export class DicesGameOrderItem_Component extends ComponentController {
     );
     // 获取挪单标记节点
     this._moveTagNode = this.getNode("OrderIcons/MoveTag");
+
+    // 数据已在 addChild 前经 setData 注入，onLoad 时直接渲染，
+    // 避免依赖 start 延迟导致“类型缺失 / 分数显示 00（预制体默认值）”的闪烁
+    if (this._data) {
+      this.renderBase();
+      this.renderIcons();
+    }
+  }
+
+  /**
+   * 渲染基础信息（订单类型 + 分数 + 挪单标记），不依赖图集
+   */
+  private renderBase() {
+    if (!this._data) return;
+    const orderTypeMap = {
+      1: "单",
+      2: "连串",
+      3: "豹",
+      4: "挪",
+    };
+    // 设置订单类型标签文本（未知类型兜底为空，避免显示 undefined）
+    this._orderTypeLabel.string = orderTypeMap[this._data.order_type] ?? "";
+    // 设置分数标签文本
+    this._scoreLabel.string = this._data.order_score.toString();
+    // 挪单标记
+    this._moveTagNode.active = this._data.order_type === 4;
+  }
+
+  /**
+   * 渲染结果图标（依赖图集，可能需 start 兜底重试）
+   */
+  private renderIcons() {
+    if (!this._data) return;
+    // 从资源管理中获取图集
+    const atlas = ResourceManager.Instance.getAsset<SpriteAtlas>(
+      "Images",
+      `DicesGame/icons/small_icon0_atlas`,
+    );
+    if (!atlas) return;
+
+    // 根据订单类型设置结果精灵
+    if (this._data.order_type === 1 || this._data.order_type === 3) {
+      // 单 或 豹
+      this._result1Sprite.spriteFrame = atlas.getSpriteFrame(
+        `${this._data.order_results}`,
+      );
+    } else if (this._data.order_type === 2 || this._data.order_type === 4) {
+      // 连串 或 挪
+      const results = this._data.order_results.split(",");
+      this._result1Sprite.spriteFrame = atlas.getSpriteFrame(results[0]);
+      this._result2Sprite.spriteFrame = atlas.getSpriteFrame(results[1]);
+    }
   }
 
   /**
@@ -90,6 +114,11 @@ export class DicesGameOrderItem_Component extends ComponentController {
    */
   public setData(data: Gateway.Returned.Games.DicesGame.OrderData) {
     this._data = data;
+    // 若组件已初始化（onLoad 已执行）后再次注入数据，立即重渲染
+    if (this._orderTypeLabel) {
+      this.renderBase();
+      this.renderIcons();
+    }
   }
 
   /**
@@ -97,6 +126,7 @@ export class DicesGameOrderItem_Component extends ComponentController {
    * @param data
    */
   public onOrderCreated(data: Gateway.Returned.Games.DicesGame.OrderData) {
+    if (!this._data) return;
     this._data.order_score += data.order_score;
     this._scoreLabel.string = this._data.order_score.toString();
   }
